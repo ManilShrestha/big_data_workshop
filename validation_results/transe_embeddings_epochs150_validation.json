@@ -1,0 +1,431 @@
+{
+  "embedding_file": "transe_embeddings_epochs150.npy",
+  "method": "transe",
+  "shape": [
+    43234,
+    256
+  ],
+  "metadata": {
+    "method": "TransE",
+    "embedding_dim": 256,
+    "num_epochs": 150,
+    "total_planned_epochs": 300,
+    "batch_size": 4096,
+    "learning_rate": 0.001,
+    "num_nodes": 43234,
+    "num_relations": 9,
+    "training_time_seconds": 83.31678605079651,
+    "device": "cuda",
+    "timestamp": "2025-10-14T17:25:21.193182",
+    "relation_to_id": {
+      "directed_by": 0,
+      "has_genre": 1,
+      "has_imdb_rating": 2,
+      "has_imdb_votes": 3,
+      "has_tags": 4,
+      "in_language": 5,
+      "release_year": 6,
+      "starred_actors": 7,
+      "written_by": 8
+    },
+    "checkpoint": true,
+    "evaluation_metrics": {
+      "head": {
+        "optimistic": {
+          "z_geometric_mean_rank": 68.01275221980232,
+          "adjusted_arithmetic_mean_rank_index": 0.4780060234229241,
+          "inverse_geometric_mean_rank": 0.00016191702095221287,
+          "adjusted_inverse_harmonic_mean_rank": 0.0009141909485007733,
+          "inverse_arithmetic_mean_rank": 8.931750401934141e-05,
+          "variance": 98029585.09180741,
+          "inverse_median_rank": 0.00011988970147464332,
+          "adjusted_arithmetic_mean_rank": 0.5220162636986105,
+          "geometric_mean_rank": 6176.002955829662,
+          "arithmetic_mean_rank": 11196.013715110683,
+          "adjusted_geometric_mean_rank_index": 0.6086381965607707,
+          "z_inverse_harmonic_mean_rank": 16.490644268013103,
+          "z_arithmetic_mean_rank": 92.42473314726753,
+          "count": 12468.0,
+          "standard_deviation": 9900.989096641173,
+          "median_rank": 8341.0,
+          "harmonic_mean_rank": 850.2070881041769,
+          "inverse_harmonic_mean_rank": 0.0011761840309163227,
+          "median_absolute_deviation": 9047.580038430437,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0005614372794353545,
+          "hits_at_5": 0.0008822585819698428,
+          "hits_at_10": 0.0017645171639396856,
+          "z_hits_at_k": 11.196964149668771,
+          "adjusted_hits_at_k": 0.0015316335160245392
+        },
+        "realistic": {
+          "z_geometric_mean_rank": 68.01269707472234,
+          "adjusted_arithmetic_mean_rank_index": 0.4780053879554014,
+          "inverse_geometric_mean_rank": 0.0001619168178876862,
+          "adjusted_inverse_harmonic_mean_rank": 0.0009141903786466379,
+          "inverse_arithmetic_mean_rank": 8.931739284889773e-05,
+          "variance": 98029696.0,
+          "inverse_median_rank": 0.00011988970072707161,
+          "adjusted_arithmetic_mean_rank": 0.5220168991365045,
+          "geometric_mean_rank": 6176.0107421875,
+          "arithmetic_mean_rank": 11196.02734375,
+          "adjusted_geometric_mean_rank_index": 0.608637703073874,
+          "z_inverse_harmonic_mean_rank": 16.490633988692522,
+          "z_arithmetic_mean_rank": 92.42461027660622,
+          "count": 12468.0,
+          "standard_deviation": 9900.9951171875,
+          "median_rank": 8341.0,
+          "harmonic_mean_rank": 850.2074999166117,
+          "inverse_harmonic_mean_rank": 0.0011761834612116218,
+          "median_absolute_deviation": 9047.580038430437,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0005614372794353545,
+          "hits_at_5": 0.0008822585819698428,
+          "hits_at_10": 0.0017645171639396856,
+          "z_hits_at_k": 11.196964149668771,
+          "adjusted_hits_at_k": 0.0015316335160245392
+        },
+        "pessimistic": {
+          "z_geometric_mean_rank": 68.01262042145808,
+          "adjusted_arithmetic_mean_rank_index": 0.4780048154795098,
+          "inverse_geometric_mean_rank": 0.00016191653306296962,
+          "adjusted_inverse_harmonic_mean_rank": 0.0009141899359190916,
+          "inverse_arithmetic_mean_rank": 8.931729734913167e-05,
+          "variance": 98029794.42416,
+          "inverse_median_rank": 0.00011988970147464332,
+          "adjusted_arithmetic_mean_rank": 0.5220174715857042,
+          "geometric_mean_rank": 6176.021565451246,
+          "arithmetic_mean_rank": 11196.039621430864,
+          "adjusted_geometric_mean_rank_index": 0.6086370171127418,
+          "z_inverse_harmonic_mean_rank": 16.490626002546428,
+          "z_arithmetic_mean_rank": 92.42449958567573,
+          "count": 12468.0,
+          "standard_deviation": 9900.999667920407,
+          "median_rank": 8341.0,
+          "harmonic_mean_rank": 850.2078198596539,
+          "inverse_harmonic_mean_rank": 0.0011761830186001732,
+          "median_absolute_deviation": 9047.580038430437,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0005614372794353545,
+          "hits_at_5": 0.0008822585819698428,
+          "hits_at_10": 0.0017645171639396856,
+          "z_hits_at_k": 11.196964149668771,
+          "adjusted_hits_at_k": 0.0015316335160245392
+        }
+      },
+      "tail": {
+        "optimistic": {
+          "z_geometric_mean_rank": 107.68159754642264,
+          "adjusted_arithmetic_mean_rank_index": 0.8339152497141754,
+          "inverse_geometric_mean_rank": 0.001725837871841176,
+          "adjusted_inverse_harmonic_mean_rank": 0.024462085101861302,
+          "inverse_arithmetic_mean_rank": 0.0002784747525940109,
+          "variance": 40281466.17931556,
+          "inverse_median_rank": 0.0012706480304955528,
+          "adjusted_arithmetic_mean_rank": 0.1661233281665399,
+          "geometric_mean_rank": 579.4287031916675,
+          "arithmetic_mean_rank": 3590.9898139236443,
+          "adjusted_geometric_mean_rank_index": 0.963634640459788,
+          "z_inverse_harmonic_mean_rank": 443.09443883085464,
+          "z_arithmetic_mean_rank": 161.27642694484985,
+          "count": 12468.0,
+          "standard_deviation": 6346.7681680770065,
+          "median_rank": 787.0,
+          "harmonic_mean_rank": 40.45965461842585,
+          "inverse_harmonic_mean_rank": 0.02471597964517935,
+          "median_absolute_deviation": 1138.6385038123024,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0232595444337504,
+          "hits_at_5": 0.04042348411934552,
+          "hits_at_10": 0.07234520372152711,
+          "z_hits_at_k": 529.5040897824,
+          "adjusted_hits_at_k": 0.07213057721067691
+        },
+        "realistic": {
+          "z_geometric_mean_rank": 107.68158248426748,
+          "adjusted_arithmetic_mean_rank_index": 0.8339149817782279,
+          "inverse_geometric_mean_rank": 0.0017258315347135067,
+          "adjusted_inverse_harmonic_mean_rank": 0.02446204498293127,
+          "inverse_arithmetic_mean_rank": 0.0002784742973744869,
+          "variance": 40281540.0,
+          "inverse_median_rank": 0.001270647975616157,
+          "adjusted_arithmetic_mean_rank": 0.16612359609009247,
+          "geometric_mean_rank": 579.4308471679688,
+          "arithmetic_mean_rank": 3590.99560546875,
+          "adjusted_geometric_mean_rank_index": 0.963634505669677,
+          "z_inverse_harmonic_mean_rank": 443.0937121358605,
+          "z_arithmetic_mean_rank": 161.27637512693155,
+          "count": 12468.0,
+          "standard_deviation": 6346.77392578125,
+          "median_rank": 787.0,
+          "harmonic_mean_rank": 40.4597202754726,
+          "inverse_harmonic_mean_rank": 0.024715939536690712,
+          "median_absolute_deviation": 1138.6385038123024,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0232595444337504,
+          "hits_at_5": 0.04042348411934552,
+          "hits_at_10": 0.07234520372152711,
+          "z_hits_at_k": 529.5040897824,
+          "adjusted_hits_at_k": 0.07213057721067691
+        },
+        "pessimistic": {
+          "z_geometric_mean_rank": 107.6815714456067,
+          "adjusted_arithmetic_mean_rank_index": 0.8339147265248668,
+          "inverse_geometric_mean_rank": 0.0017258268060071367,
+          "adjusted_inverse_harmonic_mean_rank": 0.02446200571130973,
+          "inverse_arithmetic_mean_rank": 0.000278473875608123,
+          "variance": 40281612.72216749,
+          "inverse_median_rank": 0.0012706480304955528,
+          "adjusted_arithmetic_mean_rank": 0.16612385133164517,
+          "geometric_mean_rank": 579.4324184322959,
+          "arithmetic_mean_rank": 3591.001122874559,
+          "adjusted_geometric_mean_rank_index": 0.9636344068855194,
+          "z_inverse_harmonic_mean_rank": 443.09300078860474,
+          "z_arithmetic_mean_rank": 161.2763257617832,
+          "count": 12468.0,
+          "standard_deviation": 6346.7797127494105,
+          "median_rank": 787.0,
+          "harmonic_mean_rank": 40.45978454605432,
+          "inverse_harmonic_mean_rank": 0.024715900275290047,
+          "median_absolute_deviation": 1138.6385038123024,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0232595444337504,
+          "hits_at_5": 0.04042348411934552,
+          "hits_at_10": 0.07234520372152711,
+          "z_hits_at_k": 529.5040897824,
+          "adjusted_hits_at_k": 0.07213057721067691
+        }
+      },
+      "both": {
+        "optimistic": {
+          "z_geometric_mean_rank": 139.16636123544424,
+          "adjusted_arithmetic_mean_rank_index": 0.6566581026771549,
+          "inverse_geometric_mean_rank": 0.0005286232371500805,
+          "adjusted_inverse_harmonic_mean_rank": 0.012688149635804166,
+          "inverse_arithmetic_mean_rank": 0.00013525390699156822,
+          "variance": 83614622.769968,
+          "inverse_median_rank": 0.0002933411557641537,
+          "adjusted_arithmetic_mean_rank": 0.3433723941391074,
+          "geometric_mean_rank": 1891.7064739552716,
+          "arithmetic_mean_rank": 7393.501764517164,
+          "adjusted_geometric_mean_rank_index": 0.8806499887654566,
+          "z_inverse_harmonic_mean_rank": 324.34946684309074,
+          "z_arithmetic_mean_rank": 179.57804542622597,
+          "count": 24936.0,
+          "standard_deviation": 9144.10316925438,
+          "median_rank": 3409.0,
+          "harmonic_mean_rank": 77.24344805708348,
+          "inverse_harmonic_mean_rank": 0.012946081838047838,
+          "median_absolute_deviation": 4891.846019959234,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.011910490856592877,
+          "hits_at_5": 0.020652871350657683,
+          "hits_at_10": 0.0370548604427334,
+          "z_hits_at_k": 381.5715170592734,
+          "adjusted_hits_at_k": 0.036831139431236753
+        },
+        "realistic": {
+          "z_geometric_mean_rank": 139.16631549220827,
+          "adjusted_arithmetic_mean_rank_index": 0.6566576630346792,
+          "inverse_geometric_mean_rank": 0.0005286219529807568,
+          "adjusted_inverse_harmonic_mean_rank": 0.012688128650940995,
+          "inverse_arithmetic_mean_rank": 0.00013525373651646078,
+          "variance": 83614736.0,
+          "inverse_median_rank": 0.0002933411451522261,
+          "adjusted_arithmetic_mean_rank": 0.34337283376116506,
+          "geometric_mean_rank": 1891.7110595703125,
+          "arithmetic_mean_rank": 7393.51123046875,
+          "adjusted_geometric_mean_rank_index": 0.8806496993005322,
+          "z_inverse_harmonic_mean_rank": 324.34893040323334,
+          "z_arithmetic_mean_rank": 179.57792519602373,
+          "count": 24936.0,
+          "standard_deviation": 9144.109375,
+          "median_rank": 3409.0,
+          "harmonic_mean_rank": 77.2435732318173,
+          "inverse_harmonic_mean_rank": 0.012946060858666899,
+          "median_absolute_deviation": 4891.846019959234,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.011910490856592877,
+          "hits_at_5": 0.020652871350657683,
+          "hits_at_10": 0.0370548604427334,
+          "z_hits_at_k": 381.5715170592734,
+          "adjusted_hits_at_k": 0.036831139431236753
+        },
+        "pessimistic": {
+          "z_geometric_mean_rank": 139.1662723072069,
+          "adjusted_arithmetic_mean_rank_index": 0.6566572384526883,
+          "inverse_geometric_mean_rank": 0.0005286207459945301,
+          "adjusted_inverse_harmonic_mean_rank": 0.012688109434198888,
+          "inverse_arithmetic_mean_rank": 0.00013525356659142309,
+          "variance": 83614856.21429464,
+          "inverse_median_rank": 0.0002933411557641537,
+          "adjusted_arithmetic_mean_rank": 0.34337325832343724,
+          "geometric_mean_rank": 1891.7153887304064,
+          "arithmetic_mean_rank": 7393.520372152711,
+          "adjusted_geometric_mean_rank_index": 0.880649426024213,
+          "z_inverse_harmonic_mean_rank": 324.34843916217494,
+          "z_arithmetic_mean_rank": 179.57780908445255,
+          "count": 24936.0,
+          "standard_deviation": 9144.11593399245,
+          "median_rank": 3409.0,
+          "harmonic_mean_rank": 77.2436878600627,
+          "inverse_harmonic_mean_rank": 0.012946041646945107,
+          "median_absolute_deviation": 4891.846019959234,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.011910490856592877,
+          "hits_at_5": 0.020652871350657683,
+          "hits_at_10": 0.0370548604427334,
+          "z_hits_at_k": 381.5715170592734,
+          "adjusted_hits_at_k": 0.036831139431236753
+        }
+      }
+    }
+  },
+  "checks": {
+    "cosine_similarity": {
+      "connected_similarity": 0.10953611135482788,
+      "random_similarity": 0.0008465287974104285,
+      "difference": 0.10868958383798599,
+      "verdict": "\u26a0\ufe0f  WEAK - Some separation but not strong"
+    },
+    "nearest_neighbors": {
+      "Brad Pitt": [
+        [
+          "Brad Pitt",
+          0.9999998807907104
+        ],
+        [
+          "Brooks Benedict",
+          0.24750091135501862
+        ],
+        [
+          "Walter Huston",
+          0.2473723590373993
+        ],
+        [
+          "James Cagney",
+          0.24160656332969666
+        ],
+        [
+          "G\u00e9rard Depardieu",
+          0.23871156573295593
+        ],
+        [
+          "The Mark",
+          0.23326396942138672
+        ],
+        [
+          "Barbara Stanwyck",
+          0.23275332152843475
+        ],
+        [
+          "Glenn Close",
+          0.23078300058841705
+        ],
+        [
+          "Rob Meltzer",
+          0.22235438227653503
+        ],
+        [
+          "Alan Caillou",
+          0.21915674209594727
+        ]
+      ],
+      "Tom Hanks": [
+        [
+          "Tom Hanks",
+          1.0000001192092896
+        ],
+        [
+          "You've Got Mail",
+          0.27996963262557983
+        ],
+        [
+          "Sarah Silverman",
+          0.2716681957244873
+        ],
+        [
+          "Gene Hackman",
+          0.24711933732032776
+        ],
+        [
+          "Julian Goldberger",
+          0.2470530867576599
+        ],
+        [
+          "Inger Stevens",
+          0.24424879252910614
+        ],
+        [
+          "Epic Movie",
+          0.23407995700836182
+        ],
+        [
+          "That Thing You Do!",
+          0.2326967865228653
+        ],
+        [
+          "Hank Azaria",
+          0.23117348551750183
+        ],
+        [
+          "Brent Maddock",
+          0.22978410124778748
+        ]
+      ],
+      "Inception": [
+        [
+          "Inception",
+          1.0
+        ],
+        [
+          "Crazy Safari",
+          0.26720094680786133
+        ],
+        [
+          "Planet Terror",
+          0.25802284479141235
+        ],
+        [
+          "The Island of Dr. Moreau",
+          0.25682926177978516
+        ],
+        [
+          "Sneakers",
+          0.2566106915473938
+        ],
+        [
+          "Saw",
+          0.2532893717288971
+        ],
+        [
+          "Murk",
+          0.25269871950149536
+        ],
+        [
+          "The Long Gray Line",
+          0.24841244518756866
+        ],
+        [
+          "Robin Hood",
+          0.24451500177383423
+        ],
+        [
+          "French Kiss",
+          0.23558729887008667
+        ]
+      ]
+    },
+    "path_correlation": {},
+    "qa_probe": {
+      "valid_questions": 100,
+      "hits": 16,
+      "topk": 10,
+      "accuracy": 0.16,
+      "verdict": "\u274c FAIL - Poor QA performance"
+    },
+    "transe_link_prediction": {
+      "error": "relation_embeddings_not_found"
+    }
+  }
+}

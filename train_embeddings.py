@@ -297,9 +297,10 @@ class EmbeddingTrainer:
                     num_epochs: int = 100,
                     batch_size: int = 2048,
                     learning_rate: float = 0.01,
-                    patience: int = 10) -> Tuple[np.ndarray, Dict]:
+                    patience: int = 10,
+                    checkpoints: List[int] = None):
         """
-        Generate TransE embeddings using GPU with early stopping.
+        Generate TransE embeddings using GPU with optional checkpoints.
 
         Args:
             embedding_dim: Dimension of embeddings
@@ -307,6 +308,11 @@ class EmbeddingTrainer:
             batch_size: Batch size
             learning_rate: Learning rate
             patience: Early stopping patience (stop if no improvement for N epochs)
+            checkpoints: List of epoch numbers to save checkpoints (e.g., [50, 100, 200])
+                        If None, only saves final model
+
+        Yields:
+            Tuple of (embeddings, metadata, relation_embeddings, triples_factory) for each checkpoint
         """
         if not PYKEEN_AVAILABLE:
             raise ImportError("pykeen not installed. Run: pip install pykeen torch")
@@ -346,93 +352,222 @@ class EmbeddingTrainer:
             gpu_memory = torch.cuda.get_device_properties(0).total_memory / 1e9
             self.logger.log(f"   🎮 GPU: {gpu_name} ({gpu_memory:.1f} GB)")
 
+        # Determine checkpoints
+        if checkpoints is None:
+            checkpoints = [num_epochs]  # Only final model
+        else:
+            checkpoints = sorted([cp for cp in checkpoints if cp <= num_epochs])
+            if not checkpoints or checkpoints[-1] != num_epochs:
+                checkpoints.append(num_epochs)  # Always include final
+
         self.logger.log(f"   Training for {num_epochs} epochs, batch_size={batch_size}")
-        self.logger.log(f"   Note: Early stopping patience parameter available but not yet integrated")
+        self.logger.log(f"   Checkpoints at epochs: {checkpoints}")
         self.logger.log("")
 
-        # Train using PyKEEN pipeline
-        # Note: Early stopping with best model tracking is built into PyKEEN
-        self.logger.log("   Training TransE model...")
+        # If checkpoints, need to train incrementally
+        if len(checkpoints) > 1 or checkpoints[0] < num_epochs:
+            self.logger.log("   Training with checkpoints (incremental training)...")
+            results = []
+            trained_epochs = 0
 
-        result = pipeline(
-            training=train_tf,
-            testing=test_tf,
-            model='TransE',
-            model_kwargs=dict(embedding_dim=embedding_dim),
-            optimizer='Adam',
-            optimizer_kwargs=dict(lr=learning_rate),
-            training_kwargs=dict(
-                num_epochs=num_epochs,
-                batch_size=batch_size,
-            ),
-            training_loop='sLCWA',
-            negative_sampler='basic',
-            random_seed=42,
-            device=device.type,
-            # Note: Removed early stopping due to complexity with evaluation setup
-            # PyKEEN saves best model internally during training
-        )
+            # Train incrementally to each checkpoint
+            for i, target_epoch in enumerate(checkpoints):
+                epochs_to_train = target_epoch - trained_epochs
 
-        # Get training info
-        actual_epochs = num_epochs  # Trained for full epochs
-        best_epoch = num_epochs  # Using final model
+                if epochs_to_train <= 0:
+                    continue
 
-        self.logger.log(f"   ℹ️  Training completed {actual_epochs} epochs")
+                self.logger.log(f"\n   📊 Training to epoch {target_epoch} ({epochs_to_train} epochs)...")
 
-        # Log final metrics
-        self.logger.log("")
-        self.logger.log("   Final evaluation metrics:")
-        if result.metric_results:
-            metrics_dict = result.metric_results.to_dict()
-            for metric_name, metric_value in sorted(metrics_dict.items()):
-                if any(x in metric_name for x in ['hits_at', 'mean_rank', 'mean_reciprocal_rank']):
-                    self.logger.log(f"      {metric_name}: {metric_value:.4f}")
+                if i == 0:
+                    # First training session
+                    result = pipeline(
+                        training=train_tf,
+                        testing=test_tf,
+                        model='TransE',
+                        model_kwargs=dict(embedding_dim=embedding_dim),
+                        optimizer='Adam',
+                        optimizer_kwargs=dict(lr=learning_rate),
+                        training_kwargs=dict(
+                            num_epochs=epochs_to_train,
+                            batch_size=batch_size,
+                        ),
+                        training_loop='sLCWA',
+                        negative_sampler='basic',
+                        random_seed=42,
+                        device=device.type,
+                    )
+                    model = result.model
+                else:
+                    # Continue training existing model manually
+                    self.logger.log(f"      Continuing from epoch {trained_epochs}...")
 
-        # Extract entity embeddings
-        entity_embeddings = result.model.entity_representations[0](
-            indices=None
-        ).detach().cpu().numpy()
+                    from pykeen.training import SLCWATrainingLoop
+                    from pykeen.sampling import BasicNegativeSampler
+                    from pykeen.evaluation import RankBasedEvaluator
 
-        # Map back to our node order
-        embeddings = np.zeros((self.num_nodes, embedding_dim), dtype=np.float32)
-        entity_to_id = train_tf.entity_to_id
+                    # Create training loop with existing model
+                    training_loop = SLCWATrainingLoop(
+                        model=model,
+                        triples_factory=train_tf,
+                        optimizer=torch.optim.Adam(model.parameters(), lr=learning_rate),
+                    )
 
-        for node, idx in self.node2id.items():
-            node_str = str(node)
-            if node_str in entity_to_id:
-                transe_id = entity_to_id[node_str]
-                embeddings[idx] = entity_embeddings[transe_id]
+                    # Train additional epochs
+                    training_loop.train(
+                        triples_factory=train_tf,
+                        num_epochs=epochs_to_train,
+                        batch_size=batch_size,
+                    )
 
-        elapsed = time.time() - start_time
-        self.logger.log("")
-        self.logger.log(f"✓ TransE complete in {elapsed:.2f}s ({elapsed/60:.1f} min)")
-        self.logger.log(f"   Shape: {embeddings.shape}")
-        self.logger.log(f"   Mean norm: {np.linalg.norm(embeddings, axis=1).mean():.4f}")
-        self.logger.log(f"   Epochs trained: {actual_epochs}")
+                    # Evaluate
+                    evaluator = RankBasedEvaluator()
+                    result_obj = evaluator.evaluate(
+                        model=model,
+                        mapped_triples=test_tf.mapped_triples,
+                        batch_size=batch_size,
+                        additional_filter_triples=[train_tf.mapped_triples],
+                    )
 
-        metadata = {
-            "method": "TransE",
-            "embedding_dim": embedding_dim,
-            "num_epochs": num_epochs,
-            "batch_size": batch_size,
-            "learning_rate": learning_rate,
-            "early_stopping_patience": patience,
-            "early_stopping_enabled": False,  # TODO: Implement proper early stopping
-            "num_nodes": self.num_nodes,
-            "num_relations": tf.num_relations,
-            "training_time_seconds": elapsed,
-            "device": device.type,
-            "timestamp": datetime.now().isoformat()
-        }
+                    # Create result object
+                    result = type('Result', (), {'model': model, 'metric_results': result_obj})()
 
-        # Add metrics to metadata
-        if result.metric_results:
-            metadata['evaluation_metrics'] = result.metric_results.to_dict()
+                trained_epochs = target_epoch
 
-        return embeddings, metadata
+                # Extract embeddings at this checkpoint (use result.model to ensure we get the updated model)
+                entity_embeddings = result.model.entity_representations[0](indices=None).detach().cpu().numpy()
+                relation_embeddings = result.model.relation_representations[0](indices=None).detach().cpu().numpy()
+
+                # Map back to our node order
+                embeddings = np.zeros((self.num_nodes, embedding_dim), dtype=np.float32)
+                entity_to_id = train_tf.entity_to_id
+
+                for node, idx in self.node2id.items():
+                    node_str = str(node)
+                    if node_str in entity_to_id:
+                        transe_id = entity_to_id[node_str]
+                        embeddings[idx] = entity_embeddings[transe_id]
+
+                checkpoint_elapsed = time.time() - start_time
+                self.logger.log(f"   ✓ Checkpoint {target_epoch} epochs: {checkpoint_elapsed:.2f}s")
+
+                # Log metrics for this checkpoint
+                if hasattr(result, 'metric_results') and result.metric_results:
+                    metrics_dict = result.metric_results.to_dict()
+                    # Access nested dictionary correctly
+                    hits_10 = metrics_dict.get('both', {}).get('realistic', {}).get('hits_at_10', 0)
+                    self.logger.log(f"      Hits@10: {hits_10:.4f}")
+
+                metadata = {
+                    "method": "TransE",
+                    "embedding_dim": embedding_dim,
+                    "num_epochs": target_epoch,
+                    "total_planned_epochs": num_epochs,
+                    "batch_size": batch_size,
+                    "learning_rate": learning_rate,
+                    "num_nodes": self.num_nodes,
+                    "num_relations": tf.num_relations,
+                    "training_time_seconds": checkpoint_elapsed,
+                    "device": device.type,
+                    "timestamp": datetime.now().isoformat(),
+                    "relation_to_id": train_tf.relation_to_id,
+                    "checkpoint": True
+                }
+
+                # Add metrics to metadata
+                if hasattr(result, 'metric_results') and result.metric_results:
+                    metadata['evaluation_metrics'] = result.metric_results.to_dict()
+
+                results.append((embeddings, metadata, relation_embeddings, train_tf))
+
+            elapsed = time.time() - start_time
+            self.logger.log("")
+            self.logger.log(f"✓ TransE complete in {elapsed:.2f}s ({elapsed/60:.1f} min)")
+            self.logger.log(f"   Total checkpoints saved: {len(results)}")
+
+            return results
+
+        else:
+            # Single training run (no checkpoints)
+            self.logger.log("   Training TransE model...")
+
+            result = pipeline(
+                training=train_tf,
+                testing=test_tf,
+                model='TransE',
+                model_kwargs=dict(embedding_dim=embedding_dim),
+                optimizer='Adam',
+                optimizer_kwargs=dict(lr=learning_rate),
+                training_kwargs=dict(
+                    num_epochs=num_epochs,
+                    batch_size=batch_size,
+                ),
+                training_loop='sLCWA',
+                negative_sampler='basic',
+                random_seed=42,
+                device=device.type,
+            )
+
+            self.logger.log(f"   ℹ️  Training completed {num_epochs} epochs")
+
+            # Log final metrics
+            self.logger.log("")
+            self.logger.log("   Final evaluation metrics:")
+            if result.metric_results:
+                metrics_dict = result.metric_results.to_dict()
+                for metric_name, metric_value in sorted(metrics_dict.items()):
+                    if any(x in metric_name for x in ['hits_at', 'mean_rank', 'mean_reciprocal_rank']):
+                        self.logger.log(f"      {metric_name}: {metric_value:.4f}")
+
+            # Extract entity embeddings
+            entity_embeddings = result.model.entity_representations[0](
+                indices=None
+            ).detach().cpu().numpy()
+
+            # Extract relation embeddings
+            relation_embeddings = result.model.relation_representations[0](
+                indices=None
+            ).detach().cpu().numpy()
+
+            # Map back to our node order
+            embeddings = np.zeros((self.num_nodes, embedding_dim), dtype=np.float32)
+            entity_to_id = train_tf.entity_to_id
+
+            for node, idx in self.node2id.items():
+                node_str = str(node)
+                if node_str in entity_to_id:
+                    transe_id = entity_to_id[node_str]
+                    embeddings[idx] = entity_embeddings[transe_id]
+
+            elapsed = time.time() - start_time
+            self.logger.log("")
+            self.logger.log(f"✓ TransE complete in {elapsed:.2f}s ({elapsed/60:.1f} min)")
+            self.logger.log(f"   Shape: {embeddings.shape}")
+            self.logger.log(f"   Mean norm: {np.linalg.norm(embeddings, axis=1).mean():.4f}")
+
+            metadata = {
+                "method": "TransE",
+                "embedding_dim": embedding_dim,
+                "num_epochs": num_epochs,
+                "batch_size": batch_size,
+                "learning_rate": learning_rate,
+                "num_nodes": self.num_nodes,
+                "num_relations": tf.num_relations,
+                "training_time_seconds": elapsed,
+                "device": device.type,
+                "timestamp": datetime.now().isoformat(),
+                "relation_to_id": train_tf.relation_to_id,
+                "checkpoint": False
+            }
+
+            # Add metrics to metadata
+            if result.metric_results:
+                metadata['evaluation_metrics'] = result.metric_results.to_dict()
+
+            return [(embeddings, metadata, relation_embeddings, train_tf)]
 
     def save_embeddings(self, embeddings: np.ndarray, metadata: Dict,
-                       output_dir: str = "embeddings"):
+                       output_dir: str = "embeddings", relation_embeddings: np.ndarray = None):
         """Save embeddings and metadata."""
         output_path = Path(output_dir)
         output_path.mkdir(exist_ok=True)
@@ -445,6 +580,8 @@ class EmbeddingTrainer:
                 suffix = f"_walks{metadata['num_walks']}"
             elif 'iterations' in metadata:
                 suffix = f"_iter{metadata['iterations']}"
+            elif 'num_epochs' in metadata and method_name == 'transe':
+                suffix = f"_epochs{metadata['num_epochs']}"
             else:
                 suffix = ""
         else:
@@ -454,6 +591,12 @@ class EmbeddingTrainer:
         emb_file = output_path / f"{method_name}_embeddings{suffix}.npy"
         np.save(emb_file, embeddings)
         self.logger.log(f"   💾 Saved embeddings: {emb_file}")
+
+        # Save relation embeddings (for TransE)
+        if relation_embeddings is not None:
+            rel_file = output_path / f"{method_name}_relation_embeddings{suffix}.npy"
+            np.save(rel_file, relation_embeddings)
+            self.logger.log(f"   💾 Saved relation embeddings: {rel_file}")
 
         # Save node mapping (only once)
         node2id_file = output_path / "node2id.json"
@@ -543,7 +686,7 @@ Examples:
         '--checkpoints',
         type=int,
         nargs='+',
-        help='Node2Vec checkpoint walk counts (e.g., --checkpoints 10 50 100 200)'
+        help='Checkpoint values - Node2Vec: walk counts, FastRP: iterations, TransE: epoch counts (e.g., --checkpoints 10 50 100 200)'
     )
 
     parser.add_argument(
@@ -650,14 +793,16 @@ Examples:
             if not PYKEEN_AVAILABLE:
                 logger.log("⚠️  pykeen not installed. Skipping.", level="WARNING")
             else:
-                embeddings, metadata = trainer.train_transe(
+                results = trainer.train_transe(
                     embedding_dim=args.dim,
                     num_epochs=args.epochs,
                     batch_size=args.batch_size,
                     learning_rate=args.lr,
-                    patience=args.early_stopping
+                    patience=args.early_stopping,
+                    checkpoints=args.checkpoints
                 )
-                trainer.save_embeddings(embeddings, metadata, args.output)
+                for embeddings, metadata, relation_embeddings, _ in results:
+                    trainer.save_embeddings(embeddings, metadata, args.output, relation_embeddings)
                 logger.log("")
 
         logger.log("="*60)

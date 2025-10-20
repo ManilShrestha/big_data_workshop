@@ -1,0 +1,431 @@
+{
+  "embedding_file": "transe_embeddings_epochs100.npy",
+  "method": "transe",
+  "shape": [
+    43234,
+    256
+  ],
+  "metadata": {
+    "method": "TransE",
+    "embedding_dim": 256,
+    "num_epochs": 100,
+    "total_planned_epochs": 300,
+    "batch_size": 4096,
+    "learning_rate": 0.001,
+    "num_nodes": 43234,
+    "num_relations": 9,
+    "training_time_seconds": 54.059804916381836,
+    "device": "cuda",
+    "timestamp": "2025-10-14T17:24:51.936178",
+    "relation_to_id": {
+      "directed_by": 0,
+      "has_genre": 1,
+      "has_imdb_rating": 2,
+      "has_imdb_votes": 3,
+      "has_tags": 4,
+      "in_language": 5,
+      "release_year": 6,
+      "starred_actors": 7,
+      "written_by": 8
+    },
+    "checkpoint": true,
+    "evaluation_metrics": {
+      "head": {
+        "optimistic": {
+          "z_geometric_mean_rank": 67.1540536828448,
+          "adjusted_arithmetic_mean_rank_index": 0.4729332968429708,
+          "inverse_geometric_mean_rank": 0.00015879949602044962,
+          "adjusted_inverse_harmonic_mean_rank": 0.0006136691128845444,
+          "inverse_arithmetic_mean_rank": 8.845794830245912e-05,
+          "variance": 99123961.90959036,
+          "inverse_median_rank": 0.00012009848075421846,
+          "adjusted_arithmetic_mean_rank": 0.5270887537617246,
+          "geometric_mean_rank": 6297.249204564375,
+          "arithmetic_mean_rank": 11304.806624959898,
+          "adjusted_geometric_mean_rank_index": 0.6009538033864709,
+          "z_inverse_harmonic_mean_rank": 11.06967757167379,
+          "z_arithmetic_mean_rank": 91.44389738891473,
+          "count": 12468.0,
+          "standard_deviation": 9956.10174262951,
+          "median_rank": 8326.5,
+          "harmonic_mean_rank": 1141.890122458165,
+          "inverse_harmonic_mean_rank": 0.0008757410019864995,
+          "median_absolute_deviation": 9074.266878363536,
+          "hits_at_1": 0.0,
+          "hits_at_3": 8.020532563362207e-05,
+          "hits_at_5": 0.0003208213025344883,
+          "hits_at_10": 0.0009624639076034649,
+          "z_hits_at_k": 5.33220826246879,
+          "adjusted_hits_at_k": 0.0007293931444320796
+        },
+        "realistic": {
+          "z_geometric_mean_rank": 67.15395467959978,
+          "adjusted_arithmetic_mean_rank_index": 0.47293265862905975,
+          "inverse_geometric_mean_rank": 0.00015879914280958474,
+          "adjusted_inverse_harmonic_mean_rank": 0.0006136674911900608,
+          "inverse_arithmetic_mean_rank": 8.845784032018855e-05,
+          "variance": 99124064.0,
+          "inverse_median_rank": 0.0001200984843308106,
+          "adjusted_arithmetic_mean_rank": 0.5270893919458788,
+          "geometric_mean_rank": 6297.26318359375,
+          "arithmetic_mean_rank": 11304.8203125,
+          "adjusted_geometric_mean_rank_index": 0.6009529174179643,
+          "z_inverse_harmonic_mean_rank": 11.069648318718611,
+          "z_arithmetic_mean_rank": 91.4437739872262,
+          "count": 12468.0,
+          "standard_deviation": 9956.1064453125,
+          "median_rank": 8326.5,
+          "harmonic_mean_rank": 1141.8922364561777,
+          "inverse_harmonic_mean_rank": 0.0008757393807172774,
+          "median_absolute_deviation": 9074.266878363536,
+          "hits_at_1": 0.0,
+          "hits_at_3": 8.020532563362207e-05,
+          "hits_at_5": 0.0003208213025344883,
+          "hits_at_10": 0.0009624639076034649,
+          "z_hits_at_k": 5.33220826246879,
+          "adjusted_hits_at_k": 0.0007293931444320796
+        },
+        "pessimistic": {
+          "z_geometric_mean_rank": 67.15388932303733,
+          "adjusted_arithmetic_mean_rank_index": 0.47293207020074224,
+          "inverse_geometric_mean_rank": 0.00015879891079951858,
+          "adjusted_inverse_harmonic_mean_rank": 0.0006136658035525965,
+          "inverse_arithmetic_mean_rank": 8.845774245298414e-05,
+          "variance": 99124153.27598637,
+          "inverse_median_rank": 0.00012009848075421846,
+          "adjusted_arithmetic_mean_rank": 0.5270899803467608,
+          "geometric_mean_rank": 6297.272411789311,
+          "arithmetic_mean_rank": 11304.832932306705,
+          "adjusted_geometric_mean_rank_index": 0.6009523325497006,
+          "z_inverse_harmonic_mean_rank": 11.069617876250195,
+          "z_arithmetic_mean_rank": 91.44366021181844,
+          "count": 12468.0,
+          "standard_deviation": 9956.111353133128,
+          "median_rank": 8326.5,
+          "harmonic_mean_rank": 1141.8944364240263,
+          "inverse_harmonic_mean_rank": 0.000875737693522367,
+          "median_absolute_deviation": 9074.266878363536,
+          "hits_at_1": 0.0,
+          "hits_at_3": 8.020532563362207e-05,
+          "hits_at_5": 0.0003208213025344883,
+          "hits_at_10": 0.0009624639076034649,
+          "z_hits_at_k": 5.33220826246879,
+          "adjusted_hits_at_k": 0.0007293931444320796
+        }
+      },
+      "tail": {
+        "optimistic": {
+          "z_geometric_mean_rank": 107.51681236831662,
+          "adjusted_arithmetic_mean_rank_index": 0.8303517590960358,
+          "inverse_geometric_mean_rank": 0.001658692380863762,
+          "adjusted_inverse_harmonic_mean_rank": 0.02538119895531641,
+          "inverse_arithmetic_mean_rank": 0.0002726269369976598,
+          "variance": 40552895.949611776,
+          "inverse_median_rank": 0.0011806375442739079,
+          "adjusted_arithmetic_mean_rank": 0.16968665393349588,
+          "geometric_mean_rank": 602.8845441969482,
+          "arithmetic_mean_rank": 3668.0161212704525,
+          "adjusted_geometric_mean_rank_index": 0.9621599901065664,
+          "z_inverse_harmonic_mean_rank": 459.742824911703,
+          "z_arithmetic_mean_rank": 160.58725974885238,
+          "count": 12468.0,
+          "standard_deviation": 6368.115572884319,
+          "median_rank": 847.0,
+          "harmonic_mean_rank": 39.009388886055284,
+          "inverse_harmonic_mean_rank": 0.025634854289077847,
+          "median_absolute_deviation": 1227.5946369226383,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.025745909528392685,
+          "hits_at_5": 0.04290984921398781,
+          "hits_at_10": 0.07418992621110042,
+          "z_hits_at_k": 543.0491650437449,
+          "adjusted_hits_at_k": 0.07397572650379074
+        },
+        "realistic": {
+          "z_geometric_mean_rank": 107.51679794893452,
+          "adjusted_arithmetic_mean_rank_index": 0.83035149968641,
+          "inverse_geometric_mean_rank": 0.0016586867859587073,
+          "adjusted_inverse_harmonic_mean_rank": 0.02538116616205823,
+          "inverse_arithmetic_mean_rank": 0.00027262652292847633,
+          "variance": 40552972.0,
+          "inverse_median_rank": 0.0011806375114247203,
+          "adjusted_arithmetic_mean_rank": 0.1696869133311211,
+          "geometric_mean_rank": 602.8865966796875,
+          "arithmetic_mean_rank": 3668.021728515625,
+          "adjusted_geometric_mean_rank_index": 0.9621598610685841,
+          "z_inverse_harmonic_mean_rank": 459.74223091040386,
+          "z_arithmetic_mean_rank": 160.58720957989624,
+          "count": 12468.0,
+          "standard_deviation": 6368.12158203125,
+          "median_rank": 847.0,
+          "harmonic_mean_rank": 39.009438775695564,
+          "inverse_harmonic_mean_rank": 0.025634821504354477,
+          "median_absolute_deviation": 1227.5946369226383,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.025745909528392685,
+          "hits_at_5": 0.04290984921398781,
+          "hits_at_10": 0.07418992621110042,
+          "z_hits_at_k": 543.0491650437449,
+          "adjusted_hits_at_k": 0.07397572650379074
+        },
+        "pessimistic": {
+          "z_geometric_mean_rank": 107.51678656632984,
+          "adjusted_arithmetic_mean_rank_index": 0.8303512284856023,
+          "inverse_geometric_mean_rank": 0.001658682276358237,
+          "adjusted_inverse_harmonic_mean_rank": 0.02538113470638834,
+          "inverse_arithmetic_mean_rank": 0.0002726260845349027,
+          "variance": 40553044.81027501,
+          "inverse_median_rank": 0.0011806375442739079,
+          "adjusted_arithmetic_mean_rank": 0.16968718451938278,
+          "geometric_mean_rank": 602.8882169016576,
+          "arithmetic_mean_rank": 3668.027590632018,
+          "adjusted_geometric_mean_rank_index": 0.9621597592064978,
+          "z_inverse_harmonic_mean_rank": 459.74166113753535,
+          "z_arithmetic_mean_rank": 160.5871571305649,
+          "count": 12468.0,
+          "standard_deviation": 6368.127260841684,
+          "median_rank": 847.0,
+          "harmonic_mean_rank": 39.009486630531434,
+          "inverse_harmonic_mean_rank": 0.025634790056871273,
+          "median_absolute_deviation": 1227.5946369226383,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.025745909528392685,
+          "hits_at_5": 0.04290984921398781,
+          "hits_at_10": 0.07418992621110042,
+          "z_hits_at_k": 543.0491650437449,
+          "adjusted_hits_at_k": 0.07397572650379074
+        }
+      },
+      "both": {
+        "optimistic": {
+          "z_geometric_mean_rank": 138.6001777730153,
+          "adjusted_arithmetic_mean_rank_index": 0.6523429516888011,
+          "inverse_geometric_mean_rank": 0.0005132246234682481,
+          "adjusted_inverse_harmonic_mean_rank": 0.012997446246082277,
+          "inverse_arithmetic_mean_rank": 0.000133575347407591,
+          "variance": 84418571.2289114,
+          "inverse_median_rank": 0.0002791346824842987,
+          "adjusted_arithmetic_mean_rank": 0.34768734472124335,
+          "geometric_mean_rank": 1948.4645791977816,
+          "arithmetic_mean_rank": 7486.411373115175,
+          "adjusted_geometric_mean_rank_index": 0.8770671584363396,
+          "z_inverse_harmonic_mean_rank": 332.2560721022998,
+          "z_arithmetic_mean_rank": 178.39796955866507,
+          "count": 24936.0,
+          "standard_deviation": 9187.957946622928,
+          "median_rank": 3582.5,
+          "harmonic_mean_rank": 75.44153490488081,
+          "inverse_harmonic_mean_rank": 0.013255297645532176,
+          "median_absolute_deviation": 5111.271148298063,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.012913057427013154,
+          "hits_at_5": 0.021615335258261148,
+          "hits_at_10": 0.03757619505935194,
+          "z_hits_at_k": 386.9738114276921,
+          "adjusted_hits_at_k": 0.03735259516950903
+        },
+        "realistic": {
+          "z_geometric_mean_rank": 138.6001276438122,
+          "adjusted_arithmetic_mean_rank_index": 0.6523425092888742,
+          "inverse_geometric_mean_rank": 0.0005132232909090817,
+          "adjusted_inverse_harmonic_mean_rank": 0.012997429970156519,
+          "inverse_arithmetic_mean_rank": 0.00013357517309486866,
+          "variance": 84418680.0,
+          "inverse_median_rank": 0.00027913469239138067,
+          "adjusted_arithmetic_mean_rank": 0.34768778710062404,
+          "geometric_mean_rank": 1948.4696044921875,
+          "arithmetic_mean_rank": 7486.4208984375,
+          "adjusted_geometric_mean_rank_index": 0.8770668412168494,
+          "z_inverse_harmonic_mean_rank": 332.2556560378622,
+          "z_arithmetic_mean_rank": 178.3978485743753,
+          "count": 24936.0,
+          "standard_deviation": 9187.9638671875,
+          "median_rank": 3582.5,
+          "harmonic_mean_rank": 75.44162751400819,
+          "inverse_harmonic_mean_rank": 0.013255281373858452,
+          "median_absolute_deviation": 5111.271148298063,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.012913057427013154,
+          "hits_at_5": 0.021615335258261148,
+          "hits_at_10": 0.03757619505935194,
+          "z_hits_at_k": 386.9738114276921,
+          "adjusted_hits_at_k": 0.03735259516950903
+        },
+        "pessimistic": {
+          "z_geometric_mean_rank": 138.60008275510222,
+          "adjusted_arithmetic_mean_rank_index": 0.6523420744264654,
+          "inverse_geometric_mean_rank": 0.0005132221145353679,
+          "adjusted_inverse_harmonic_mean_rank": 0.01299741246692222,
+          "inverse_arithmetic_mean_rank": 0.00013357501039537234,
+          "variance": 84418797.99978845,
+          "inverse_median_rank": 0.0002791346824842987,
+          "adjusted_arithmetic_mean_rank": 0.3476882219428367,
+          "geometric_mean_rank": 1948.4741044436942,
+          "arithmetic_mean_rank": 7486.4302614693615,
+          "adjusted_geometric_mean_rank_index": 0.8770665571593977,
+          "z_inverse_harmonic_mean_rank": 332.25520859951416,
+          "z_arithmetic_mean_rank": 178.39772965139076,
+          "count": 24936.0,
+          "standard_deviation": 9187.970287271746,
+          "median_rank": 3582.5,
+          "harmonic_mean_rank": 75.44172710670776,
+          "inverse_harmonic_mean_rank": 0.01325526387519682,
+          "median_absolute_deviation": 5111.271148298063,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.012913057427013154,
+          "hits_at_5": 0.021615335258261148,
+          "hits_at_10": 0.03757619505935194,
+          "z_hits_at_k": 386.9738114276921,
+          "adjusted_hits_at_k": 0.03735259516950903
+        }
+      }
+    }
+  },
+  "checks": {
+    "cosine_similarity": {
+      "connected_similarity": 0.11107822507619858,
+      "random_similarity": 6.789441249566153e-05,
+      "difference": 0.11101032793521881,
+      "verdict": "\u26a0\ufe0f  WEAK - Some separation but not strong"
+    },
+    "nearest_neighbors": {
+      "Brad Pitt": [
+        [
+          "Brad Pitt",
+          1.0
+        ],
+        [
+          "Mike Binder",
+          0.271771103143692
+        ],
+        [
+          "Taylor Lautner",
+          0.2523399591445923
+        ],
+        [
+          "Linda Darnell",
+          0.25029081106185913
+        ],
+        [
+          "Shu Takumi",
+          0.24364951252937317
+        ],
+        [
+          "Warner Baxter",
+          0.24203985929489136
+        ],
+        [
+          "Sarah Butler",
+          0.2362060397863388
+        ],
+        [
+          "Sam Worthington",
+          0.23306779563426971
+        ],
+        [
+          "The L-Shaped Room",
+          0.23291753232479095
+        ],
+        [
+          "World War Z",
+          0.23288114368915558
+        ]
+      ],
+      "Tom Hanks": [
+        [
+          "Tom Hanks",
+          1.0000001192092896
+        ],
+        [
+          "Elizabeth Taylor",
+          0.3146824538707733
+        ],
+        [
+          "Captain Phillips",
+          0.27411454916000366
+        ],
+        [
+          "Heather Graham",
+          0.2518292963504791
+        ],
+        [
+          "Kristen Stewart",
+          0.24500614404678345
+        ],
+        [
+          "rick rosenthal",
+          0.23883022367954254
+        ],
+        [
+          "Madeline Kahn",
+          0.22840526700019836
+        ],
+        [
+          "Michael Keaton",
+          0.22700314223766327
+        ],
+        [
+          "william wyler",
+          0.22531658411026
+        ],
+        [
+          "Javier Bardem",
+          0.22303232550621033
+        ]
+      ],
+      "Inception": [
+        [
+          "Inception",
+          1.0
+        ],
+        [
+          "Ken Wiederhorn",
+          0.2474244385957718
+        ],
+        [
+          "An Affair to Remember",
+          0.24677860736846924
+        ],
+        [
+          "The Last Days of Disco",
+          0.24600383639335632
+        ],
+        [
+          "Joe",
+          0.2412021905183792
+        ],
+        [
+          "Back to the Future Part II",
+          0.24032892286777496
+        ],
+        [
+          "Casino Jack and the United States of Money",
+          0.2340753972530365
+        ],
+        [
+          "The Dark Knight Rises",
+          0.2322632521390915
+        ],
+        [
+          "Fried Green Tomatoes",
+          0.2297193855047226
+        ],
+        [
+          "Big Trouble in Little China",
+          0.2284914255142212
+        ]
+      ]
+    },
+    "path_correlation": {},
+    "qa_probe": {
+      "valid_questions": 100,
+      "hits": 19,
+      "topk": 10,
+      "accuracy": 0.19,
+      "verdict": "\u274c FAIL - Poor QA performance"
+    },
+    "transe_link_prediction": {
+      "error": "relation_embeddings_not_found"
+    }
+  }
+}

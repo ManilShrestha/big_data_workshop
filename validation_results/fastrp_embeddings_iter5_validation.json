@@ -1,0 +1,166 @@
+{
+  "embedding_file": "fastrp_embeddings_iter5.npy",
+  "method": "fastrp",
+  "shape": [
+    43234,
+    128
+  ],
+  "metadata": {
+    "method": "FastRP",
+    "embedding_dim": 128,
+    "iterations": 5,
+    "normalization_strength": 0.5,
+    "num_nodes": 43234,
+    "training_time_seconds": 4.850283145904541,
+    "checkpoint": true,
+    "timestamp": "2025-10-14T14:30:29.297116"
+  },
+  "checks": {
+    "cosine_similarity": {
+      "connected_similarity": 0.557544469833374,
+      "random_similarity": 0.029008621349930763,
+      "difference": 0.5285358428955078,
+      "verdict": "\u2705 PASS - Clear separation between connected and random"
+    },
+    "nearest_neighbors": {
+      "Brad Pitt": [
+        [
+          "Brad Pitt",
+          1.0000001192092896
+        ],
+        [
+          "brad pitt",
+          0.6699278354644775
+        ],
+        [
+          "Spy Game",
+          0.5959452390670776
+        ],
+        [
+          "Johnny Suede",
+          0.5362334251403809
+        ],
+        [
+          "The Devil's Own",
+          0.5236908197402954
+        ],
+        [
+          "The Mexican",
+          0.5135655999183655
+        ],
+        [
+          "Kalifornia",
+          0.47953832149505615
+        ],
+        [
+          "Seven Years in Tibet",
+          0.46349114179611206
+        ],
+        [
+          "The Dark Side of the Sun",
+          0.46238815784454346
+        ],
+        [
+          "The Assassination of Jesse James by the Coward Robert Ford",
+          0.440975159406662
+        ]
+      ],
+      "Tom Hanks": [
+        [
+          "Tom Hanks",
+          1.0000001192092896
+        ],
+        [
+          "tom hanks",
+          0.6928309202194214
+        ],
+        [
+          "Larry Crowne",
+          0.689266562461853
+        ],
+        [
+          "That Thing You Do!",
+          0.6546708345413208
+        ],
+        [
+          "Nothing in Common",
+          0.6129313111305237
+        ],
+        [
+          "Volunteers",
+          0.6034469604492188
+        ],
+        [
+          "The 'Burbs",
+          0.5990782976150513
+        ],
+        [
+          "Joe Versus the Volcano",
+          0.5873713493347168
+        ],
+        [
+          "Splash",
+          0.5811926126480103
+        ],
+        [
+          "Punchline",
+          0.5652899146080017
+        ]
+      ],
+      "Inception": [
+        [
+          "Inception",
+          1.0
+        ],
+        [
+          "nolan",
+          0.9881500601768494
+        ],
+        [
+          "lucid dreaming",
+          0.9879599809646606
+        ],
+        [
+          "dileep rao",
+          0.9876724481582642
+        ],
+        [
+          "subconscious",
+          0.9857024550437927
+        ],
+        [
+          "dream",
+          0.7211571931838989
+        ],
+        [
+          "tom berenger",
+          0.5763878226280212
+        ],
+        [
+          "screenplay",
+          0.5468636751174927
+        ],
+        [
+          "tokyo",
+          0.5300052165985107
+        ],
+        [
+          "ken watanabe",
+          0.4882257580757141
+        ]
+      ]
+    },
+    "path_correlation": {},
+    "qa_probe": {
+      "valid_questions": 100,
+      "hits": 79,
+      "topk": 10,
+      "accuracy": 0.79,
+      "verdict": "\u2705 PASS - Good QA performance"
+    },
+    "degree_correlation": {
+      "corr_pc1": -0.024948947105158797,
+      "corr_pc2": 0.0529590003004598
+    }
+  }
+}

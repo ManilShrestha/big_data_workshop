@@ -1,0 +1,431 @@
+{
+  "embedding_file": "transe_embeddings_epochs300.npy",
+  "method": "transe",
+  "shape": [
+    43234,
+    256
+  ],
+  "metadata": {
+    "method": "TransE",
+    "embedding_dim": 256,
+    "num_epochs": 300,
+    "total_planned_epochs": 300,
+    "batch_size": 4096,
+    "learning_rate": 0.001,
+    "num_nodes": 43234,
+    "num_relations": 9,
+    "training_time_seconds": 160.72701001167297,
+    "device": "cuda",
+    "timestamp": "2025-10-14T17:26:38.603438",
+    "relation_to_id": {
+      "directed_by": 0,
+      "has_genre": 1,
+      "has_imdb_rating": 2,
+      "has_imdb_votes": 3,
+      "has_tags": 4,
+      "in_language": 5,
+      "release_year": 6,
+      "starred_actors": 7,
+      "written_by": 8
+    },
+    "checkpoint": true,
+    "evaluation_metrics": {
+      "head": {
+        "optimistic": {
+          "z_geometric_mean_rank": 70.80589024283441,
+          "adjusted_arithmetic_mean_rank_index": 0.49572614567509987,
+          "inverse_geometric_mean_rank": 0.00017296195358980915,
+          "adjusted_inverse_harmonic_mean_rank": 0.0010215849804910107,
+          "inverse_arithmetic_mean_rank": 9.245582012576336e-05,
+          "variance": 95681914.46882056,
+          "inverse_median_rank": 0.0001264702162640698,
+          "adjusted_arithmetic_mean_rank": 0.5042969676504968,
+          "geometric_mean_rank": 5781.618322672089,
+          "arithmetic_mean_rank": 10815.976740455566,
+          "adjusted_geometric_mean_rank_index": 0.6336336633460216,
+          "z_inverse_harmonic_mean_rank": 18.42787278790052,
+          "z_arithmetic_mean_rank": 95.85100288078772,
+          "count": 12468.0,
+          "standard_deviation": 9781.713268585445,
+          "median_rank": 7907.0,
+          "harmonic_mean_rank": 779.0893049658753,
+          "inverse_harmonic_mean_rank": 0.0012835499006674219,
+          "median_absolute_deviation": 8794.055059065979,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0005614372794353545,
+          "hits_at_5": 0.0009624639076034649,
+          "hits_at_10": 0.002165543792107796,
+          "z_hits_at_k": 14.129342093268763,
+          "adjusted_hits_at_k": 0.001932753701820769
+        },
+        "realistic": {
+          "z_geometric_mean_rank": 70.80583257778525,
+          "adjusted_arithmetic_mean_rank_index": 0.49572556202374507,
+          "inverse_geometric_mean_rank": 0.0001729617069941014,
+          "adjusted_inverse_harmonic_mean_rank": 0.0010215842012002512,
+          "inverse_arithmetic_mean_rank": 9.245570981875062e-05,
+          "variance": 95682024.0,
+          "inverse_median_rank": 0.00012646621325984597,
+          "adjusted_arithmetic_mean_rank": 0.5042975512746388,
+          "geometric_mean_rank": 5781.62646484375,
+          "arithmetic_mean_rank": 10815.9892578125,
+          "adjusted_geometric_mean_rank_index": 0.6336331473082144,
+          "z_inverse_harmonic_mean_rank": 18.42785873065491,
+          "z_arithmetic_mean_rank": 95.85089002902838,
+          "count": 12468.0,
+          "standard_deviation": 9781.71875,
+          "median_rank": 7907.25,
+          "harmonic_mean_rank": 779.0897778561408,
+          "inverse_harmonic_mean_rank": 0.001283549121581018,
+          "median_absolute_deviation": 8794.425709620604,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0005614372794353545,
+          "hits_at_5": 0.0009624639076034649,
+          "hits_at_10": 0.002165543792107796,
+          "z_hits_at_k": 14.129342093268763,
+          "adjusted_hits_at_k": 0.001932753701820769
+        },
+        "pessimistic": {
+          "z_geometric_mean_rank": 70.80576064425563,
+          "adjusted_arithmetic_mean_rank_index": 0.49572499008836624,
+          "inverse_geometric_mean_rank": 0.00017296140616104147,
+          "adjusted_inverse_harmonic_mean_rank": 0.0010215834655010556,
+          "inverse_arithmetic_mean_rank": 9.245560827540577e-05,
+          "variance": 95682128.28817542,
+          "inverse_median_rank": 0.00012646221941195067,
+          "adjusted_arithmetic_mean_rank": 0.5042981231833511,
+          "geometric_mean_rank": 5781.636621691875,
+          "arithmetic_mean_rank": 10816.001523901186,
+          "adjusted_geometric_mean_rank_index": 0.6336325035834376,
+          "z_inverse_harmonic_mean_rank": 18.427845459736243,
+          "z_arithmetic_mean_rank": 95.85077944260858,
+          "count": 12468.0,
+          "standard_deviation": 9781.724198124553,
+          "median_rank": 7907.5,
+          "harmonic_mean_rank": 779.0902242946418,
+          "inverse_harmonic_mean_rank": 0.0012835483860747468,
+          "median_absolute_deviation": 8794.79636017523,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0005614372794353545,
+          "hits_at_5": 0.0009624639076034649,
+          "hits_at_10": 0.002165543792107796,
+          "z_hits_at_k": 14.129342093268763,
+          "adjusted_hits_at_k": 0.001932753701820769
+        }
+      },
+      "tail": {
+        "optimistic": {
+          "z_geometric_mean_rank": 106.98407770473045,
+          "adjusted_arithmetic_mean_rank_index": 0.8203088360514688,
+          "inverse_geometric_mean_rank": 0.0014733724179420461,
+          "adjusted_inverse_harmonic_mean_rank": 0.022665988309729667,
+          "inverse_arithmetic_mean_rank": 0.0002573937638619073,
+          "variance": 43831019.76710223,
+          "inverse_median_rank": 0.001076426264800861,
+          "adjusted_arithmetic_mean_rank": 0.17972911238086622,
+          "geometric_mean_rank": 678.7150267118236,
+          "arithmetic_mean_rank": 3885.098010907924,
+          "adjusted_geometric_mean_rank_index": 0.957392587061826,
+          "z_inverse_harmonic_mean_rank": 410.56080578683793,
+          "z_arithmetic_mean_rank": 158.6449919401452,
+          "count": 12468.0,
+          "standard_deviation": 6620.499963530113,
+          "median_rank": 929.0,
+          "harmonic_mean_rank": 43.62935062511627,
+          "inverse_harmonic_mean_rank": 0.022920350307123902,
+          "median_absolute_deviation": 1340.2724055290641,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0225376965030478,
+          "hits_at_5": 0.038097529675970486,
+          "hits_at_10": 0.06528713506576837,
+          "z_hits_at_k": 477.6794539998629,
+          "adjusted_hits_at_k": 0.06507087556745883
+        },
+        "realistic": {
+          "z_geometric_mean_rank": 106.98406869907845,
+          "adjusted_arithmetic_mean_rank_index": 0.8203085813851304,
+          "inverse_geometric_mean_rank": 0.0014733696589246392,
+          "adjusted_inverse_harmonic_mean_rank": 0.02266598388899699,
+          "inverse_arithmetic_mean_rank": 0.00025739340344443917,
+          "variance": 43831096.0,
+          "inverse_median_rank": 0.0010764262406155467,
+          "adjusted_arithmetic_mean_rank": 0.1797293670354235,
+          "geometric_mean_rank": 678.71630859375,
+          "arithmetic_mean_rank": 3885.103515625,
+          "adjusted_geometric_mean_rank_index": 0.9573925064709132,
+          "z_inverse_harmonic_mean_rank": 410.5607257118134,
+          "z_arithmetic_mean_rank": 158.64494268852502,
+          "count": 12468.0,
+          "standard_deviation": 6620.505859375,
+          "median_rank": 929.0,
+          "harmonic_mean_rank": 43.62935903788191,
+          "inverse_harmonic_mean_rank": 0.02292034588754177,
+          "median_absolute_deviation": 1340.2724055290641,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0225376965030478,
+          "hits_at_5": 0.038097529675970486,
+          "hits_at_10": 0.06528713506576837,
+          "z_hits_at_k": 477.6794539998629,
+          "adjusted_hits_at_k": 0.06507087556745883
+        },
+        "pessimistic": {
+          "z_geometric_mean_rank": 106.98406169952247,
+          "adjusted_arithmetic_mean_rank_index": 0.8203082943093478,
+          "inverse_geometric_mean_rank": 0.0014733674723555908,
+          "adjusted_inverse_harmonic_mean_rank": 0.0226659810847207,
+          "inverse_arithmetic_mean_rank": 0.00025739298806008677,
+          "variance": 43831171.26627381,
+          "inverse_median_rank": 0.001076426264800861,
+          "adjusted_arithmetic_mean_rank": 0.17972965409792555,
+          "geometric_mean_rank": 678.7173049240864,
+          "arithmetic_mean_rank": 3885.1097208854667,
+          "adjusted_geometric_mean_rank_index": 0.9573924438324053,
+          "z_inverse_harmonic_mean_rank": 410.560674916502,
+          "z_arithmetic_mean_rank": 158.6448871690265,
+          "count": 12468.0,
+          "standard_deviation": 6620.511405191733,
+          "median_rank": 929.0,
+          "harmonic_mean_rank": 43.62936437449201,
+          "inverse_harmonic_mean_rank": 0.022920343083995324,
+          "median_absolute_deviation": 1340.2724055290641,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.0225376965030478,
+          "hits_at_5": 0.038097529675970486,
+          "hits_at_10": 0.06528713506576837,
+          "z_hits_at_k": 477.6794539998629,
+          "adjusted_hits_at_k": 0.06507087556745883
+        }
+      },
+      "both": {
+        "optimistic": {
+          "z_geometric_mean_rank": 138.27635427957557,
+          "adjusted_arithmetic_mean_rank_index": 0.6586535671694156,
+          "inverse_geometric_mean_rank": 0.0005048141952962466,
+          "adjusted_inverse_harmonic_mean_rank": 0.011843797317190324,
+          "inverse_arithmetic_mean_rank": 0.00013604447523909806,
+          "variance": 81765737.10888538,
+          "inverse_median_rank": 0.0002881014116969173,
+          "adjusted_arithmetic_mean_rank": 0.3413770223211222,
+          "geometric_mean_rank": 1980.9268624333297,
+          "arithmetic_mean_rank": 7350.537375681745,
+          "adjusted_geometric_mean_rank_index": 0.8750179911424039,
+          "z_inverse_harmonic_mean_rank": 302.7651356182037,
+          "z_arithmetic_mean_rank": 180.12375043127605,
+          "count": 24936.0,
+          "standard_deviation": 9042.440882244427,
+          "median_rank": 3471.0,
+          "harmonic_mean_rank": 82.63131077346752,
+          "inverse_harmonic_mean_rank": 0.012101950103895663,
+          "median_absolute_deviation": 4938.54798984216,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.011549566891241578,
+          "hits_at_5": 0.019529996791786974,
+          "hits_at_10": 0.03372633942893808,
+          "z_hits_at_k": 347.07994532244595,
+          "adjusted_hits_at_k": 0.0335018451022676
+        },
+        "realistic": {
+          "z_geometric_mean_rank": 138.27632853386683,
+          "adjusted_arithmetic_mean_rank_index": 0.658653171333307,
+          "inverse_geometric_mean_rank": 0.0005048135644756258,
+          "adjusted_inverse_harmonic_mean_rank": 0.011843796405640082,
+          "inverse_arithmetic_mean_rank": 0.0001360443129669875,
+          "variance": 81765856.0,
+          "inverse_median_rank": 0.0002881014079321176,
+          "adjusted_arithmetic_mean_rank": 0.34137741813884726,
+          "geometric_mean_rank": 1980.929443359375,
+          "arithmetic_mean_rank": 7350.5458984375,
+          "adjusted_geometric_mean_rank_index": 0.875017828222587,
+          "z_inverse_harmonic_mean_rank": 302.7651123160798,
+          "z_arithmetic_mean_rank": 180.12364218091807,
+          "count": 24936.0,
+          "standard_deviation": 9042.447265625,
+          "median_rank": 3471.0,
+          "harmonic_mean_rank": 82.63131699584643,
+          "inverse_harmonic_mean_rank": 0.012101949192583561,
+          "median_absolute_deviation": 4938.54798984216,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.011549566891241578,
+          "hits_at_5": 0.019529996791786974,
+          "hits_at_10": 0.03372633942893808,
+          "z_hits_at_k": 347.07994532244595,
+          "adjusted_hits_at_k": 0.0335018451022676
+        },
+        "pessimistic": {
+          "z_geometric_mean_rank": 138.27628984368397,
+          "adjusted_arithmetic_mean_rank_index": 0.6586527197079237,
+          "inverse_geometric_mean_rank": 0.0005048125491809431,
+          "adjusted_inverse_harmonic_mean_rank": 0.011843792947188046,
+          "inverse_arithmetic_mean_rank": 0.00013604413752798755,
+          "variance": 81765965.07350224,
+          "inverse_median_rank": 0.0002881014116969173,
+          "adjusted_arithmetic_mean_rank": 0.34137786974325596,
+          "geometric_mean_rank": 1980.9333219281039,
+          "arithmetic_mean_rank": 7350.555622393327,
+          "adjusted_geometric_mean_rank_index": 0.8750175833896487,
+          "z_inverse_harmonic_mean_rank": 302.7650239070441,
+          "z_arithmetic_mean_rank": 180.12351867371808,
+          "count": 24936.0,
+          "standard_deviation": 9042.453487494544,
+          "median_rank": 3471.0,
+          "harmonic_mean_rank": 82.63134060376822,
+          "inverse_harmonic_mean_rank": 0.012101945735035034,
+          "median_absolute_deviation": 4938.54798984216,
+          "hits_at_1": 0.0,
+          "hits_at_3": 0.011549566891241578,
+          "hits_at_5": 0.019529996791786974,
+          "hits_at_10": 0.03372633942893808,
+          "z_hits_at_k": 347.07994532244595,
+          "adjusted_hits_at_k": 0.0335018451022676
+        }
+      }
+    }
+  },
+  "checks": {
+    "cosine_similarity": {
+      "connected_similarity": 0.1410202533006668,
+      "random_similarity": -0.0003347890742588788,
+      "difference": 0.14135503768920898,
+      "verdict": "\u26a0\ufe0f  WEAK - Some separation but not strong"
+    },
+    "nearest_neighbors": {
+      "Brad Pitt": [
+        [
+          "Brad Pitt",
+          1.000000238418579
+        ],
+        [
+          "Groucho Marx",
+          0.2801620364189148
+        ],
+        [
+          "The Devil's Own",
+          0.2599042057991028
+        ],
+        [
+          "Kristin Davis",
+          0.25706246495246887
+        ],
+        [
+          "Ocean's Twelve",
+          0.25698399543762207
+        ],
+        [
+          "Hart Bochner",
+          0.2562546133995056
+        ],
+        [
+          "Fight Club",
+          0.24611634016036987
+        ],
+        [
+          "Johnny Suede",
+          0.24402949213981628
+        ],
+        [
+          "Annie Girardot",
+          0.24118615686893463
+        ],
+        [
+          "John Dall",
+          0.23808757960796356
+        ]
+      ],
+      "Tom Hanks": [
+        [
+          "Tom Hanks",
+          0.9999998807907104
+        ],
+        [
+          "Philadelphia",
+          0.2519059181213379
+        ],
+        [
+          "Punchline",
+          0.24989065527915955
+        ],
+        [
+          "Vittorio Mezzogiorno",
+          0.24631696939468384
+        ],
+        [
+          "Elsa Zylberstein",
+          0.24305137991905212
+        ],
+        [
+          "Christina Ricci",
+          0.23723158240318298
+        ],
+        [
+          "David Arquette",
+          0.23596219718456268
+        ],
+        [
+          "pilot",
+          0.23195219039916992
+        ],
+        [
+          "Dami\u00e1n Szifr\u00f3n",
+          0.23097726702690125
+        ],
+        [
+          "The Secrets",
+          0.23096297681331635
+        ]
+      ],
+      "Inception": [
+        [
+          "Inception",
+          1.0000001192092896
+        ],
+        [
+          "Black Swan",
+          0.27090370655059814
+        ],
+        [
+          "Near Dark",
+          0.250582754611969
+        ],
+        [
+          "editing",
+          0.24888776242733002
+        ],
+        [
+          "The Racket",
+          0.24796561896800995
+        ],
+        [
+          "Wolf Creek",
+          0.23948602378368378
+        ],
+        [
+          "Now You See Me",
+          0.23896650969982147
+        ],
+        [
+          "A Star Is Born",
+          0.23793159425258636
+        ],
+        [
+          "Parenthood",
+          0.23347994685173035
+        ],
+        [
+          "The Skeleton Key",
+          0.2332155406475067
+        ]
+      ]
+    },
+    "path_correlation": {},
+    "qa_probe": {
+      "valid_questions": 100,
+      "hits": 28,
+      "topk": 10,
+      "accuracy": 0.28,
+      "verdict": "\u274c FAIL - Poor QA performance"
+    },
+    "transe_link_prediction": {
+      "error": "relation_embeddings_not_found"
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "embedding_file": "fastrp_embeddings_iter20.npy",
+  "method": "fastrp",
+  "shape": [
+    43234,
+    128
+  ],
+  "metadata": {
+    "method": "FastRP",
+    "embedding_dim": 128,
+    "iterations": 20,
+    "normalization_strength": 0.5,
+    "num_nodes": 43234,
+    "training_time_seconds": 16.841689348220825,
+    "checkpoint": true,
+    "timestamp": "2025-10-14T14:30:41.289040"
+  },
+  "checks": {
+    "cosine_similarity": {
+      "connected_similarity": 0.982964277267456,
+      "random_similarity": 0.8584507703781128,
+      "difference": 0.12451350688934326,
+      "verdict": "\u26a0\ufe0f  WEAK - Some separation but not strong"
+    },
+    "nearest_neighbors": {
+      "Brad Pitt": [
+        [
+          "Brad Pitt",
+          1.0
+        ],
+        [
+          "brad pitt",
+          0.9995020627975464
+        ],
+        [
+          "Spy Game",
+          0.9963686466217041
+        ],
+        [
+          "Ocean's Eleven",
+          0.9959472417831421
+        ],
+        [
+          "Kalifornia",
+          0.9956167340278625
+        ],
+        [
+          "The Assassination of Jesse James by the Coward Robert Ford",
+          0.995395839214325
+        ],
+        [
+          "Meet Joe Black",
+          0.9952980875968933
+        ],
+        [
+          "The Mexican",
+          0.9952752590179443
+        ],
+        [
+          "Burn After Reading",
+          0.9951530694961548
+        ],
+        [
+          "Ocean's Twelve",
+          0.9949837327003479
+        ]
+      ],
+      "Tom Hanks": [
+        [
+          "Tom Hanks",
+          1.000000238418579
+        ],
+        [
+          "tom hanks",
+          0.9996614456176758
+        ],
+        [
+          "Joe Versus the Volcano",
+          0.9977248311042786
+        ],
+        [
+          "Splash",
+          0.9973011016845703
+        ],
+        [
+          "Big",
+          0.9966301918029785
+        ],
+        [
+          "You've Got Mail",
+          0.9965185523033142
+        ],
+        [
+          "When Harry Met Sally...",
+          0.9964730143547058
+        ],
+        [
+          "A League of Their Own",
+          0.9964043498039246
+        ],
+        [
+          "meg ryan",
+          0.9960659146308899
+        ],
+        [
+          "That Thing You Do!",
+          0.9959133863449097
+        ]
+      ],
+      "Inception": [
+        [
+          "Inception",
+          1.0000001192092896
+        ],
+        [
+          "nolan",
+          0.9976011514663696
+        ],
+        [
+          "lucid dreaming",
+          0.9976011514663696
+        ],
+        [
+          "subconscious",
+          0.9976011514663696
+        ],
+        [
+          "dileep rao",
+          0.9976011514663696
+        ],
+        [
+          "dream",
+          0.9970683455467224
+        ],
+        [
+          "ensemble cast",
+          0.9946120977401733
+        ],
+        [
+          "Following",
+          0.9940253496170044
+        ],
+        [
+          "editing",
+          0.993594229221344
+        ],
+        [
+          "The Dark Knight Rises",
+          0.993446409702301
+        ]
+      ]
+    },
+    "path_correlation": {},
+    "qa_probe": {
+      "valid_questions": 100,
+      "hits": 64,
+      "topk": 10,
+      "accuracy": 0.64,
+      "verdict": "\u2705 PASS - Good QA performance"
+    },
+    "degree_correlation": {
+      "corr_pc1": 0.008015534284439334,
+      "corr_pc2": -0.045725495500878434
+    }
+  }
+}

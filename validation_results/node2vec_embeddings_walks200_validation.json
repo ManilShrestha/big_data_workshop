@@ -1,0 +1,169 @@
+{
+  "embedding_file": "node2vec_embeddings_walks200.npy",
+  "method": "node2vec",
+  "shape": [
+    43234,
+    128
+  ],
+  "metadata": {
+    "method": "Node2Vec",
+    "embedding_dim": 128,
+    "walk_length": 30,
+    "num_walks": 200,
+    "p": 1.0,
+    "q": 1.0,
+    "num_nodes": 43234,
+    "training_time_seconds": 5913.933947563171,
+    "checkpoint": true
+  },
+  "checks": {
+    "cosine_similarity": {
+      "connected_similarity": 0.7069215774536133,
+      "random_similarity": 0.1698983907699585,
+      "difference": 0.5370231866836548,
+      "verdict": "\u2705 PASS - Clear separation between connected and random"
+    },
+    "nearest_neighbors": {
+      "Brad Pitt": [
+        [
+          "Brad Pitt",
+          1.0
+        ],
+        [
+          "brad pitt",
+          0.936307966709137
+        ],
+        [
+          "The Dark Side of the Sun",
+          0.7623961567878723
+        ],
+        [
+          "Johnny Suede",
+          0.7385649681091309
+        ],
+        [
+          "Killing Them Softly",
+          0.7060577273368835
+        ],
+        [
+          "Spy Game",
+          0.6851933598518372
+        ],
+        [
+          "Kalifornia",
+          0.6845300197601318
+        ],
+        [
+          "The Mexican",
+          0.6772609949111938
+        ],
+        [
+          "The Curious Case of Benjamin Button",
+          0.6724640130996704
+        ],
+        [
+          "The Assassination of Jesse James by the Coward Robert Ford",
+          0.6696138978004456
+        ]
+      ],
+      "Tom Hanks": [
+        [
+          "Tom Hanks",
+          1.0000001192092896
+        ],
+        [
+          "tom hanks",
+          0.9561850428581238
+        ],
+        [
+          "Joe Versus the Volcano",
+          0.7501758337020874
+        ],
+        [
+          "The Money Pit",
+          0.7376562356948853
+        ],
+        [
+          "Volunteers",
+          0.7346198558807373
+        ],
+        [
+          "shelley long",
+          0.7298510074615479
+        ],
+        [
+          "Larry Crowne",
+          0.7212228178977966
+        ],
+        [
+          "The Terminal",
+          0.7080854773521423
+        ],
+        [
+          "The 'Burbs",
+          0.6978716850280762
+        ],
+        [
+          "Jeff Arch",
+          0.6971800327301025
+        ]
+      ],
+      "Inception": [
+        [
+          "Inception",
+          1.0
+        ],
+        [
+          "nolan",
+          0.9763185977935791
+        ],
+        [
+          "lucid dreaming",
+          0.9747574329376221
+        ],
+        [
+          "dileep rao",
+          0.9729815125465393
+        ],
+        [
+          "subconscious",
+          0.9717608690261841
+        ],
+        [
+          "dream",
+          0.8207009434700012
+        ],
+        [
+          "editing",
+          0.6997480392456055
+        ],
+        [
+          "screenplay",
+          0.6847630143165588
+        ],
+        [
+          "tom berenger",
+          0.6812340617179871
+        ],
+        [
+          "Tom Hardy",
+          0.676369845867157
+        ]
+      ]
+    },
+    "path_correlation": {},
+    "qa_probe": {
+      "valid_questions": 100,
+      "hits": 72,
+      "topk": 10,
+      "accuracy": 0.72,
+      "verdict": "\u2705 PASS - Good QA performance"
+    },
+    "cluster_analysis": {
+      "intra_cluster_sim": 0.258963942527771,
+      "inter_cluster_sim": 0.16208422183990479,
+      "difference": 0.09687972068786621,
+      "verdict": "\u26a0\ufe0f  WEAK - Some community structure"
+    }
+  }
+}

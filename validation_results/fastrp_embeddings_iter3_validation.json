@@ -1,0 +1,166 @@
+{
+  "embedding_file": "fastrp_embeddings_iter3.npy",
+  "method": "fastrp",
+  "shape": [
+    43234,
+    128
+  ],
+  "metadata": {
+    "method": "FastRP",
+    "embedding_dim": 128,
+    "iterations": 3,
+    "normalization_strength": 0.5,
+    "num_nodes": 43234,
+    "training_time_seconds": 2.9385581016540527,
+    "checkpoint": true,
+    "timestamp": "2025-10-14T14:30:27.386047"
+  },
+  "checks": {
+    "cosine_similarity": {
+      "connected_similarity": 0.46065741777420044,
+      "random_similarity": 0.00757641764357686,
+      "difference": 0.45308101177215576,
+      "verdict": "\u2705 PASS - Clear separation between connected and random"
+    },
+    "nearest_neighbors": {
+      "Brad Pitt": [
+        [
+          "Brad Pitt",
+          1.0
+        ],
+        [
+          "Johnny Suede",
+          0.5142264366149902
+        ],
+        [
+          "Spy Game",
+          0.44274967908859253
+        ],
+        [
+          "The Dark Side of the Sun",
+          0.4287526607513428
+        ],
+        [
+          "Kalifornia",
+          0.37173008918762207
+        ],
+        [
+          "The Devil's Own",
+          0.367156058549881
+        ],
+        [
+          "Road to Singapore",
+          0.3409091830253601
+        ],
+        [
+          "Crime Wave",
+          0.339997261762619
+        ],
+        [
+          "The Mexican",
+          0.3321060836315155
+        ],
+        [
+          "Ward Hawkins",
+          0.3317506015300751
+        ]
+      ],
+      "Tom Hanks": [
+        [
+          "Tom Hanks",
+          1.0
+        ],
+        [
+          "Larry Crowne",
+          0.5863454341888428
+        ],
+        [
+          "Nothing in Common",
+          0.5012715458869934
+        ],
+        [
+          "That Thing You Do!",
+          0.46563801169395447
+        ],
+        [
+          "Punchline",
+          0.45875799655914307
+        ],
+        [
+          "The Horseman on the Roof",
+          0.44586923718452454
+        ],
+        [
+          "The 'Burbs",
+          0.4403873085975647
+        ],
+        [
+          "The Man with One Red Shoe",
+          0.4137400686740875
+        ],
+        [
+          "Volunteers",
+          0.41051340103149414
+        ],
+        [
+          "Joe Versus the Volcano",
+          0.37931084632873535
+        ]
+      ],
+      "Inception": [
+        [
+          "Inception",
+          1.0
+        ],
+        [
+          "lucid dreaming",
+          0.9748390316963196
+        ],
+        [
+          "nolan",
+          0.9735215902328491
+        ],
+        [
+          "dileep rao",
+          0.9721485376358032
+        ],
+        [
+          "subconscious",
+          0.962483286857605
+        ],
+        [
+          "dream",
+          0.6573173999786377
+        ],
+        [
+          "tom berenger",
+          0.5387305617332458
+        ],
+        [
+          "screenplay",
+          0.48761898279190063
+        ],
+        [
+          "tokyo",
+          0.44780871272087097
+        ],
+        [
+          "Ellen Page",
+          0.40642207860946655
+        ]
+      ]
+    },
+    "path_correlation": {},
+    "qa_probe": {
+      "valid_questions": 100,
+      "hits": 78,
+      "topk": 10,
+      "accuracy": 0.78,
+      "verdict": "\u2705 PASS - Good QA performance"
+    },
+    "degree_correlation": {
+      "corr_pc1": -0.00889742454394225,
+      "corr_pc2": 0.04398131269179052
+    }
+  }
+}

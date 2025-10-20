@@ -1,0 +1,166 @@
+{
+  "embedding_file": "fastrp_embeddings_iter10.npy",
+  "method": "fastrp",
+  "shape": [
+    43234,
+    128
+  ],
+  "metadata": {
+    "method": "FastRP",
+    "embedding_dim": 128,
+    "iterations": 10,
+    "normalization_strength": 0.5,
+    "num_nodes": 43234,
+    "training_time_seconds": 8.863280296325684,
+    "checkpoint": true,
+    "timestamp": "2025-10-14T14:30:33.310478"
+  },
+  "checks": {
+    "cosine_similarity": {
+      "connected_similarity": 0.7876307964324951,
+      "random_similarity": 0.26297762989997864,
+      "difference": 0.5246531963348389,
+      "verdict": "\u2705 PASS - Clear separation between connected and random"
+    },
+    "nearest_neighbors": {
+      "Brad Pitt": [
+        [
+          "Brad Pitt",
+          1.0000001192092896
+        ],
+        [
+          "brad pitt",
+          0.9720824956893921
+        ],
+        [
+          "Spy Game",
+          0.8454490900039673
+        ],
+        [
+          "The Mexican",
+          0.8320677876472473
+        ],
+        [
+          "The Assassination of Jesse James by the Coward Robert Ford",
+          0.8190964460372925
+        ],
+        [
+          "Kalifornia",
+          0.7981674075126648
+        ],
+        [
+          "The Devil's Own",
+          0.7861364483833313
+        ],
+        [
+          "The Dark Side of the Sun",
+          0.7790768146514893
+        ],
+        [
+          "Killing Them Softly",
+          0.7748479843139648
+        ],
+        [
+          "Meet Joe Black",
+          0.7686220407485962
+        ]
+      ],
+      "Tom Hanks": [
+        [
+          "Tom Hanks",
+          1.000000238418579
+        ],
+        [
+          "tom hanks",
+          0.9844433069229126
+        ],
+        [
+          "That Thing You Do!",
+          0.9056485891342163
+        ],
+        [
+          "Splash",
+          0.904500424861908
+        ],
+        [
+          "Joe Versus the Volcano",
+          0.8939716219902039
+        ],
+        [
+          "Dragnet",
+          0.8906109929084778
+        ],
+        [
+          "Volunteers",
+          0.8839372396469116
+        ],
+        [
+          "Larry Crowne",
+          0.8779691457748413
+        ],
+        [
+          "The Money Pit",
+          0.8739558458328247
+        ],
+        [
+          "The Terminal",
+          0.8696212768554688
+        ]
+      ],
+      "Inception": [
+        [
+          "Inception",
+          1.0000001192092896
+        ],
+        [
+          "nolan",
+          0.9634905457496643
+        ],
+        [
+          "dileep rao",
+          0.96349036693573
+        ],
+        [
+          "lucid dreaming",
+          0.9634475111961365
+        ],
+        [
+          "subconscious",
+          0.9634333848953247
+        ],
+        [
+          "dream",
+          0.8696348071098328
+        ],
+        [
+          "marion cotillard",
+          0.7618936896324158
+        ],
+        [
+          "screenplay",
+          0.7615252137184143
+        ],
+        [
+          "editing",
+          0.7540990114212036
+        ],
+        [
+          "Ellen Page",
+          0.7510854005813599
+        ]
+      ]
+    },
+    "path_correlation": {},
+    "qa_probe": {
+      "valid_questions": 100,
+      "hits": 78,
+      "topk": 10,
+      "accuracy": 0.78,
+      "verdict": "\u2705 PASS - Good QA performance"
+    },
+    "degree_correlation": {
+      "corr_pc1": -0.07437954523001941,
+      "corr_pc2": -0.0328695399323989
+    }
+  }
+}
