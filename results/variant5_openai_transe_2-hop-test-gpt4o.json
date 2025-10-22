@@ -1,0 +1,527 @@
+{
+  "variant_name": "variant5_openai_transe",
+  "metrics": {
+    "total_questions": 10,
+    "correct_answers": 10,
+    "accuracy": 1.0,
+    "successful_searches": 10,
+    "success_rate": 1.0,
+    "macro_avg_precision": 1.0,
+    "macro_avg_recall": 1.0,
+    "macro_avg_f1_score": 1.0,
+    "macro_median_precision": 1.0,
+    "macro_median_recall": 1.0,
+    "macro_median_f1_score": 1.0,
+    "micro_precision": 1.0,
+    "micro_recall": 1.0,
+    "micro_f1_score": 1.0,
+    "avg_correct_per_question": 2.9,
+    "avg_incorrect_per_question": 0.0,
+    "avg_missed_per_question": 0.0,
+    "total_correct_answers": 29,
+    "total_incorrect_answers": 0,
+    "total_missed_answers": 0,
+    "avg_nodes_expanded": 6.5,
+    "min_nodes_expanded": 2,
+    "max_nodes_expanded": 21,
+    "median_nodes_expanded": 2.0,
+    "avg_search_time_ms": 0.39670467376708984,
+    "min_search_time_ms": 0.053882598876953125,
+    "max_search_time_ms": 1.4002323150634766,
+    "median_search_time_ms": 0.10907649993896484,
+    "total_search_time_sec": 0.0039670467376708984,
+    "total_eval_time_sec": 5.1389000415802,
+    "total_eval_time_min": 0.08564833402633668,
+    "avg_time_per_query_sec": 0.51389000415802,
+    "total_cost_usd": 0.0010383,
+    "cost_per_query_usd": 0.00010383,
+    "queries_per_second": 1.9459417227592195,
+    "queries_per_minute": 116.75650336555317
+  },
+  "results": [
+    {
+      "question_id": 0,
+      "question_text": "which person directed the movies starred by [John Krasinski]",
+      "predicted_answers": [
+        "Ken Kwapis",
+        "Nancy Meyers",
+        "George Clooney",
+        "Sam Mendes",
+        "Luke Greenfield"
+      ],
+      "ground_truth_answers": [
+        "Nancy Meyers",
+        "Sam Mendes",
+        "George Clooney",
+        "Ken Kwapis",
+        "Luke Greenfield"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 5,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 8,
+      "search_time_ms": 1.4002323150634766,
+      "success": true,
+      "reasoning_path": [
+        "John Krasinski --starred_actors--> Leatherheads --directed_by--> George Clooney",
+        "John Krasinski --starred_actors--> Away We Go --directed_by--> Sam Mendes",
+        "John Krasinski --starred_actors--> License to Wed --directed_by--> Ken Kwapis",
+        "John Krasinski --starred_actors--> Something Borrowed --directed_by--> Luke Greenfield",
+        "John Krasinski --starred_actors--> It's Complicated --directed_by--> Nancy Meyers"
+      ],
+      "relations_used": [
+        "starred_actors",
+        "directed_by"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00010383,
+      "metadata": {
+        "llm_reasoning": "To find out which person directed the movies starred by John Krasinski, we first need to identify the movies he starred in using the 'starred_actors' relation. After obtaining that list of movies, we then need to find the directors for those movies using the 'directed_by' relation.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ],
+          [
+            "directed_by"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 1,
+      "question_text": "who are movie co-directors of [Delbert Mann]",
+      "predicted_answers": [
+        "Lewis Milestone",
+        "Cary Fukunaga",
+        "Franco Zeffirelli",
+        "Robert Stevenson"
+      ],
+      "ground_truth_answers": [
+        "Franco Zeffirelli",
+        "Cary Fukunaga",
+        "Lewis Milestone",
+        "Robert Stevenson"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 4,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 14,
+      "search_time_ms": 0.9582042694091797,
+      "success": true,
+      "reasoning_path": [
+        "Delbert Mann --directed_by--> Jane Eyre --directed_by--> Robert Stevenson",
+        "Delbert Mann --directed_by--> Jane Eyre --directed_by--> Cary Fukunaga",
+        "Delbert Mann --directed_by--> Jane Eyre --directed_by--> Franco Zeffirelli",
+        "Delbert Mann --directed_by--> All Quiet on the Western Front --directed_by--> Lewis Milestone"
+      ],
+      "relations_used": [
+        "directed_by",
+        "directed_by"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00010383,
+      "metadata": {
+        "llm_reasoning": "To find the co-directors of Delbert Mann, the first step is to identify the movies directed by him. This requires the relation 'directed_by'. Next, we can find the other directors associated with those movies, which involves the relation 'directed_by' again to retrieve co-directors of the same movies.",
+        "llm_planned_hops": [
+          [
+            "directed_by"
+          ],
+          [
+            "directed_by"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 2,
+      "question_text": "what are the primary languages in the movies directed by [David Mandel]",
+      "predicted_answers": [
+        "German"
+      ],
+      "ground_truth_answers": [
+        "German"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 1,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.12493133544921875,
+      "success": true,
+      "reasoning_path": [
+        "David Mandel --directed_by--> EuroTrip --in_language--> German"
+      ],
+      "relations_used": [
+        "directed_by",
+        "in_language"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00010383,
+      "metadata": {
+        "llm_reasoning": "To determine the primary languages of the movies directed by David Mandel, we first need to identify the movies he directed. This requires traversing the 'directed_by' relation to find those movies. After establishing which movies he directed, the next step is to find out their primary languages, which involves using the 'in_language' relation.",
+        "llm_planned_hops": [
+          [
+            "directed_by"
+          ],
+          [
+            "in_language"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 3,
+      "question_text": "the screenwriter [Mimsy Farmer] co-wrote movies with who",
+      "predicted_answers": [
+        "Barbet Schroeder"
+      ],
+      "ground_truth_answers": [
+        "Barbet Schroeder"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 1,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.053882598876953125,
+      "success": true,
+      "reasoning_path": [
+        "Mimsy Farmer --written_by--> More --written_by--> Barbet Schroeder"
+      ],
+      "relations_used": [
+        "written_by",
+        "written_by"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00010383,
+      "metadata": {
+        "llm_reasoning": "To determine with whom Mimsy Farmer co-wrote movies, we first need to find the movies that Mimsy Farmer has written. This requires traversing the relation that identifies the screenwriter's works. In the second hop, we need to uncover the other screenwriters associated with those movies, which involves finding other writers for the same films.",
+        "llm_planned_hops": [
+          [
+            "written_by"
+          ],
+          [
+            "written_by"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 4,
+      "question_text": "the films acted by [Shaun White] were in which genres",
+      "predicted_answers": [
+        "Documentary",
+        "Sport"
+      ],
+      "ground_truth_answers": [
+        "Sport",
+        "Documentary"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.091552734375,
+      "success": true,
+      "reasoning_path": [
+        "Shaun White --starred_actors--> The Crash Reel --has_genre--> Sport",
+        "Shaun White --starred_actors--> The Crash Reel --has_genre--> Documentary"
+      ],
+      "relations_used": [
+        "starred_actors",
+        "has_genre"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00010383,
+      "metadata": {
+        "llm_reasoning": "To find out the genres of films acted by Shaun White, we first need to identify the films where he is an actor. Therefore, we'll use the 'starred_actors' relation to identify those films. Once we have the list of films, we can then check the 'has_genre' relation to determine the genres associated with those films.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ],
+          [
+            "has_genre"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 5,
+      "question_text": "what are the genres of the films directed by [Jerry Lewis]",
+      "predicted_answers": [
+        "Drama",
+        "Comedy",
+        "War"
+      ],
+      "ground_truth_answers": [
+        "Drama",
+        "Comedy",
+        "War"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 3,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 10,
+      "search_time_ms": 0.3466606140136719,
+      "success": true,
+      "reasoning_path": [
+        "Jerry Lewis --directed_by--> The Family Jewels --has_genre--> Comedy",
+        "Jerry Lewis --directed_by--> The Nutty Professor --has_genre--> Comedy",
+        "Jerry Lewis --directed_by--> The Nutty Professor --has_genre--> Comedy",
+        "Jerry Lewis --directed_by--> Which Way to the Front? --has_genre--> War",
+        "Jerry Lewis --directed_by--> The Patsy --has_genre--> Drama",
+        "Jerry Lewis --directed_by--> The Patsy --has_genre--> Comedy",
+        "Jerry Lewis --directed_by--> Three on a Couch --has_genre--> Comedy",
+        "Jerry Lewis --directed_by--> The Bellboy --has_genre--> Comedy",
+        "Jerry Lewis --directed_by--> The Errand Boy --has_genre--> Comedy",
+        "Jerry Lewis --directed_by--> The Ladies Man --has_genre--> Comedy",
+        "Jerry Lewis --directed_by--> The Ladies Man --has_genre--> Comedy"
+      ],
+      "relations_used": [
+        "directed_by",
+        "has_genre"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00010383,
+      "metadata": {
+        "llm_reasoning": "To determine the genres of the films directed by Jerry Lewis, we first need to identify the films that he directed. Therefore, we will use the 'directed_by' relation to obtain a list of those films. Once we have the films directed by Jerry Lewis, we can then use the 'has_genre' relation to find out the genres associated with those films.",
+        "llm_planned_hops": [
+          [
+            "directed_by"
+          ],
+          [
+            "has_genre"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 6,
+      "question_text": "who appeared in the same movie with [Angie Everhart]",
+      "predicted_answers": [
+        "Erika Eleniak",
+        "Dennis Miller"
+      ],
+      "ground_truth_answers": [
+        "Erika Eleniak",
+        "Dennis Miller"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.059604644775390625,
+      "success": true,
+      "reasoning_path": [
+        "Angie Everhart --starred_actors--> Bordello of Blood --starred_actors--> Dennis Miller",
+        "Angie Everhart --starred_actors--> Bordello of Blood --starred_actors--> Erika Eleniak"
+      ],
+      "relations_used": [
+        "starred_actors",
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00010383,
+      "metadata": {
+        "llm_reasoning": "To determine who appeared in the same movie as Angie Everhart, we first need to identify the movies in which she starred (Hop 1). Then, we can find other actors who appeared in the same movies (Hop 2).",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ],
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 7,
+      "question_text": "what are the genres of the films directed by [Mike Nichols]",
+      "predicted_answers": [
+        "Comedy",
+        "Thriller",
+        "War",
+        "Horror",
+        "Drama"
+      ],
+      "ground_truth_answers": [
+        "Drama",
+        "Horror",
+        "Comedy",
+        "War",
+        "Thriller"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 5,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 21,
+      "search_time_ms": 0.7832050323486328,
+      "success": true,
+      "reasoning_path": [
+        "Mike Nichols --directed_by--> Regarding Henry --has_genre--> Drama",
+        "Mike Nichols --directed_by--> Working Girl --has_genre--> Drama",
+        "Mike Nichols --directed_by--> Working Girl --has_genre--> Comedy",
+        "Mike Nichols --directed_by--> The Day of the Dolphin --has_genre--> Thriller",
+        "Mike Nichols --directed_by--> The Fortune --has_genre--> Comedy",
+        "Mike Nichols --directed_by--> Primary Colors --has_genre--> Drama",
+        "Mike Nichols --directed_by--> The Graduate --has_genre--> Drama",
+        "Mike Nichols --directed_by--> The Graduate --has_genre--> Comedy",
+        "Mike Nichols --directed_by--> What Planet Are You From? --has_genre--> Comedy",
+        "Mike Nichols --directed_by--> Postcards from the Edge --has_genre--> Drama",
+        "Mike Nichols --directed_by--> Postcards from the Edge --has_genre--> Comedy",
+        "Mike Nichols --directed_by--> Silkwood --has_genre--> Drama",
+        "Mike Nichols --directed_by--> The Birdcage --has_genre--> Comedy",
+        "Mike Nichols --directed_by--> Who's Afraid of Virginia Woolf? --has_genre--> Drama",
+        "Mike Nichols --directed_by--> Heartburn --has_genre--> Drama",
+        "Mike Nichols --directed_by--> Catch-22 --has_genre--> Comedy",
+        "Mike Nichols --directed_by--> Catch-22 --has_genre--> War",
+        "Mike Nichols --directed_by--> Carnal Knowledge --has_genre--> Drama",
+        "Mike Nichols --directed_by--> Biloxi Blues --has_genre--> Comedy",
+        "Mike Nichols --directed_by--> Charlie Wilson's War --has_genre--> Drama",
+        "Mike Nichols --directed_by--> Charlie Wilson's War --has_genre--> Comedy",
+        "Mike Nichols --directed_by--> Wolf --has_genre--> Horror",
+        "Mike Nichols --directed_by--> Closer --has_genre--> Drama"
+      ],
+      "relations_used": [
+        "directed_by",
+        "has_genre"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00010383,
+      "metadata": {
+        "llm_reasoning": "To find the genres of films directed by Mike Nichols, we first need to identify the movies he directed using the 'directed_by' relation. Once we have a list of those films, we can then check their genres using the 'has_genre' relation.",
+        "llm_planned_hops": [
+          [
+            "directed_by"
+          ],
+          [
+            "has_genre"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 8,
+      "question_text": "who are the actors in the films written by [John Travis]",
+      "predicted_answers": [
+        "Chace Crawford",
+        "Jake Weber",
+        "Haley Bennett"
+      ],
+      "ground_truth_answers": [
+        "Haley Bennett",
+        "Chace Crawford",
+        "Jake Weber"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 3,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.05555152893066406,
+      "success": true,
+      "reasoning_path": [
+        "John Travis --written_by--> The Haunting of Molly Hartley --starred_actors--> Jake Weber",
+        "John Travis --written_by--> The Haunting of Molly Hartley --starred_actors--> Chace Crawford",
+        "John Travis --written_by--> The Haunting of Molly Hartley --starred_actors--> Haley Bennett"
+      ],
+      "relations_used": [
+        "written_by",
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00010383,
+      "metadata": {
+        "llm_reasoning": "To find the actors in the films written by [John Travis], the first hop involves identifying the films associated with John Travis as a writer. Therefore, we will use the 'written_by' relation. The second hop requires us to find the actors associated with those films, which involves the 'starred_actors' relation.",
+        "llm_planned_hops": [
+          [
+            "written_by"
+          ],
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 9,
+      "question_text": "the movies starred by [Clifford Rose] were written by who",
+      "predicted_answers": [
+        "Adrian Mitchell",
+        "Geoffrey Skelton",
+        "Peter Weiss"
+      ],
+      "ground_truth_answers": [
+        "Adrian Mitchell",
+        "Geoffrey Skelton",
+        "Peter Weiss"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 3,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.09322166442871094,
+      "success": true,
+      "reasoning_path": [
+        "Clifford Rose --starred_actors--> Marat/Sade --written_by--> Peter Weiss",
+        "Clifford Rose --starred_actors--> Marat/Sade --written_by--> Adrian Mitchell",
+        "Clifford Rose --starred_actors--> Marat/Sade --written_by--> Geoffrey Skelton"
+      ],
+      "relations_used": [
+        "starred_actors",
+        "written_by"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00010383,
+      "metadata": {
+        "llm_reasoning": "To determine who wrote the movies starred by Clifford Rose, we first need to find the movies associated with him as an actor (Hop 1), and then we can find who wrote those movies (Hop 2). Hence, we start with the 'starred_actors' relation to locate the movies, and then use the 'written_by' relation to identify the writers of those movies.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ],
+          [
+            "written_by"
+          ]
+        ]
+      }
+    }
+  ],
+  "status": "completed"
+}

@@ -1,0 +1,467 @@
+{
+  "variant_name": "variant5_openai_transe",
+  "metrics": {
+    "total_questions": 10,
+    "correct_answers": 10,
+    "accuracy": 1.0,
+    "successful_searches": 10,
+    "success_rate": 1.0,
+    "macro_avg_precision": 1.0,
+    "macro_avg_recall": 1.0,
+    "macro_avg_f1_score": 1.0,
+    "macro_median_precision": 1.0,
+    "macro_median_recall": 1.0,
+    "macro_median_f1_score": 1.0,
+    "micro_precision": 1.0,
+    "micro_recall": 1.0,
+    "micro_f1_score": 1.0,
+    "avg_correct_per_question": 3.1,
+    "avg_incorrect_per_question": 0.0,
+    "avg_missed_per_question": 0.0,
+    "total_correct_answers": 31,
+    "total_incorrect_answers": 0,
+    "total_missed_answers": 0,
+    "avg_nodes_expanded": 4.0,
+    "min_nodes_expanded": 1,
+    "max_nodes_expanded": 17,
+    "median_nodes_expanded": 2.0,
+    "avg_search_time_ms": 0.05633831024169922,
+    "min_search_time_ms": 0.028848648071289062,
+    "max_search_time_ms": 0.13113021850585938,
+    "median_search_time_ms": 0.04398822784423828,
+    "total_search_time_sec": 0.0005633831024169922,
+    "total_eval_time_sec": 4.1063549518585205,
+    "total_eval_time_min": 0.06843924919764201,
+    "avg_time_per_query_sec": 0.4106354951858521,
+    "total_cost_usd": 0.0009397500000000002,
+    "cost_per_query_usd": 9.397500000000002e-05,
+    "queries_per_second": 2.435249781676579,
+    "queries_per_minute": 146.11498690059472
+  },
+  "results": [
+    {
+      "question_id": 0,
+      "question_text": "what does [Gr\u00e9goire Colin] appear in",
+      "predicted_answers": [
+        "Before the Rain"
+      ],
+      "ground_truth_answers": [
+        "Before the Rain"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 1,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 1,
+      "search_time_ms": 0.13113021850585938,
+      "success": true,
+      "reasoning_path": [
+        "Before the Rain --starred_actors--> Gr\u00e9goire Colin"
+      ],
+      "relations_used": [
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 9.397500000000002e-05,
+      "metadata": {
+        "llm_reasoning": "To find out what [Gr\u00e9goire Colin] appears in, we need to first traverse the relation that connects the actor to the films they are associated with. The most relevant relation for this context is 'starred_actors', which directly links an actor to the films they appear in.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 1,
+      "question_text": "[Joe Thomas] appears in which movies",
+      "predicted_answers": [
+        "The Inbetweeners 2",
+        "The Inbetweeners Movie"
+      ],
+      "ground_truth_answers": [
+        "The Inbetweeners Movie",
+        "The Inbetweeners 2"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.0629425048828125,
+      "success": true,
+      "reasoning_path": [
+        "The Inbetweeners 2 --starred_actors--> Joe Thomas",
+        "The Inbetweeners Movie --starred_actors--> Joe Thomas"
+      ],
+      "relations_used": [
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 9.397500000000002e-05,
+      "metadata": {
+        "llm_reasoning": "To determine which movies Joe Thomas appears in, we need to find movies that include him as a starred actor. Therefore, the most relevant relation to traverse is 'starred_actors' to identify the movies associated with Joe Thomas.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 2,
+      "question_text": "what films did [Michelle Trachtenberg] star in",
+      "predicted_answers": [
+        "Black Christmas",
+        "Harriet the Spy",
+        "Inspector Gadget",
+        "Ice Princess",
+        "The Scribbler"
+      ],
+      "ground_truth_answers": [
+        "Inspector Gadget",
+        "Black Christmas",
+        "Ice Princess",
+        "Harriet the Spy",
+        "The Scribbler"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 5,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 8,
+      "search_time_ms": 0.08058547973632812,
+      "success": true,
+      "reasoning_path": [
+        "Ice Princess --starred_actors--> Michelle Trachtenberg",
+        "The Scribbler --starred_actors--> Michelle Trachtenberg",
+        "Harriet the Spy --starred_actors--> Michelle Trachtenberg",
+        "Black Christmas --starred_actors--> Michelle Trachtenberg",
+        "Inspector Gadget --starred_actors--> Michelle Trachtenberg"
+      ],
+      "relations_used": [
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 9.397500000000002e-05,
+      "metadata": {
+        "llm_reasoning": "To answer the question about which films Michelle Trachtenberg starred in, we need to start with the relation that directly links her to the films. Hence, the most relevant relation is 'starred_actors', which connects actors to the films they are part of.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 3,
+      "question_text": "what does [Helen Mack] star in",
+      "predicted_answers": [
+        "Kiss and Make-Up",
+        "Divorce",
+        "The Son of Kong"
+      ],
+      "ground_truth_answers": [
+        "The Son of Kong",
+        "Kiss and Make-Up",
+        "Divorce"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 3,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 3,
+      "search_time_ms": 0.043392181396484375,
+      "success": true,
+      "reasoning_path": [
+        "Divorce --starred_actors--> Helen Mack",
+        "Kiss and Make-Up --starred_actors--> Helen Mack",
+        "The Son of Kong --starred_actors--> Helen Mack"
+      ],
+      "relations_used": [
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 9.397500000000002e-05,
+      "metadata": {
+        "llm_reasoning": "To answer the question 'what does [Helen Mack] star in', we need to find films that Helen Mack is associated with as a star. Therefore, the first hop should focus on finding the movies in which she starred using the 'starred_actors' relation.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 4,
+      "question_text": "what films did [Shahid Kapoor] act in",
+      "predicted_answers": [
+        "Jab We Met",
+        "Chance Pe Dance",
+        "Haider"
+      ],
+      "ground_truth_answers": [
+        "Haider",
+        "Jab We Met",
+        "Chance Pe Dance"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 3,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 3,
+      "search_time_ms": 0.03147125244140625,
+      "success": true,
+      "reasoning_path": [
+        "Chance Pe Dance --starred_actors--> Shahid Kapoor",
+        "Jab We Met --starred_actors--> Shahid Kapoor",
+        "Haider --starred_actors--> Shahid Kapoor"
+      ],
+      "relations_used": [
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 9.397500000000002e-05,
+      "metadata": {
+        "llm_reasoning": "To find out what films Shahid Kapoor acted in, we need to first identify movies that involve Shahid Kapoor in the role of an actor. The direct relation for this information is 'starred_actors', which connects actors to the films they have appeared in.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 5,
+      "question_text": "[Brendan Gleeson] appears in which movies",
+      "predicted_answers": [
+        "Lake Placid",
+        "The General",
+        "Into the Storm",
+        "The Smurfs 2",
+        "Harrison's Flowers",
+        "The Tiger's Tail",
+        "Six Shooter",
+        "Calvary",
+        "The Grand Seduction",
+        "The Raven",
+        "Stonehearst Asylum"
+      ],
+      "ground_truth_answers": [
+        "The Raven",
+        "Lake Placid",
+        "Calvary",
+        "The Smurfs 2",
+        "Stonehearst Asylum",
+        "The Grand Seduction",
+        "The General",
+        "Six Shooter",
+        "Harrison's Flowers",
+        "Into the Storm",
+        "The Tiger's Tail"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 11,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 17,
+      "search_time_ms": 0.06270408630371094,
+      "success": true,
+      "reasoning_path": [
+        "Harrison's Flowers --starred_actors--> Brendan Gleeson",
+        "The Grand Seduction --starred_actors--> Brendan Gleeson",
+        "The Smurfs 2 --starred_actors--> Brendan Gleeson",
+        "The Raven --starred_actors--> Brendan Gleeson",
+        "The Tiger's Tail --starred_actors--> Brendan Gleeson",
+        "Six Shooter --starred_actors--> Brendan Gleeson",
+        "The General --starred_actors--> Brendan Gleeson",
+        "Into the Storm --starred_actors--> Brendan Gleeson",
+        "Lake Placid --starred_actors--> Brendan Gleeson",
+        "Stonehearst Asylum --starred_actors--> Brendan Gleeson",
+        "Calvary --starred_actors--> Brendan Gleeson"
+      ],
+      "relations_used": [
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 9.397500000000002e-05,
+      "metadata": {
+        "llm_reasoning": "To determine which movies Brendan Gleeson appears in, we need to start with his appearances and see which movies are associated with him. This can be achieved by checking the 'starred_actors' relation, which connects actors to the movies they have appeared in.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 6,
+      "question_text": "what films does [Paresh Rawal] appear in",
+      "predicted_answers": [
+        "Table No. 21",
+        "Cheeni Kum"
+      ],
+      "ground_truth_answers": [
+        "Table No. 21",
+        "Cheeni Kum"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.04458427429199219,
+      "success": true,
+      "reasoning_path": [
+        "Table No. 21 --starred_actors--> Paresh Rawal",
+        "Cheeni Kum --starred_actors--> Paresh Rawal"
+      ],
+      "relations_used": [
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 9.397500000000002e-05,
+      "metadata": {
+        "llm_reasoning": "To find out what films Paresh Rawal appears in, we need to start by identifying films that he starred in. Thus, the first hop should utilize the 'starred_actors' relation to link Paresh Rawal to the films he has appeared in.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 7,
+      "question_text": "what does [Doug Collins] star in",
+      "predicted_answers": [
+        "Michael Jordan to the Max"
+      ],
+      "ground_truth_answers": [
+        "Michael Jordan to the Max"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 1,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 1,
+      "search_time_ms": 0.03504753112792969,
+      "success": true,
+      "reasoning_path": [
+        "Michael Jordan to the Max --starred_actors--> Doug Collins"
+      ],
+      "relations_used": [
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 9.397500000000002e-05,
+      "metadata": {
+        "llm_reasoning": "To answer the question regarding what Doug Collins stars in, we first need to find movies that he is associated with. The most relevant relation for this purpose is 'starred_actors', as it directly links actors to the films in which they appear. Since this is a 1-hop question, no additional relations are necessary to find the answer.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 8,
+      "question_text": "what films does [Brigitte Nielsen] appear in",
+      "predicted_answers": [
+        "Red Sonja",
+        "Cobra"
+      ],
+      "ground_truth_answers": [
+        "Cobra",
+        "Red Sonja"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.04267692565917969,
+      "success": true,
+      "reasoning_path": [
+        "Cobra --starred_actors--> Brigitte Nielsen",
+        "Red Sonja --starred_actors--> Brigitte Nielsen"
+      ],
+      "relations_used": [
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 9.397500000000002e-05,
+      "metadata": {
+        "llm_reasoning": "To find the films that Brigitte Nielsen appears in, we need to start from her and find the films she starred in. Therefore, the most relevant relation is 'starred_actors', as it directly connects her to the films she has appeared in.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 9,
+      "question_text": "[Mona McKinnon] appears in which movies",
+      "predicted_answers": [
+        "Plan 9 from Outer Space"
+      ],
+      "ground_truth_answers": [
+        "Plan 9 from Outer Space"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 1,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 1,
+      "search_time_ms": 0.028848648071289062,
+      "success": true,
+      "reasoning_path": [
+        "Plan 9 from Outer Space --starred_actors--> Mona McKinnon"
+      ],
+      "relations_used": [
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 9.397500000000002e-05,
+      "metadata": {
+        "llm_reasoning": "To determine which movies Mona McKinnon appears in, we need to start from her as an actor and check for the relation that connects her to the movies. The most relevant relation for this is 'starred_actors', which links actors to the movies they appear in.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    }
+  ],
+  "status": "completed"
+}

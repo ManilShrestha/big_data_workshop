@@ -40,12 +40,15 @@ class Config:
     TIMEOUT_SECONDS = 30
 
     # Relation ranking
-    NUM_TOP_RELATIONS = 3  # Use top-k relations from ranker
+    NUM_TOP_RELATIONS = 9  # Use top-k relations from ranker (use all 9 for MetaQA)
 
     # OpenAI configuration
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     OPENAI_MODEL_EMBED = "text-embedding-3-small"
-    OPENAI_MODEL_CHAT = "gpt-4o-mini"
+    OPENAI_MODEL_CHAT = "gpt-5-mini"  # Latest model for relation planning
+    OPENAI_BATCH_SIZE = 50  # Number of questions to batch in parallel LLM calls
+    OPENAI_MAX_WORKERS = 10  # ThreadPoolExecutor max workers for parallel API calls
+    OPENAI_MAX_RETRIES = 5  # Number of retries for malformed JSON responses
 
     # Cost tracking (USD)
     COST_PER_EMBEDDING = 0.00000002  # text-embedding-3-small: $0.02 per 1M tokens

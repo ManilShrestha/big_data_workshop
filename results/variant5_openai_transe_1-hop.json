@@ -1,0 +1,941 @@
+{
+  "variant_name": "variant5_openai_transe",
+  "metrics": {
+    "total_questions": 20,
+    "correct_answers": 20,
+    "accuracy": 1.0,
+    "successful_searches": 20,
+    "success_rate": 1.0,
+    "macro_avg_precision": 0.9285714285714285,
+    "macro_avg_recall": 1.0,
+    "macro_avg_f1_score": 0.9400000000000001,
+    "macro_median_precision": 1.0,
+    "macro_median_recall": 1.0,
+    "macro_median_f1_score": 1.0,
+    "micro_precision": 0.8313253012048193,
+    "micro_recall": 1.0,
+    "micro_f1_score": 0.9078947368421052,
+    "avg_correct_per_question": 3.45,
+    "avg_incorrect_per_question": 0.7,
+    "avg_missed_per_question": 0.0,
+    "total_correct_answers": 69,
+    "total_incorrect_answers": 14,
+    "total_missed_answers": 0,
+    "avg_nodes_expanded": 9.7,
+    "min_nodes_expanded": 1,
+    "max_nodes_expanded": 51,
+    "median_nodes_expanded": 4.5,
+    "avg_search_time_ms": 0.054383277893066406,
+    "min_search_time_ms": 0.023603439331054688,
+    "max_search_time_ms": 0.23937225341796875,
+    "median_search_time_ms": 0.04303455352783203,
+    "total_search_time_sec": 0.0010876655578613281,
+    "total_eval_time_sec": 27.87699294090271,
+    "total_eval_time_min": 0.4646165490150452,
+    "avg_time_per_query_sec": 1.3938496470451356,
+    "total_cost_usd": 0.0049902,
+    "cost_per_query_usd": 0.00024951,
+    "queries_per_second": 0.7174374955863644,
+    "queries_per_minute": 43.04624973518186
+  },
+  "results": [
+    {
+      "question_id": 0,
+      "question_text": "what movies are about [ginger rogers]",
+      "predicted_answers": [
+        "Top Hat",
+        "Kitty Foyle",
+        "The Barkleys of Broadway"
+      ],
+      "ground_truth_answers": [
+        "Top Hat",
+        "Kitty Foyle",
+        "The Barkleys of Broadway"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 3,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 29,
+      "search_time_ms": 0.23937225341796875,
+      "success": true,
+      "reasoning_path": [
+        "Kitty Foyle --has_tags--> ginger rogers",
+        "The Barkleys of Broadway --has_tags--> ginger rogers",
+        "Top Hat --has_tags--> ginger rogers"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Films that are 'about' a person are typically annotated with that person as a tag/topic. So we should follow the film -> tag relation to find movies about Ginger Rogers.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 1,
+      "question_text": "which movies can be described by [moore]",
+      "predicted_answers": [
+        "Fahrenheit 9/11",
+        "Far from Heaven"
+      ],
+      "ground_truth_answers": [
+        "Fahrenheit 9/11",
+        "Far from Heaven"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.08916854858398438,
+      "success": true,
+      "reasoning_path": [
+        "Fahrenheit 9/11 --has_tags--> moore",
+        "Far from Heaven --has_tags--> moore"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "The phrasing 'described by [moore]' indicates movies tagged/described by that term; films point to descriptive tags. So a single hop from films to tags is needed.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 2,
+      "question_text": "what films can be described by [occupation]",
+      "predicted_answers": [
+        "Red Dawn",
+        "The Teahouse of the August Moon"
+      ],
+      "ground_truth_answers": [
+        "Red Dawn",
+        "The Teahouse of the August Moon"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.047206878662109375,
+      "success": true,
+      "reasoning_path": [
+        "Red Dawn --has_tags--> occupation",
+        "The Teahouse of the August Moon --has_tags--> occupation"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Find films that are labeled/described by the given occupation term (occupation is treated as a tag/theme on films).",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 3,
+      "question_text": "which films are about [jacques tati]",
+      "predicted_answers": [
+        "Trafic",
+        "Playtime",
+        "Mon Oncle"
+      ],
+      "ground_truth_answers": [
+        "Mon Oncle",
+        "Playtime",
+        "Trafic"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 3,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 15,
+      "search_time_ms": 0.05030632019042969,
+      "success": true,
+      "reasoning_path": [
+        "Trafic --has_tags--> jacques tati",
+        "Mon Oncle --has_tags--> jacques tati",
+        "Playtime --has_tags--> jacques tati"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Films that are 'about' a person are represented as having that person as a tag/theme; therefore we should follow the film -> tag relation to the tag 'jacques tati'.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 4,
+      "question_text": "what movies are about [donnie darko]",
+      "predicted_answers": [
+        "noah wyle",
+        "get",
+        "richard kelly",
+        "mary mcdonnell",
+        "jake gyllenhaal",
+        "dark",
+        "jena malone",
+        "r",
+        "patrick swayze",
+        "director's cut",
+        "maggie gyllenhaal",
+        "drew barrymore",
+        "cdon",
+        "S. Darko"
+      ],
+      "ground_truth_answers": [
+        "S. Darko"
+      ],
+      "is_correct": true,
+      "precision": 0.07142857142857142,
+      "recall": 1.0,
+      "f1_score": 0.13333333333333333,
+      "num_correct": 1,
+      "num_incorrect": 13,
+      "num_missed": 0,
+      "nodes_expanded": 20,
+      "search_time_ms": 0.05340576171875,
+      "success": true,
+      "reasoning_path": [
+        "S. Darko --has_tags--> donnie darko",
+        "Donnie Darko --has_tags--> dark",
+        "Donnie Darko --has_tags--> r",
+        "Donnie Darko --has_tags--> jake gyllenhaal",
+        "Donnie Darko --has_tags--> drew barrymore",
+        "Donnie Darko --has_tags--> maggie gyllenhaal",
+        "Donnie Darko --has_tags--> get",
+        "Donnie Darko --has_tags--> patrick swayze",
+        "Donnie Darko --has_tags--> jena malone",
+        "Donnie Darko --has_tags--> cdon",
+        "Donnie Darko --has_tags--> director's cut",
+        "Donnie Darko --has_tags--> mary mcdonnell",
+        "Donnie Darko --has_tags--> noah wyle",
+        "Donnie Darko --has_tags--> richard kelly"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Find films that are about the topic/tag 'donnie darko' \u2014 movies are linked to topics/tags via has_tags.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 5,
+      "question_text": "what movies can be described with [ben stiller]",
+      "predicted_answers": [
+        "Little Fockers",
+        "Night at the Museum",
+        "The Secret Life of Walter Mitty",
+        "Along Came Polly",
+        "Keeping the Faith",
+        "Tower Heist",
+        "Duplex",
+        "The Heartbreak Kid",
+        "Flirting with Disaster",
+        "There's Something About Mary",
+        "Zero Effect",
+        "Zoolander",
+        "Reality Bites",
+        "Tropic Thunder",
+        "The Cable Guy",
+        "Meet the Fockers",
+        "Greenberg",
+        "The Royal Tenenbaums",
+        "Madagascar",
+        "Meet the Parents",
+        "Envy"
+      ],
+      "ground_truth_answers": [
+        "Tropic Thunder",
+        "Meet the Parents",
+        "There's Something About Mary",
+        "Madagascar",
+        "The Secret Life of Walter Mitty",
+        "Night at the Museum",
+        "Meet the Fockers",
+        "The Royal Tenenbaums",
+        "Zoolander",
+        "The Cable Guy",
+        "Tower Heist",
+        "Along Came Polly",
+        "Little Fockers",
+        "The Heartbreak Kid",
+        "Keeping the Faith",
+        "Duplex",
+        "Reality Bites",
+        "Greenberg",
+        "Envy",
+        "Flirting with Disaster",
+        "Zero Effect"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 21,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 51,
+      "search_time_ms": 0.10800361633300781,
+      "success": true,
+      "reasoning_path": [
+        "Flirting with Disaster --has_tags--> ben stiller",
+        "Tropic Thunder --has_tags--> ben stiller",
+        "Meet the Fockers --has_tags--> ben stiller",
+        "Zero Effect --has_tags--> ben stiller",
+        "The Cable Guy --has_tags--> ben stiller",
+        "Night at the Museum --has_tags--> ben stiller",
+        "Duplex --has_tags--> ben stiller",
+        "Tower Heist --has_tags--> ben stiller",
+        "The Heartbreak Kid --has_tags--> ben stiller",
+        "Little Fockers --has_tags--> ben stiller",
+        "Keeping the Faith --has_tags--> ben stiller",
+        "There's Something About Mary --has_tags--> ben stiller",
+        "The Royal Tenenbaums --has_tags--> ben stiller",
+        "The Secret Life of Walter Mitty --has_tags--> ben stiller",
+        "Envy --has_tags--> ben stiller",
+        "Madagascar --has_tags--> ben stiller",
+        "Meet the Parents --has_tags--> ben stiller",
+        "Greenberg --has_tags--> ben stiller",
+        "Along Came Polly --has_tags--> ben stiller",
+        "Zoolander --has_tags--> ben stiller",
+        "Reality Bites --has_tags--> ben stiller"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Find movies that are described/tagged with the person 'ben stiller' \u2014 traverse from the tag/person node to films via the films' tag relation.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 6,
+      "question_text": "what films are about [dillinger]",
+      "predicted_answers": [
+        "bd-r",
+        "Public Enemies"
+      ],
+      "ground_truth_answers": [
+        "Public Enemies"
+      ],
+      "is_correct": true,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1_score": 0.6666666666666666,
+      "num_correct": 1,
+      "num_incorrect": 1,
+      "num_missed": 0,
+      "nodes_expanded": 10,
+      "search_time_ms": 0.041484832763671875,
+      "success": true,
+      "reasoning_path": [
+        "Dillinger --has_tags--> bd-r",
+        "Public Enemies --has_tags--> dillinger"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Films about a person/topic are modeled as films having that topic as a tag; traverse from films to their tags to find those tagged with [dillinger].",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 7,
+      "question_text": "what movies can be described with [chris noonan]",
+      "predicted_answers": [
+        "Babe",
+        "Miss Potter"
+      ],
+      "ground_truth_answers": [
+        "Babe",
+        "Miss Potter"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 5,
+      "search_time_ms": 0.038623809814453125,
+      "success": true,
+      "reasoning_path": [
+        "Babe --has_tags--> chris noonan",
+        "Miss Potter --has_tags--> chris noonan"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "The phrase 'described with [chris noonan]' implies the person name is being used as a descriptive tag or label associated with films. This is a 1-hop query from films to tags, so use the has_tags relation.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 8,
+      "question_text": "what movies are about [george pal]",
+      "predicted_answers": [
+        "The Time Machine",
+        "7 Faces of Dr. Lao"
+      ],
+      "ground_truth_answers": [
+        "The Time Machine",
+        "7 Faces of Dr. Lao"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 6,
+      "search_time_ms": 0.04673004150390625,
+      "success": true,
+      "reasoning_path": [
+        "7 Faces of Dr. Lao --has_tags--> george pal",
+        "The Time Machine --has_tags--> george pal"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Single-hop: films that are about the person 'George Pal' will be linked to that person via a tag/theme. Follow the film -> has_tags -> 'George Pal' relation.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 9,
+      "question_text": "what movies are about [rod lurie]",
+      "predicted_answers": [
+        "The Contender",
+        "The Last Castle",
+        "Resurrecting the Champ"
+      ],
+      "ground_truth_answers": [
+        "The Last Castle",
+        "The Contender",
+        "Resurrecting the Champ"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 3,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 11,
+      "search_time_ms": 0.04696846008300781,
+      "success": true,
+      "reasoning_path": [
+        "Resurrecting the Champ --has_tags--> rod lurie",
+        "The Contender --has_tags--> rod lurie",
+        "The Last Castle --has_tags--> rod lurie"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Films that are 'about' a person are typically tagged with that person's name (films \u2192 tags/themes). So traverse the film's tagging relation to the person tag.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 10,
+      "question_text": "what movies can be described by [the melancholy of resistance]",
+      "predicted_answers": [
+        "Werckmeister Harmonies"
+      ],
+      "ground_truth_answers": [
+        "Werckmeister Harmonies"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 1,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 1,
+      "search_time_ms": 0.024557113647460938,
+      "success": true,
+      "reasoning_path": [
+        "Werckmeister Harmonies --has_tags--> the melancholy of resistance"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "The phrase is a descriptor/tag/theme. To find movies that can be described by it, traverse the films' tag relation.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 11,
+      "question_text": "what movies are about [quebec]",
+      "predicted_answers": [
+        "Polytechnique",
+        "Black Robe"
+      ],
+      "ground_truth_answers": [
+        "Black Robe",
+        "Polytechnique"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.023603439331054688,
+      "success": true,
+      "reasoning_path": [
+        "Polytechnique --has_tags--> quebec",
+        "Black Robe --has_tags--> quebec"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Films about a topic (e.g., 'quebec') are represented as having that topic as a tag/theme, so find films that have the tag 'quebec'.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 12,
+      "question_text": "what movies are about [planet]",
+      "predicted_answers": [
+        "Aliens",
+        "Rise of the Planet of the Apes"
+      ],
+      "ground_truth_answers": [
+        "Aliens",
+        "Rise of the Planet of the Apes"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 2,
+      "search_time_ms": 0.02384185791015625,
+      "success": true,
+      "reasoning_path": [
+        "Rise of the Planet of the Apes --has_tags--> planet",
+        "Aliens --has_tags--> planet"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Films that are 'about' a planet are typically linked via thematic tags rather than genre or crew metadata. So start from the planet tag and follow the films' has_tags relation to find movies about that planet.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 13,
+      "question_text": "what films are about [s.e. hinton]",
+      "predicted_answers": [
+        "The Outsiders",
+        "That Was Then... This Is Now"
+      ],
+      "ground_truth_answers": [
+        "The Outsiders",
+        "That Was Then... This Is Now"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 4,
+      "search_time_ms": 0.03838539123535156,
+      "success": true,
+      "reasoning_path": [
+        "The Outsiders --has_tags--> s.e. hinton",
+        "That Was Then... This Is Now --has_tags--> s.e. hinton"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "The question asks for films about a person (S.E. Hinton). Films are typically linked to subjects/tags, so traverse the film -> tag relation to find films tagged with that person.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 14,
+      "question_text": "what movies can be described by [carey mulligan]",
+      "predicted_answers": [
+        "An Education",
+        "The Greatest",
+        "The Great Gatsby",
+        "Never Let Me Go",
+        "Shame",
+        "Drive"
+      ],
+      "ground_truth_answers": [
+        "Drive",
+        "The Great Gatsby",
+        "Shame",
+        "An Education",
+        "Never Let Me Go",
+        "The Greatest"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 6,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 11,
+      "search_time_ms": 0.057220458984375,
+      "success": true,
+      "reasoning_path": [
+        "An Education --has_tags--> carey mulligan",
+        "Never Let Me Go --has_tags--> carey mulligan",
+        "The Greatest --has_tags--> carey mulligan",
+        "Drive --has_tags--> carey mulligan",
+        "The Great Gatsby --has_tags--> carey mulligan",
+        "Shame --has_tags--> carey mulligan"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "The phrase 'can be described by [carey mulligan]' implies films labeled/tagged with that person name. This is a single-hop query from films to tags, so use the has_tags relation.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 15,
+      "question_text": "which films are about [steve oedekerk]",
+      "predicted_answers": [
+        "Nothing to Lose"
+      ],
+      "ground_truth_answers": [
+        "Nothing to Lose"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 1,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 8,
+      "search_time_ms": 0.04458427429199219,
+      "success": true,
+      "reasoning_path": [
+        "Nothing to Lose --has_tags--> steve oedekerk"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "To find films about a person, traverse the films' subject/tags relation. Films that are 'about' Steve Oedekerk are typically connected via a tag/theme relation.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 16,
+      "question_text": "which movies can be described by [teenagers]",
+      "predicted_answers": [
+        "Kidulthood",
+        "Ken Park",
+        "Remember the Daze",
+        "Kids"
+      ],
+      "ground_truth_answers": [
+        "Kids",
+        "Ken Park",
+        "Kidulthood",
+        "Remember the Daze"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 4,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 4,
+      "search_time_ms": 0.028848648071289062,
+      "success": true,
+      "reasoning_path": [
+        "Kidulthood --has_tags--> teenagers",
+        "Remember the Daze --has_tags--> teenagers",
+        "Ken Park --has_tags--> teenagers",
+        "Kids --has_tags--> teenagers"
+      ],
+      "relations_used": [
+        "has_tags",
+        "has_genre"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "Find films that are labeled/described by the concept 'teenagers' \u2014 films typically link to such descriptors via tags (themes) and sometimes via genre (e.g., 'teen' movies).",
+        "llm_planned_hops": [
+          [
+            "has_tags",
+            "has_genre"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 17,
+      "question_text": "what films are about [80s]",
+      "predicted_answers": [
+        "Big",
+        "Some Kind of Wonderful",
+        "Flashdance",
+        "The Monster Squad"
+      ],
+      "ground_truth_answers": [
+        "Big",
+        "Flashdance",
+        "Some Kind of Wonderful",
+        "The Monster Squad"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 4,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 4,
+      "search_time_ms": 0.0286102294921875,
+      "success": true,
+      "reasoning_path": [
+        "Big --has_tags--> 80s",
+        "Flashdance --has_tags--> 80s",
+        "Some Kind of Wonderful --has_tags--> 80s",
+        "The Monster Squad --has_tags--> 80s"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "The query asks for films that are about the 1980s \u2014 this is a topical/theme tag, so traverse from film to tag/theme.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 18,
+      "question_text": "what films can be described by [juzo itami]",
+      "predicted_answers": [
+        "Tampopo",
+        "The Funeral",
+        "A Taxing Woman"
+      ],
+      "ground_truth_answers": [
+        "Tampopo",
+        "A Taxing Woman",
+        "The Funeral"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 3,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 3,
+      "search_time_ms": 0.026464462280273438,
+      "success": true,
+      "reasoning_path": [
+        "A Taxing Woman --has_tags--> juzo itami",
+        "The Funeral --has_tags--> juzo itami",
+        "Tampopo --has_tags--> juzo itami"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "The phrase \"can be described by [juzo itami]\" implies films that are tagged/associated with that person as a descriptor. Use the has_tags relation to find films linked to the tag 'juzo itami'.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 19,
+      "question_text": "which films can be described by [artist]",
+      "predicted_answers": [
+        "Andrei Rublev",
+        "Basquiat",
+        "Vicky Cristina Barcelona",
+        "The Horse's Mouth"
+      ],
+      "ground_truth_answers": [
+        "Vicky Cristina Barcelona",
+        "Andrei Rublev",
+        "Basquiat",
+        "The Horse's Mouth"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 4,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 4,
+      "search_time_ms": 0.030279159545898438,
+      "success": true,
+      "reasoning_path": [
+        "Andrei Rublev --has_tags--> artist",
+        "The Horse's Mouth --has_tags--> artist",
+        "Vicky Cristina Barcelona --has_tags--> artist",
+        "Basquiat --has_tags--> artist"
+      ],
+      "relations_used": [
+        "has_tags"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00024951,
+      "metadata": {
+        "llm_reasoning": "The question asks for films that can be \"described by [artist]\", which corresponds to films that have that artist as a tag/descriptor. The has_tags relation links films to descriptive tags (including person-name tags), so a single hop via has_tags retrieves the films.",
+        "llm_planned_hops": [
+          [
+            "has_tags"
+          ]
+        ]
+      }
+    }
+  ],
+  "status": "completed"
+}

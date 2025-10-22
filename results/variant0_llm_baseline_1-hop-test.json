@@ -1,0 +1,319 @@
+{
+  "variant_name": "variant0_llm_baseline",
+  "dataset_name": "1-hop-test",
+  "model": "gpt-5-mini",
+  "mode": "direct",
+  "status": "completed",
+  "metrics": {
+    "total_questions": 5,
+    "correct_answers": 3,
+    "accuracy": 0.6,
+    "successful_searches": 5,
+    "success_rate": 1.0,
+    "precision": 0.2926829268292683,
+    "recall": 0.8571428571428571,
+    "f1_score": 0.4363636363636364,
+    "avg_correct_per_question": 2.4,
+    "avg_incorrect_per_question": 5.8,
+    "avg_missed_per_question": 0.4,
+    "total_correct_answers": 12,
+    "total_incorrect_answers": 29,
+    "total_missed_answers": 2,
+    "avg_nodes_expanded": 0.0,
+    "total_cost_usd": 0.00646095,
+    "cost_per_query_usd": 0.00129219,
+    "total_eval_time_sec": 62.85901689529419,
+    "queries_per_second": 0.07954308302862298,
+    "count_perfect": 0,
+    "count_complete_with_hallucinations": 3,
+    "count_partial": 1,
+    "count_hallucination_only": 1,
+    "count_failed": 0,
+    "pct_perfect": 0.0,
+    "pct_complete_with_hallucinations": 60.0,
+    "pct_partial": 20.0,
+    "pct_hallucination_only": 20.0,
+    "pct_failed": 0.0
+  },
+  "results": [
+    {
+      "question_id": 0,
+      "question_text": "what does [Gr\u00e9goire Colin] appear in",
+      "predicted_answers": [
+        "I Can't Sleep",
+        "N\u00e9nette and Boni",
+        "Beau Travail",
+        "The Intruder",
+        "Claire Denis"
+      ],
+      "ground_truth_answers": [
+        "Before the Rain"
+      ],
+      "is_correct": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "num_correct": 0,
+      "num_incorrect": 5,
+      "num_missed": 1,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.0010710000000000001,
+        "correct_answers": [],
+        "incorrect_answers": [
+          "i can't sleep",
+          "n\u00e9nette and boni",
+          "beau travail",
+          "the intruder",
+          "claire denis"
+        ],
+        "missed_answers": [
+          "before the rain"
+        ],
+        "is_correct": false,
+        "is_perfect": false,
+        "is_partial": false,
+        "is_hallucination_only": true,
+        "answer_category": "hallucination_only",
+        "hallucination_rate": 1.0
+      }
+    },
+    {
+      "question_id": 1,
+      "question_text": "[Joe Thomas] appears in which movies",
+      "predicted_answers": [
+        "The Inbetweeners Movie",
+        "The Inbetweeners 2",
+        "The Festival",
+        "The Boat That Rocked"
+      ],
+      "ground_truth_answers": [
+        "The Inbetweeners Movie",
+        "The Inbetweeners 2"
+      ],
+      "is_correct": true,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1_score": 0.6666666666666666,
+      "num_correct": 2,
+      "num_incorrect": 2,
+      "num_missed": 0,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.00111195,
+        "correct_answers": [
+          "the inbetweeners movie",
+          "the inbetweeners 2"
+        ],
+        "incorrect_answers": [
+          "the festival",
+          "the boat that rocked"
+        ],
+        "missed_answers": [],
+        "is_correct": true,
+        "is_perfect": false,
+        "is_partial": false,
+        "is_hallucination_only": false,
+        "answer_category": "complete_with_hallucinations",
+        "hallucination_rate": 0.5
+      }
+    },
+    {
+      "question_id": 2,
+      "question_text": "what films did [Michelle Trachtenberg] star in",
+      "predicted_answers": [
+        "Harriet the Spy",
+        "Inspector Gadget",
+        "EuroTrip",
+        "Ice Princess",
+        "Black Christmas",
+        "17 Again",
+        "The Scribbler",
+        "Smart House"
+      ],
+      "ground_truth_answers": [
+        "Inspector Gadget",
+        "Black Christmas",
+        "Ice Princess",
+        "Harriet the Spy",
+        "The Scribbler"
+      ],
+      "is_correct": true,
+      "precision": 0.625,
+      "recall": 1.0,
+      "f1_score": 0.7692307692307693,
+      "num_correct": 5,
+      "num_incorrect": 3,
+      "num_missed": 0,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.0014634000000000001,
+        "correct_answers": [
+          "harriet the spy",
+          "inspector gadget",
+          "ice princess",
+          "black christmas",
+          "the scribbler"
+        ],
+        "incorrect_answers": [
+          "eurotrip",
+          "17 again",
+          "smart house"
+        ],
+        "missed_answers": [],
+        "is_correct": true,
+        "is_perfect": false,
+        "is_partial": false,
+        "is_hallucination_only": false,
+        "answer_category": "complete_with_hallucinations",
+        "hallucination_rate": 0.375
+      }
+    },
+    {
+      "question_id": 3,
+      "question_text": "what does [Helen Mack] star in",
+      "predicted_answers": [
+        "Son of Kong",
+        "She",
+        "The Milky Way",
+        "Kiss and Make-Up",
+        "College Humor"
+      ],
+      "ground_truth_answers": [
+        "The Son of Kong",
+        "Kiss and Make-Up",
+        "Divorce"
+      ],
+      "is_correct": true,
+      "precision": 0.2,
+      "recall": 0.3333333333333333,
+      "f1_score": 0.25,
+      "num_correct": 1,
+      "num_incorrect": 4,
+      "num_missed": 2,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.00053535,
+        "correct_answers": [
+          "son of kong",
+          "kiss and make-up"
+        ],
+        "incorrect_answers": [
+          "she",
+          "the milky way",
+          "college humor"
+        ],
+        "missed_answers": [
+          "divorce"
+        ],
+        "is_correct": false,
+        "is_perfect": false,
+        "is_partial": true,
+        "is_hallucination_only": false,
+        "answer_category": "partial",
+        "hallucination_rate": 0.6
+      }
+    },
+    {
+      "question_id": 4,
+      "question_text": "what films did [Shahid Kapoor] act in",
+      "predicted_answers": [
+        "Ishq Vishk",
+        "Fida",
+        "Shikhar",
+        "Dil Maange More",
+        "Vaah! Life Ho Toh Aisi",
+        "Dil Bole Hadippa!",
+        "Vivah",
+        "Jab We Met",
+        "Kismat Konnection",
+        "Kaminey",
+        "Chance Pe Dance",
+        "R... Rajkumar",
+        "Phata Poster Nikhla Hero",
+        "Haider",
+        "Udta Punjab",
+        "Batti Gul Meter Chalu",
+        "Kabir Singh",
+        "Mausam",
+        "Jersey"
+      ],
+      "ground_truth_answers": [
+        "Haider",
+        "Jab We Met",
+        "Chance Pe Dance"
+      ],
+      "is_correct": true,
+      "precision": 0.15789473684210525,
+      "recall": 1.0,
+      "f1_score": 0.2727272727272727,
+      "num_correct": 3,
+      "num_incorrect": 16,
+      "num_missed": 0,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.00227925,
+        "correct_answers": [
+          "jab we met",
+          "chance pe dance",
+          "haider"
+        ],
+        "incorrect_answers": [
+          "ishq vishk",
+          "fida",
+          "shikhar",
+          "dil maange more",
+          "vaah! life ho toh aisi",
+          "dil bole hadippa!",
+          "vivah",
+          "kismat konnection",
+          "kaminey",
+          "r... rajkumar",
+          "phata poster nikhla hero",
+          "udta punjab",
+          "batti gul meter chalu",
+          "kabir singh",
+          "mausam",
+          "jersey"
+        ],
+        "missed_answers": [],
+        "is_correct": true,
+        "is_perfect": false,
+        "is_partial": false,
+        "is_hallucination_only": false,
+        "answer_category": "complete_with_hallucinations",
+        "hallucination_rate": 0.8421052631578947
+      }
+    }
+  ]
+}

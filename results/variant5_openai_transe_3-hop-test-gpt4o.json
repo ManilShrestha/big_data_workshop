@@ -1,0 +1,649 @@
+{
+  "variant_name": "variant5_openai_transe",
+  "metrics": {
+    "total_questions": 10,
+    "correct_answers": 8,
+    "accuracy": 0.8,
+    "successful_searches": 8,
+    "success_rate": 0.8,
+    "macro_avg_precision": 0.8,
+    "macro_avg_recall": 0.8,
+    "macro_avg_f1_score": 0.8,
+    "macro_median_precision": 1.0,
+    "macro_median_recall": 1.0,
+    "macro_median_f1_score": 1.0,
+    "micro_precision": 1.0,
+    "micro_recall": 0.6172839506172839,
+    "micro_f1_score": 0.7633587786259541,
+    "avg_correct_per_question": 5.0,
+    "avg_incorrect_per_question": 0.0,
+    "avg_missed_per_question": 3.1,
+    "total_correct_answers": 50,
+    "total_incorrect_answers": 0,
+    "total_missed_answers": 31,
+    "avg_nodes_expanded": 14.8,
+    "min_nodes_expanded": 3,
+    "max_nodes_expanded": 31,
+    "median_nodes_expanded": 13.0,
+    "avg_search_time_ms": 0.6956815719604492,
+    "min_search_time_ms": 0.07891654968261719,
+    "max_search_time_ms": 2.3589134216308594,
+    "median_search_time_ms": 0.5333423614501953,
+    "total_search_time_sec": 0.006956815719604492,
+    "total_eval_time_sec": 4.423499584197998,
+    "total_eval_time_min": 0.07372499306996663,
+    "avg_time_per_query_sec": 0.4423499584197998,
+    "total_cost_usd": 0.0011524500000000002,
+    "cost_per_query_usd": 0.00011524500000000001,
+    "queries_per_second": 2.260653541309883,
+    "queries_per_minute": 135.63921247859298
+  },
+  "results": [
+    {
+      "question_id": 0,
+      "question_text": "the films that share directors with the film [Catch Me If You Can] were in which languages",
+      "predicted_answers": [
+        "German",
+        "Polish",
+        "Mende",
+        "Japanese"
+      ],
+      "ground_truth_answers": [
+        "German",
+        "Polish",
+        "Mende",
+        "Japanese"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 4,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 28,
+      "search_time_ms": 2.3589134216308594,
+      "success": true,
+      "reasoning_path": [
+        "Catch Me If You Can --directed_by--> Steven Spielberg --directed_by--> 1941 --in_language--> Japanese",
+        "Catch Me If You Can --directed_by--> Steven Spielberg --directed_by--> Empire of the Sun --in_language--> Japanese",
+        "Catch Me If You Can --directed_by--> Steven Spielberg --directed_by--> Schindler's List --in_language--> German",
+        "Catch Me If You Can --directed_by--> Steven Spielberg --directed_by--> Schindler's List --in_language--> Polish",
+        "Catch Me If You Can --directed_by--> Steven Spielberg --directed_by--> Amistad --in_language--> Mende"
+      ],
+      "relations_used": [
+        "directed_by",
+        "directed_by",
+        "in_language"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00011524500000000001,
+      "metadata": {
+        "llm_reasoning": "To find the languages of films that share directors with 'Catch Me If You Can', we first need to identify the directors of 'Catch Me If You Can'. Next, we will find films directed by those same directors. Finally, we will check the languages in which those films have been produced.",
+        "llm_planned_hops": [
+          [
+            "directed_by"
+          ],
+          [
+            "directed_by"
+          ],
+          [
+            "in_language"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 1,
+      "question_text": "who starred movies for the director of [Written on the Wind]",
+      "predicted_answers": [
+        "Lana Turner",
+        "Claudette Colbert",
+        "Patricia Knight",
+        "Rochelle Hudson",
+        "Joan Bennett",
+        "Robert Cummings",
+        "Susan Kohner",
+        "Rock Hudson",
+        "Cornel Wilde",
+        "Lucille Ball",
+        "Barbara Stanwyck",
+        "John Gavin",
+        "Sandra Dee",
+        "Charles Coburn",
+        "Boris Karloff",
+        "George Sanders",
+        "Warren William",
+        "Don Ameche",
+        "Fred MacMurray",
+        "Jane Wyman"
+      ],
+      "ground_truth_answers": [
+        "Sandra Dee",
+        "Charles Coburn",
+        "Cornel Wilde",
+        "John Gavin",
+        "Warren William",
+        "Susan Kohner",
+        "Joan Bennett",
+        "Fred MacMurray",
+        "Barbara Stanwyck",
+        "Don Ameche",
+        "Jane Wyman",
+        "Rochelle Hudson",
+        "Boris Karloff",
+        "Patricia Knight",
+        "Robert Cummings",
+        "Rock Hudson",
+        "Lucille Ball",
+        "Claudette Colbert",
+        "Lana Turner",
+        "George Sanders"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 20,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 14,
+      "search_time_ms": 0.6899833679199219,
+      "success": true,
+      "reasoning_path": [
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Sleep, My Love --starred_actors--> Robert Cummings",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Sleep, My Love --starred_actors--> Don Ameche",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Sleep, My Love --starred_actors--> Claudette Colbert",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> A Time to Love and a Time to Die --starred_actors--> John Gavin",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Lured --starred_actors--> George Sanders",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Lured --starred_actors--> Boris Karloff",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Lured --starred_actors--> Charles Coburn",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Lured --starred_actors--> Lucille Ball",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Shockproof --starred_actors--> Cornel Wilde",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Shockproof --starred_actors--> Patricia Knight",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> There's Always Tomorrow --starred_actors--> Fred MacMurray",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> There's Always Tomorrow --starred_actors--> Barbara Stanwyck",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> There's Always Tomorrow --starred_actors--> Joan Bennett",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Battle Hymn --starred_actors--> Rock Hudson",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Imitation of Life --starred_actors--> Claudette Colbert",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Imitation of Life --starred_actors--> Warren William",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Imitation of Life --starred_actors--> Rochelle Hudson",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Imitation of Life --starred_actors--> John Gavin",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Imitation of Life --starred_actors--> Lana Turner",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Imitation of Life --starred_actors--> Sandra Dee",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Imitation of Life --starred_actors--> Susan Kohner",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> All I Desire --starred_actors--> Barbara Stanwyck",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> All That Heaven Allows --starred_actors--> Rock Hudson",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> All That Heaven Allows --starred_actors--> Jane Wyman",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Magnificent Obsession --starred_actors--> Rock Hudson",
+        "Written on the Wind --directed_by--> Douglas Sirk --directed_by--> Magnificent Obsession --starred_actors--> Jane Wyman"
+      ],
+      "relations_used": [
+        "directed_by",
+        "directed_by",
+        "starred_actors"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00011524500000000001,
+      "metadata": {
+        "llm_reasoning": "To answer the question about who starred in movies directed by the director of 'Written on the Wind', we first need to find out who directed 'Written on the Wind' using the 'directed_by' relation. Once we have the director, we will look for other movies that this director has done using the same 'directed_by' relation. Finally, we will need to find out which actors starred in those movies using the 'starred_actors' relation.",
+        "llm_planned_hops": [
+          [
+            "directed_by"
+          ],
+          [
+            "directed_by"
+          ],
+          [
+            "starred_actors"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 2,
+      "question_text": "the films that share actors with the film [Creepshow] were in which languages",
+      "predicted_answers": [
+        "Polish",
+        "English"
+      ],
+      "ground_truth_answers": [
+        "Polish",
+        "English"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 31,
+      "search_time_ms": 1.739501953125,
+      "success": true,
+      "reasoning_path": [
+        "Creepshow --starred_actors--> Leslie Nielsen --starred_actors--> Mr. Magoo --in_language--> English",
+        "Creepshow --starred_actors--> Leslie Nielsen --starred_actors--> Camouflage --in_language--> Polish",
+        "Creepshow --starred_actors--> Hal Holbrook --starred_actors--> The Star Chamber --in_language--> English"
+      ],
+      "relations_used": [
+        "starred_actors",
+        "starred_actors",
+        "in_language"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00011524500000000001,
+      "metadata": {
+        "llm_reasoning": "To answer the question about the films that share actors with the film Creepshow and their languages, we need to first identify the actors involved in Creepshow. Then, we will need to find the films that have those actors. Lastly, we will check the languages of those films.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ],
+          [
+            "starred_actors"
+          ],
+          [
+            "in_language"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 3,
+      "question_text": "what were the release years of the films that share writers with the film [Grown Ups 2]",
+      "predicted_answers": [
+        "2011",
+        "1999",
+        "1996",
+        "1995",
+        "2008",
+        "1998",
+        "2000",
+        "2010",
+        "2002",
+        "1989"
+      ],
+      "ground_truth_answers": [
+        "1995",
+        "1996",
+        "1999",
+        "1998",
+        "1989",
+        "2002",
+        "2000",
+        "2008",
+        "2011",
+        "2010"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 10,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 12,
+      "search_time_ms": 0.6570816040039062,
+      "success": true,
+      "reasoning_path": [
+        "Grown Ups 2 --written_by--> Adam Sandler --written_by--> Billy Madison --release_year--> 1995",
+        "Grown Ups 2 --written_by--> Adam Sandler --written_by--> Eight Crazy Nights --release_year--> 2002",
+        "Grown Ups 2 --written_by--> Adam Sandler --written_by--> Grown Ups --release_year--> 2010",
+        "Grown Ups 2 --written_by--> Adam Sandler --written_by--> Going Overboard --release_year--> 1989",
+        "Grown Ups 2 --written_by--> Adam Sandler --written_by--> The Waterboy --release_year--> 1998",
+        "Grown Ups 2 --written_by--> Adam Sandler --written_by--> Jack and Jill --release_year--> 2011",
+        "Grown Ups 2 --written_by--> Adam Sandler --written_by--> You Don't Mess with the Zohan --release_year--> 2008",
+        "Grown Ups 2 --written_by--> Adam Sandler --written_by--> Little Nicky --release_year--> 2000",
+        "Grown Ups 2 --written_by--> Adam Sandler --written_by--> Big Daddy --release_year--> 1999",
+        "Grown Ups 2 --written_by--> Adam Sandler --written_by--> Happy Gilmore --release_year--> 1996"
+      ],
+      "relations_used": [
+        "written_by",
+        "written_by",
+        "release_year"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00011524500000000001,
+      "metadata": {
+        "llm_reasoning": "To determine the release years of films that share writers with the film 'Grown Ups 2', we first need to identify the writers associated with 'Grown Ups 2', then find other films that are written by the same writers, and finally retrieve their release years. This requires traversing through the 'written_by' relation to find the writers and then using that information to query for release years using the 'release_year' relation.",
+        "llm_planned_hops": [
+          [
+            "written_by"
+          ],
+          [
+            "written_by"
+          ],
+          [
+            "release_year"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 4,
+      "question_text": "who is listed as director of the films starred by [The Inner Circle] actors",
+      "predicted_answers": [],
+      "ground_truth_answers": [
+        "John Landis",
+        "Atom Egoyan",
+        "Gary Trousdale",
+        "Steven Spielberg",
+        "Louis Leterrier",
+        "Alan Alda",
+        "Nora Ephron",
+        "Wolfgang Petersen",
+        "Allen Coulter",
+        "Richard Benjamin",
+        "Orson Welles",
+        "Neil Jordan",
+        "William Dieterle",
+        "Stephen Frears",
+        "Peter Yates",
+        "Markus Schleinzer",
+        "Wayne Wang",
+        "Jean Delannoy",
+        "Robert Zemeckis",
+        "Guy Jenkin",
+        "Christopher Hampton",
+        "Jack Clayton",
+        "Rocky Morton",
+        "Annabel Jankel",
+        "Mike Hodges",
+        "Kirk Wise",
+        "Ellen Perry",
+        "John Byrum",
+        "Abel Ferrara",
+        "Robert M. Young"
+      ],
+      "is_correct": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "num_correct": 0,
+      "num_incorrect": 0,
+      "num_missed": 30,
+      "nodes_expanded": 4,
+      "search_time_ms": 0.12493133544921875,
+      "success": false,
+      "reasoning_path": [],
+      "relations_used": [
+        "starred_actors",
+        "directed_by"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00011524500000000001,
+      "metadata": {
+        "llm_reasoning": "To find the director of films that star the actors from 'The Inner Circle', we first identify the actors associated with 'The Inner Circle' and then find the films they starred in. Finally, we look up the directors of those films.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ],
+          [
+            "directed_by"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 5,
+      "question_text": "the films that share directors with the film [The Dance of Reality] were in which genres",
+      "predicted_answers": [
+        "Drama",
+        "Western"
+      ],
+      "ground_truth_answers": [
+        "Drama",
+        "Western"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 2,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 5,
+      "search_time_ms": 0.1595020294189453,
+      "success": true,
+      "reasoning_path": [
+        "The Dance of Reality --directed_by--> Alejandro Jodorowsky --directed_by--> The Holy Mountain --has_genre--> Drama",
+        "The Dance of Reality --directed_by--> Alejandro Jodorowsky --directed_by--> El Topo --has_genre--> Western"
+      ],
+      "relations_used": [
+        "directed_by",
+        "directed_by",
+        "has_genre"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00011524500000000001,
+      "metadata": {
+        "llm_reasoning": "To find the genres of films that share directors with 'The Dance of Reality', we first need to identify the directors of 'The Dance of Reality' using the 'directed_by' relation. Once we have the directors, we can find other films that share these directors by again using 'directed_by'. Finally, we can determine the genres of these films using the 'has_genre' relation.",
+        "llm_planned_hops": [
+          [
+            "directed_by"
+          ],
+          [
+            "directed_by"
+          ],
+          [
+            "has_genre"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 6,
+      "question_text": "what genres do the films that share directors with [Scarlet Street] fall under",
+      "predicted_answers": [
+        "Thriller",
+        "War",
+        "Drama",
+        "Western",
+        "Fantasy",
+        "Crime",
+        "Animation"
+      ],
+      "ground_truth_answers": [
+        "Crime",
+        "Drama",
+        "Fantasy",
+        "Animation",
+        "Western",
+        "War",
+        "Thriller"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 7,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 28,
+      "search_time_ms": 0.6582736968994141,
+      "success": true,
+      "reasoning_path": [
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> The Return of Frank James --has_genre--> Western",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Moontide --has_genre--> Drama",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> The Big Heat --has_genre--> Crime",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Fury --has_genre--> Drama",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Fury --has_genre--> War",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Clash by Night --has_genre--> Drama",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Liliom --has_genre--> Fantasy",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> M --has_genre--> Drama",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> M --has_genre--> Thriller",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Destiny --has_genre--> Drama",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Western Union --has_genre--> Western",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Metropolis --has_genre--> Animation",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> The Testament of Dr. Mabuse --has_genre--> Crime",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> You Only Live Once --has_genre--> Drama",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> You Only Live Once --has_genre--> Crime",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> While the City Sleeps --has_genre--> Drama",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Rancho Notorious --has_genre--> Western",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Moonfleet --has_genre--> Drama",
+        "Scarlet Street --directed_by--> Fritz Lang --directed_by--> Man Hunt --has_genre--> Thriller"
+      ],
+      "relations_used": [
+        "directed_by",
+        "directed_by",
+        "has_genre"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00011524500000000001,
+      "metadata": {
+        "llm_reasoning": "To find the genres of films that share directors with 'Scarlet Street', we need to first identify the directors of 'Scarlet Street' using the 'directed_by' relation. Then, we will find other films that are directed by the same directors. Finally, we will determine the genres of those identified films using the 'has_genre' relation.",
+        "llm_planned_hops": [
+          [
+            "directed_by"
+          ],
+          [
+            "directed_by"
+          ],
+          [
+            "has_genre"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 7,
+      "question_text": "who are the directors of the movies written by the writer of [She]",
+      "predicted_answers": [
+        "Gary Nelson"
+      ],
+      "ground_truth_answers": [
+        "Gary Nelson"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 1,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 3,
+      "search_time_ms": 0.080108642578125,
+      "success": true,
+      "reasoning_path": [
+        "She --written_by--> H. Rider Haggard --written_by--> Allan Quatermain and the Lost City of Gold --directed_by--> Gary Nelson"
+      ],
+      "relations_used": [
+        "written_by",
+        "written_by",
+        "directed_by"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00011524500000000001,
+      "metadata": {
+        "llm_reasoning": "To find the directors of the movies written by the writer of [She], we first need to identify the writer of the movie [She], which requires the 'written_by' relation. After identifying the writer, we can then find the movies they have written using the same 'written_by' relation (in a reversed context), and finally, we need the 'directed_by' relation to find the directors of those identified movies.",
+        "llm_planned_hops": [
+          [
+            "written_by"
+          ],
+          [
+            "written_by"
+          ],
+          [
+            "directed_by"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 8,
+      "question_text": "the movies that share actors with the movie [Waxworks] were in which languages",
+      "predicted_answers": [
+        "German",
+        "English",
+        "French",
+        "Swedish"
+      ],
+      "ground_truth_answers": [
+        "Swedish",
+        "German",
+        "French",
+        "English"
+      ],
+      "is_correct": true,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "num_correct": 4,
+      "num_incorrect": 0,
+      "num_missed": 0,
+      "nodes_expanded": 18,
+      "search_time_ms": 0.4096031188964844,
+      "success": true,
+      "reasoning_path": [
+        "Waxworks --starred_actors--> Conrad Veidt --starred_actors--> The Man Who Laughs --in_language--> French",
+        "Waxworks --starred_actors--> Conrad Veidt --starred_actors--> A Woman's Face --in_language--> Swedish",
+        "Waxworks --starred_actors--> Emil Jannings --starred_actors--> Faust --in_language--> German",
+        "Waxworks --starred_actors--> Emil Jannings --starred_actors--> The Loves of Pharaoh --in_language--> German",
+        "Waxworks --starred_actors--> Emil Jannings --starred_actors--> The Blue Angel --in_language--> English",
+        "Waxworks --starred_actors--> Emil Jannings --starred_actors--> The Blue Angel --in_language--> English",
+        "Waxworks --starred_actors--> Emil Jannings --starred_actors--> The Blue Angel --in_language--> German",
+        "Waxworks --starred_actors--> Emil Jannings --starred_actors--> The Blue Angel --in_language--> German",
+        "Waxworks --starred_actors--> Werner Krauss --starred_actors--> Jud S\u00fc\u00df --in_language--> German",
+        "Waxworks --starred_actors--> Werner Krauss --starred_actors--> Tartuffe --in_language--> German"
+      ],
+      "relations_used": [
+        "starred_actors",
+        "starred_actors",
+        "in_language"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00011524500000000001,
+      "metadata": {
+        "llm_reasoning": "To find the languages of movies that share actors with 'Waxworks', the approach is to first identify the actors in 'Waxworks'. Next, use those actors to retrieve the movies they have starred in. Finally, from those movies, we will look up their languages.",
+        "llm_planned_hops": [
+          [
+            "starred_actors"
+          ],
+          [
+            "starred_actors"
+          ],
+          [
+            "in_language"
+          ]
+        ]
+      }
+    },
+    {
+      "question_id": 9,
+      "question_text": "who directed movies for the writer of [The Broken Circle Breakdown]",
+      "predicted_answers": [],
+      "ground_truth_answers": [
+        "Felix van Groeningen"
+      ],
+      "is_correct": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "num_correct": 0,
+      "num_incorrect": 0,
+      "num_missed": 1,
+      "nodes_expanded": 5,
+      "search_time_ms": 0.07891654968261719,
+      "success": false,
+      "reasoning_path": [],
+      "relations_used": [
+        "written_by",
+        "directed_by"
+      ],
+      "api_calls": 0,
+      "cost_usd": 0.00011524500000000001,
+      "metadata": {
+        "llm_reasoning": "To find out who directed movies for the writer of [The Broken Circle Breakdown], we need to first identify the writer associated with the movie, then find the movies that writer has written. Finally, we'll determine who directed those movies. Thus, we will traverse the graph in three steps, checking first for the relationship between the movie and its writer, then looking for the directed films associated with that writer.",
+        "llm_planned_hops": [
+          [
+            "written_by"
+          ],
+          [
+            "directed_by"
+          ]
+        ]
+      }
+    }
+  ],
+  "status": "completed"
+}

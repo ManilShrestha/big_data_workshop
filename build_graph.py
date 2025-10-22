@@ -20,9 +20,9 @@ def load_kb_to_graph(kb_path='data/metaqa/kb.txt'):
 
     print(f"Loaded {len(triples):,} triples")
 
-    # Create NetworkX directed graph
-    print("Creating NetworkX graph...")
-    G = nx.DiGraph()
+    # Create NetworkX multi-directed graph (allows multiple edges between same nodes)
+    print("Creating NetworkX MultiDiGraph...")
+    G = nx.MultiDiGraph()
     for s, r, o in triples:
         G.add_edge(s, o, relation=r)
 

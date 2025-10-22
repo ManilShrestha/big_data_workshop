@@ -41,6 +41,69 @@ class SearchResult:
 
         return len(pred_set & gt_set) > 0
 
+    @property
+    def precision(self) -> float:
+        """
+        Precision: What fraction of predicted answers are correct?
+        precision = |predicted ∩ ground_truth| / |predicted|
+        """
+        if not self.predicted_answers:
+            return 0.0
+
+        pred_set = set(self.predicted_answers)
+        gt_set = set(self.ground_truth_answers)
+
+        return len(pred_set & gt_set) / len(pred_set)
+
+    @property
+    def recall(self) -> float:
+        """
+        Recall: What fraction of ground truth answers were found?
+        recall = |predicted ∩ ground_truth| / |ground_truth|
+        """
+        if not self.ground_truth_answers:
+            return 0.0
+
+        pred_set = set(self.predicted_answers)
+        gt_set = set(self.ground_truth_answers)
+
+        return len(pred_set & gt_set) / len(gt_set)
+
+    @property
+    def f1_score(self) -> float:
+        """
+        F1 Score: Harmonic mean of precision and recall
+        f1 = 2 * (precision * recall) / (precision + recall)
+        """
+        p = self.precision
+        r = self.recall
+
+        if p + r == 0:
+            return 0.0
+
+        return 2 * (p * r) / (p + r)
+
+    @property
+    def num_correct(self) -> int:
+        """Number of correct predictions (true positives)"""
+        pred_set = set(self.predicted_answers)
+        gt_set = set(self.ground_truth_answers)
+        return len(pred_set & gt_set)
+
+    @property
+    def num_incorrect(self) -> int:
+        """Number of incorrect predictions (false positives)"""
+        pred_set = set(self.predicted_answers)
+        gt_set = set(self.ground_truth_answers)
+        return len(pred_set - gt_set)
+
+    @property
+    def num_missed(self) -> int:
+        """Number of ground truths not found (false negatives)"""
+        pred_set = set(self.predicted_answers)
+        gt_set = set(self.ground_truth_answers)
+        return len(gt_set - pred_set)
+
     def to_dict(self) -> dict:
         """Convert to dictionary for JSON serialization"""
         return {
@@ -49,6 +112,12 @@ class SearchResult:
             'predicted_answers': self.predicted_answers,
             'ground_truth_answers': self.ground_truth_answers,
             'is_correct': self.is_correct,
+            'precision': self.precision,
+            'recall': self.recall,
+            'f1_score': self.f1_score,
+            'num_correct': self.num_correct,
+            'num_incorrect': self.num_incorrect,
+            'num_missed': self.num_missed,
             'nodes_expanded': self.nodes_expanded,
             'search_time_ms': self.search_time_ms,
             'success': self.success,

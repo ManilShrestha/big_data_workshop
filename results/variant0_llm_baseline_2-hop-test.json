@@ -1,0 +1,443 @@
+{
+  "variant_name": "variant0_llm_baseline",
+  "dataset_name": "2-hop-test",
+  "model": "gpt-5-mini",
+  "status": "completed",
+  "metrics": {
+    "total_questions": 10,
+    "correct_answers": 1,
+    "accuracy": 0.1,
+    "successful_searches": 8,
+    "success_rate": 0.8,
+    "precision": 0.2857142857142857,
+    "recall": 0.27586206896551724,
+    "f1_score": 0.28070175438596495,
+    "avg_correct_per_question": 0.8,
+    "avg_incorrect_per_question": 2.0,
+    "avg_missed_per_question": 2.1,
+    "total_correct_answers": 8,
+    "total_incorrect_answers": 20,
+    "total_missed_answers": 21,
+    "avg_nodes_expanded": 0.0,
+    "total_cost_usd": 0.005722649999999999,
+    "cost_per_query_usd": 0.000572265,
+    "total_eval_time_sec": 41.95560693740845,
+    "queries_per_second": 0.2383471657296847
+  },
+  "results": [
+    {
+      "question_id": 0,
+      "question_text": "which person directed the movies starred by [John Krasinski]",
+      "predicted_answers": [
+        "John Krasinski"
+      ],
+      "ground_truth_answers": [
+        "Nancy Meyers",
+        "Sam Mendes",
+        "George Clooney",
+        "Ken Kwapis",
+        "Luke Greenfield"
+      ],
+      "is_correct": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "num_correct": 0,
+      "num_incorrect": 1,
+      "num_missed": 5,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.00048689999999999996,
+        "correct_answers": [],
+        "incorrect_answers": [
+          "john krasinski"
+        ],
+        "missed_answers": [
+          "nancy meyers",
+          "ken kwapis",
+          "luke greenfield",
+          "george clooney",
+          "sam mendes"
+        ],
+        "is_correct": false
+      }
+    },
+    {
+      "question_id": 1,
+      "question_text": "who are movie co-directors of [Delbert Mann]",
+      "predicted_answers": [],
+      "ground_truth_answers": [
+        "Franco Zeffirelli",
+        "Cary Fukunaga",
+        "Lewis Milestone",
+        "Robert Stevenson"
+      ],
+      "is_correct": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "num_correct": 0,
+      "num_incorrect": 0,
+      "num_missed": 4,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": false,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.0007149,
+        "correct_answers": [],
+        "incorrect_answers": [],
+        "missed_answers": [
+          "lewis milestone",
+          "franco zeffirelli",
+          "cary fukunaga",
+          "robert stevenson"
+        ],
+        "is_correct": false
+      }
+    },
+    {
+      "question_id": 2,
+      "question_text": "what are the primary languages in the movies directed by [David Mandel]",
+      "predicted_answers": [
+        "English"
+      ],
+      "ground_truth_answers": [
+        "German"
+      ],
+      "is_correct": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "num_correct": 0,
+      "num_incorrect": 1,
+      "num_missed": 1,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.0003336,
+        "correct_answers": [],
+        "incorrect_answers": [
+          "english"
+        ],
+        "missed_answers": [
+          "german"
+        ],
+        "is_correct": false
+      }
+    },
+    {
+      "question_id": 3,
+      "question_text": "the screenwriter [Mimsy Farmer] co-wrote movies with who",
+      "predicted_answers": [
+        "Unclear \u2014 please specify which film or confirm you mean actress/screenwriter Mimsy Farmer so I can list her co-writers"
+      ],
+      "ground_truth_answers": [
+        "Barbet Schroeder"
+      ],
+      "is_correct": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "num_correct": 0,
+      "num_incorrect": 1,
+      "num_missed": 1,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.0006945,
+        "correct_answers": [],
+        "incorrect_answers": [
+          "unclear \u2014 please specify which film or confirm you mean actress/screenwriter mimsy farmer so i can list her co-writers"
+        ],
+        "missed_answers": [
+          "barbet schroeder"
+        ],
+        "is_correct": false
+      }
+    },
+    {
+      "question_id": 4,
+      "question_text": "the films acted by [Shaun White] were in which genres",
+      "predicted_answers": [
+        "Documentary",
+        "Sports"
+      ],
+      "ground_truth_answers": [
+        "Sport",
+        "Documentary"
+      ],
+      "is_correct": true,
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1_score": 0.5,
+      "num_correct": 1,
+      "num_incorrect": 1,
+      "num_missed": 1,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.0004896,
+        "correct_answers": [
+          "documentary"
+        ],
+        "incorrect_answers": [
+          "sports"
+        ],
+        "missed_answers": [
+          "sport"
+        ],
+        "is_correct": false
+      }
+    },
+    {
+      "question_id": 5,
+      "question_text": "what are the genres of the films directed by [Jerry Lewis]",
+      "predicted_answers": [
+        "Comedy",
+        "Slapstick",
+        "Romantic comedy",
+        "Black comedy",
+        "Satire",
+        "Science fiction (comedy)",
+        "War comedy",
+        "Drama",
+        "Musical"
+      ],
+      "ground_truth_answers": [
+        "Drama",
+        "Comedy",
+        "War"
+      ],
+      "is_correct": true,
+      "precision": 0.2222222222222222,
+      "recall": 0.6666666666666666,
+      "f1_score": 0.3333333333333333,
+      "num_correct": 2,
+      "num_incorrect": 7,
+      "num_missed": 1,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.00074625,
+        "correct_answers": [
+          "drama",
+          "comedy"
+        ],
+        "incorrect_answers": [
+          "war comedy",
+          "science fiction (comedy)",
+          "satire",
+          "romantic comedy",
+          "slapstick",
+          "musical",
+          "black comedy"
+        ],
+        "missed_answers": [
+          "war"
+        ],
+        "is_correct": false
+      }
+    },
+    {
+      "question_id": 6,
+      "question_text": "who appeared in the same movie with [Angie Everhart]",
+      "predicted_answers": [
+        "Which movie do you mean? Please specify a film title or year so I can list the co-stars."
+      ],
+      "ground_truth_answers": [
+        "Erika Eleniak",
+        "Dennis Miller"
+      ],
+      "is_correct": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "num_correct": 0,
+      "num_incorrect": 1,
+      "num_missed": 2,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.00061605,
+        "correct_answers": [],
+        "incorrect_answers": [
+          "which movie do you mean? please specify a film title or year so i can list the co-stars."
+        ],
+        "missed_answers": [
+          "dennis miller",
+          "erika eleniak"
+        ],
+        "is_correct": false
+      }
+    },
+    {
+      "question_id": 7,
+      "question_text": "what are the genres of the films directed by [Mike Nichols]",
+      "predicted_answers": [
+        "Drama",
+        "Comedy",
+        "Comedy-drama",
+        "Romantic comedy",
+        "Black comedy",
+        "War",
+        "Thriller",
+        "Science fiction",
+        "Horror",
+        "Biographical drama",
+        "Political satire",
+        "Coming-of-age"
+      ],
+      "ground_truth_answers": [
+        "Drama",
+        "Horror",
+        "Comedy",
+        "War",
+        "Thriller"
+      ],
+      "is_correct": true,
+      "precision": 0.4166666666666667,
+      "recall": 1.0,
+      "f1_score": 0.5882352941176471,
+      "num_correct": 5,
+      "num_incorrect": 7,
+      "num_missed": 0,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.0009076499999999999,
+        "correct_answers": [
+          "drama",
+          "thriller",
+          "horror",
+          "comedy",
+          "war"
+        ],
+        "incorrect_answers": [
+          "comedy-drama",
+          "biographical drama",
+          "romantic comedy",
+          "political satire",
+          "science fiction",
+          "coming-of-age",
+          "black comedy"
+        ],
+        "missed_answers": [],
+        "is_correct": true
+      }
+    },
+    {
+      "question_id": 8,
+      "question_text": "who are the actors in the films written by [John Travis]",
+      "predicted_answers": [
+        "Which John Travis do you mean? Please provide film titles or more context so I can list the actors."
+      ],
+      "ground_truth_answers": [
+        "Haley Bennett",
+        "Chace Crawford",
+        "Jake Weber"
+      ],
+      "is_correct": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "num_correct": 0,
+      "num_incorrect": 1,
+      "num_missed": 3,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": true,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.00030885,
+        "correct_answers": [],
+        "incorrect_answers": [
+          "which john travis do you mean? please provide film titles or more context so i can list the actors."
+        ],
+        "missed_answers": [
+          "haley bennett",
+          "chace crawford",
+          "jake weber"
+        ],
+        "is_correct": false
+      }
+    },
+    {
+      "question_id": 9,
+      "question_text": "the movies starred by [Clifford Rose] were written by who",
+      "predicted_answers": [],
+      "ground_truth_answers": [
+        "Adrian Mitchell",
+        "Geoffrey Skelton",
+        "Peter Weiss"
+      ],
+      "is_correct": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "num_correct": 0,
+      "num_incorrect": 0,
+      "num_missed": 3,
+      "nodes_expanded": 0,
+      "search_time_ms": 0.0,
+      "success": false,
+      "reasoning_path": [],
+      "relations_used": [],
+      "api_calls": 0,
+      "cost_usd": 0.0,
+      "metadata": {
+        "cost_usd": 0.00042434999999999993,
+        "correct_answers": [],
+        "incorrect_answers": [],
+        "missed_answers": [
+          "geoffrey skelton",
+          "adrian mitchell",
+          "peter weiss"
+        ],
+        "is_correct": false
+      }
+    }
+  ]
+}
