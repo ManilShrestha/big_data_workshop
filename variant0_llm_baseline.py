@@ -359,6 +359,7 @@ def evaluate_direct_llm(
 
 def main():
     import argparse
+    from datetime import datetime
 
     # =========================================================================
     # Parse command-line arguments
@@ -400,15 +401,15 @@ Examples:
     parser.add_argument(
         '--limit',
         type=int,
-        default=10000,
-        help='Maximum questions per dataset (default: 10000)'
+        default=None,
+        help='Maximum questions per dataset (default: None = full dataset)'
     )
     parser.add_argument(
         '--datasets',
         type=str,
         nargs='+',
         choices=['1-hop', '2-hop', '3-hop'],
-        default=['1-hop'],
+        default=['1-hop', '2-hop', '3-hop'],
         help='Datasets to evaluate (default: 1-hop)'
     )
     parser.add_argument(
@@ -424,8 +425,16 @@ Examples:
 
     args = parser.parse_args()
 
+    # Generate timestamp for unique output files
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
     print("\n" + "="*80)
     print(" VARIANT 0: LLM 0-Shot Direct QA (No Graph Traversal)")
+    print("="*80)
+    print(f"  Mode: {args.mode}")
+    print(f"  Datasets: {', '.join(args.datasets)}")
+    print(f"  Limit per dataset: {args.limit if args.limit else 'Full dataset'}")
+    print(f"  Timestamp: {timestamp}")
     print("="*80 + "\n")
 
     # =========================================================================
@@ -469,8 +478,8 @@ Examples:
         questions = load_qa_dataset(dataset_path, hop_count=hop_count, limit=limit)
 
         # Evaluate
-        mode_suffix = f"_{args.mode}" if args.mode == "batch" else ""
-        output_path = f"results/variant0_llm_baseline_{dataset_name}{mode_suffix}.json"
+        limit_str = f"_limit{limit}" if limit else "_full"
+        output_path = f"results/variant0_llm_baseline_{args.mode}_{dataset_name}{limit_str}_{timestamp}.json"
         evaluation = evaluate_direct_llm(
             llm_qa=llm_qa,
             questions=questions,

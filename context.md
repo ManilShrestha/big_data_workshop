@@ -2,20 +2,23 @@
 
 ## 📋 Project Progress Summary
 
-**Last Updated:** October 14, 2025
+**Last Updated:** October 22, 2025
 
-**Current Status:** Phase 1 Complete ✅ | Ready for Phase 2 (A* Algorithm Implementation)
+**Current Status:** Phase 1 Complete ✅ | Phase 2 Partial ✅ | Variants 0 & 5 Complete
 
 **Completed Work:**
 - ✅ MetaQA dataset integrated (134K KB triples, 329K QA pairs)
 - ✅ Knowledge graph built (43K nodes, 124K edges)
 - ✅ Three embedding methods trained with ablation studies
-- ✅ Modular training pipeline with checkpoint support
+- ✅ **Variant 0 (LLM Direct QA)**: 56% on 1-hop, 25% on 2-hop (~24K questions tested)
+- ✅ **Variant 5 (LLM-Guided BFS)**: 99.9% on 1-hop/2-hop, 97% on 3-hop (~39K questions tested)
+- ✅ QA system infrastructure: ExactMatcher, Evaluator, Batch processing
 
 **Next Steps:**
-- 🔄 Implement A* traversal with embedding heuristic (Task 4)
-- 🔄 Add LLM planner for entity extraction (Task 5)
-- 🔄 Build evaluation pipeline for QA datasets (Task 8)
+- 🔄 Implement Variant 1 (BFS Baseline) - establish graph-based lower bound
+- 🔄 Implement Variant 3 (TransE A*) - **MAIN CONTRIBUTION**
+- 🔄 Implement Variant 2 (FastRP A*) - prove TransE superiority
+- 🔄 Generate comparison plots and paper tables
 
 **Key Files:**
 - `data/metaqa/graph.pkl` - NetworkX graph (43,234 nodes, 124,680 edges)
@@ -30,8 +33,8 @@
 | Phase                              | Status | Outcome                                |
 | ---------------------------------- | ------ | -------------------------------------- |
 | **Phase 1 – Setup & Data**         | ✅ COMPLETE | MetaQA ready, graph + embeddings built |
-| **Phase 2 – Algorithm Core**       | 🔄 TODO | Working A* traversal + LLM guidance    |
-| **Phase 3 – Experiments**          | 🔄 TODO | Baseline + ablation results + plots    |
+| **Phase 2 – Algorithm Core**       | 🔄 PARTIAL | Variants 0 & 5 complete, need 1-3 for core contribution |
+| **Phase 3 – Experiments**          | 🔄 PARTIAL | Baselines tested, need full ablation study |
 | **Phase 4 – Writing & Submission** | 🔄 TODO | Full IEEE paper draft + figures + refs |
 
 ---
@@ -103,81 +106,91 @@
 
 ## ⚙️ Phase 2 — Algorithm Implementation
 
-### **Task 4. Implement baseline A***
+### **Task 4. Implement entity linkers** ✅ COMPLETE
 
-* **Goal:** A* traversal using embedding heuristic.
-* **Steps:**
+* **Goal:** Extract entities from questions
+* **Deliverables:**
+  * ✅ `ExactMatcher` - Extract bracketed entities and link to graph (free)
+  * ✅ Base classes and infrastructure
+* **Status:** Complete - used in Variants 1-5
+* **Time:** 4 hours
 
-  * Define cost function `f(n)=g(n)+λ*(1-cos(E_n,E_q))`
-  * Implement open/closed lists with `heapq`
-  * Terminate when answer found or depth > max_hops
-* **Deliverable:** `a_star_reasoner.py` that returns answer + path
+---
+
+### **Task 5. Implement search algorithms** 🔄 PARTIAL
+
+* **Goal:** Implement different search strategies
+* **Deliverables:**
+  * ✅ `LLMGuidedBFS` - Pure BFS following GPT-4o planned relation sequence (Variant 5)
+  * ❌ `BFSBaseline` - Blind BFS with no heuristic (Variant 1) - **TODO**
+  * ❌ `FastRPAStarSearch` - A* with FastRP node embeddings (Variant 2) - **TODO**
+  * ❌ `TransEAStarSearch` - A* with TransE relation embeddings (Variant 3) - **TODO** ⭐
+* **Status:** Partial - only LLM-guided BFS complete
+* **Time:** 2-3 days total (1-2 days remaining)
+
+---
+
+### **Task 6. Implement evaluation framework** ✅ COMPLETE
+
+* **Goal:** Track metrics, handle batching, save results
+* **Deliverables:**
+  * ✅ `Evaluator` class with comprehensive metrics (accuracy, precision, recall, F1, cost)
+  * ✅ Batch processing support (OpenAI Batch API for 50% cost savings)
+  * ✅ Incremental result saving
+  * ✅ Question loading utilities
+* **Status:** Complete
 * **Time:** 1 day
 
 ---
 
-### **Task 5. Add LLM planner (front-end)**
+### **Task 7. Implement variant runners** 🔄 PARTIAL
 
-* **Goal:** extract entities and relations from question.
-* **Prompt:**
-
-  ```
-  Extract entities and relations:
-  Q: "Who directed the movie that starred Brad Pitt?"
-  A: entities=["Brad Pitt"], relations=["acted_in","directed_by"]
-  ```
-* **Use:** `openai.ChatCompletion` or `llama3` (local)
-* **Deliverable:** `llm_planner.py` returns JSON
-* **Time:** ½ day
-
----
-
-### **Task 6. Integrate planner + A***
-
-* **Goal:** seed A* with LLM entities.
-* **Pipeline:**
-
-  1. Get entities from LLM
-  2. Start A* from those nodes
-  3. Compare accuracy vs non-LLM baseline
-* **Deliverable:** `llm_guided_astar.py`
-* **Time:** 1 day
-
----
-
-### **Task 7. Implement metrics + logging**
-
-* **Goal:** track accuracy, nodes expanded, runtime.
-* **Deliverable:** CSV log for each run
-* **Time:** 3 h
+* **Goal:** Standalone scripts for each variant
+* **Deliverables:**
+  * ✅ `variant0_llm_baseline.py` - LLM direct QA (no graph)
+  * ✅ `variant5_openai_guided.py` - LLM-guided BFS with GPT-4o planning
+  * ❌ `variant1_bfs_baseline.py` - BFS baseline - **TODO**
+  * ❌ `variant2_fastrp_astar.py` - FastRP A* - **TODO**
+  * ❌ `variant3_transe_astar.py` - TransE A* (MAIN CONTRIBUTION) - **TODO**
+* **Status:** Partial - 2/5 complete
+* **Time:** 1-2 days remaining
 
 ---
 
 ## 📊 Phase 3 — Experiments & Ablations
 
-### **Task 8. Run experiments**
+### **Task 8. Run experiments** 🔄 PARTIAL
 
-* **Setups:**
+* **Completed:**
+  * ✅ Variant 0 (LLM Direct): Full 1-hop (9,947 qs) & 2-hop (14,872 qs) datasets
+  * ✅ Variant 5 (LLM-Guided): Full 1-hop, 2-hop, 3-hop datasets (~39K total questions)
+* **TODO:**
+  * ❌ Variant 1 (BFS Baseline): 1K samples per hop
+  * ❌ Variant 2 (FastRP A*): 1K samples per hop
+  * ❌ Variant 3 (TransE A*): 1K samples per hop - **MAIN CONTRIBUTION**
+* **Current Results:**
 
-  1. BFS baseline
-  2. A* (FastRP only)
-  3. LLM-seeded A*
-* **Datasets:** 1-hop (1k Qs) & 2-hop (1k Qs)
-* **Deliverables:** `results.csv`
-* **Time:** 1 day
+  | Variant | 1-hop | 2-hop | 3-hop | Cost/Query |
+  |---------|-------|-------|-------|------------|
+  | 0: LLM Direct | 56.0% | 24.7% | - | $0.00055 |
+  | 5: LLM-Guided | 99.9% | 99.9% | 97.0% | $0.0001 |
+
+* **Time:** 1-2 days for remaining variants
 
 ---
 
-### **Task 9. Visualization**
+### **Task 9. Visualization** 🔄 TODO
 
 * **Goal:** Generate plots + figures for paper.
 * **Deliverables:**
 
-  * Accuracy vs Hops
-  * Expansions vs Runtime
-  * Mermaid diagram of system
-  * Sample traversal path visual
-* **Time:** ½ day
+  * ❌ Accuracy comparison plot (all 5 variants)
+  * ❌ Cost-accuracy tradeoff plot
+  * ❌ Nodes expanded comparison
+  * ❌ Sample reasoning paths for each variant
+  * ❌ System architecture diagram
+* **Status:** Not started - waiting for Variants 1-3 results
+* **Time:** 1 day
 
 ---
 
@@ -209,9 +222,10 @@
 | Day | Milestone                            | Status |
 | --- | ------------------------------------ | ------ |
 | 1-2 | Graph + embeddings ready             | ✅ COMPLETE |
-| 3-5 | A* + LLM pipeline working            | 🔄 IN PROGRESS (Next) |
-| 6-7 | Experiments + plots complete         | 🔄 TODO |
-| 8-10| Final paper PDF ready for submission | 🔄 TODO |
+| 3-5 | QA infrastructure + baselines        | ✅ PARTIAL (Variants 0, 5 done) |
+| 6-7 | Core variants (1-3) implemented      | 🔄 IN PROGRESS (Next) |
+| 8-9 | Full ablation + plots complete       | 🔄 TODO |
+| 10  | Final paper PDF ready for submission | 🔄 TODO |
 
 ---
 
@@ -279,21 +293,36 @@ python train_embeddings.py --method node2vec --walks 200 --checkpoints 10 50 100
 python train_embeddings.py --method transe --epochs 100 --batch-size 2048
 ```
 
-### Phase 2 - Algorithm Implementation (TODO)
+### Phase 2 - Algorithm Implementation (PARTIAL)
 
 ```bash
-# To be implemented:
-# python a_star_reasoner.py --embeddings embeddings/fastrp_embeddings_iter3.npy
-# python llm_planner.py --question "Who directed Inception?"
-# python llm_guided_astar.py --qa-file data/metaqa/1-hop/vanilla/qa_test.txt
+# ✅ IMPLEMENTED:
+# Variant 0: LLM Direct QA
+python variant0_llm_baseline.py --mode batch --datasets 1-hop 2-hop --limit 1000
+
+# Variant 5: LLM-Guided BFS
+python variant5_openai_guided.py --mode batch --datasets 1-hop 2-hop --limit 1000
+
+# ❌ TODO (implement these):
+# Variant 1: BFS Baseline
+# python variant1_bfs_baseline.py --datasets 1-hop 2-hop --limit 1000
+
+# Variant 2: FastRP A*
+# python variant2_fastrp_astar.py --datasets 1-hop 2-hop --limit 1000
+
+# Variant 3: TransE A* (MAIN CONTRIBUTION)
+# python variant3_transe_astar.py --datasets 1-hop 2-hop --limit 1000
 ```
 
-### Phase 3 - Experiments (TODO)
+### Phase 3 - Experiments (PARTIAL)
 
 ```bash
-# To be implemented:
-# python run_experiments.py --methods bfs,astar,llm-astar --dataset 1-hop
-# python generate_plots.py --results results.csv
+# View existing results
+ls -lh results/*.json
+
+# ❌ TODO:
+# python analyze_results.py --variants 0 1 2 3 5
+# python generate_plots.py --output paper_figures/
 ```
 
 ---

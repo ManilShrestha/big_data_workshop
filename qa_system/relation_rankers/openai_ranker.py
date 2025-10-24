@@ -1,6 +1,7 @@
 """OpenAI-based relation ranking"""
 
 from typing import List, Tuple
+import json
 import numpy as np
 from openai import OpenAI
 from sklearn.metrics.pairwise import cosine_similarity

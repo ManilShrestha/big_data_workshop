@@ -159,7 +159,8 @@ Note:
         search_algo=search_algo,
         variant_name=f"variant5_openai_guided_{args.mode}",
         use_llm_planning=use_llm_planning,
-        batch_planning=batch_planning
+        batch_planning=batch_planning,
+        poll_interval=args.poll_interval
     )
 
     print("  Components initialized.")

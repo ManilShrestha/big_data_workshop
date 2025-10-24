@@ -69,8 +69,10 @@ class Evaluator:
         total_cost = 0.0
         batch_llm_cost = 0.0  # Track total cost of all batch LLM calls
 
-        # ASYNC BATCHED LLM PLANNING: If using LLM planning with batch mode, use async Batch API
+        # BATCHED LLM PLANNING: If using LLM planning with batch mode
         llm_plans = {}  # Maps question index -> (hop_relations, reasoning)
+
+        # Try async batch first (OpenAI only, 50% cheaper)
         if self.use_llm_planning and self.batch_planning and hasattr(self.relation_ranker, 'plan_relation_sequence_async_batch'):
             if verbose:
                 print("  [Async Batch Planning] Planning relations for all questions using OpenAI Batch API (50% cheaper)...")
@@ -93,7 +95,7 @@ class Evaluator:
                 batch_id, batch_results = self.relation_ranker.plan_relation_sequence_async_batch(
                     question_texts,
                     max_hops=hop_count,
-                    poll_interval=60,
+                    poll_interval=self.poll_interval,
                     verbose=verbose
                 )
 
@@ -111,6 +113,46 @@ class Evaluator:
             if verbose:
                 print(f"  [Async Batch Planning] Complete! Planned {len(llm_plans)} questions")
                 print(f"  [Async Batch Planning] Total LLM cost: ${batch_llm_cost:.6f} (50% discount applied)\n")
+
+        # Fallback: Try synchronous batch (parallel API calls via ThreadPoolExecutor)
+        elif self.use_llm_planning and self.batch_planning and hasattr(self.relation_ranker, 'plan_relation_sequence_batch'):
+            if verbose:
+                print("  [Batch Planning] Planning relations for all questions using parallel API calls...")
+
+            # Get unique hop counts
+            hop_counts = list(set(q.hop_count for q in questions))
+
+            # Batch by hop count (since max_hops is a parameter)
+            for hop_count in hop_counts:
+                questions_for_hop = [(i, q) for i, q in enumerate(questions) if q.hop_count == hop_count]
+                question_texts = [q.text for _, q in questions_for_hop]
+
+                if verbose:
+                    print(f"  [Batch Planning] Processing {len(question_texts)} {hop_count}-hop questions...")
+
+                # Track cost before batch call
+                cost_before = self.relation_ranker.get_cost()
+
+                # Use synchronous batch API (parallel calls)
+                batch_results = self.relation_ranker.plan_relation_sequence_batch(
+                    question_texts,
+                    max_hops=hop_count
+                )
+
+                # Track cost after batch call
+                cost_after = self.relation_ranker.get_cost()
+                batch_llm_cost += (cost_after - cost_before)
+
+                if verbose:
+                    print(f"  [Batch Planning] Completed {hop_count}-hop questions")
+
+                # Store results mapped by original question index
+                for (orig_idx, _), (hop_relations, reasoning) in zip(questions_for_hop, batch_results):
+                    llm_plans[orig_idx] = (hop_relations, reasoning)
+
+            if verbose:
+                print(f"  [Batch Planning] Complete! Planned {len(llm_plans)} questions")
+                print(f"  [Batch Planning] Total LLM cost: ${batch_llm_cost:.6f}\n")
 
         # Now process each question
         for i, question in enumerate(questions):

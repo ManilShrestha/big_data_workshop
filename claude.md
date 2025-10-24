@@ -4,8 +4,8 @@
 
 This is a research project for an IEEE paper on **LLM-Guided Knowledge Graph Reasoning using A* Search with Graph Embeddings**. The goal is to combine traditional graph traversal (A*) with modern LLMs and graph embeddings to answer multi-hop questions over knowledge graphs.
 
-**Current Status:** Phase 1 Complete | Phase 2 Implementation Started
-**Last Updated:** October 20, 2025
+**Current Status:** Phase 1 Complete | Phase 2 Partial (Variants 0, 5 Complete)
+**Last Updated:** October 22, 2025
 
 ---
 
@@ -19,11 +19,20 @@ python build_graph.py
 python train_embeddings.py --method all
 python validate_embeddings.py --all
 
-# Phase 2: Run QA ablation study (IN PROGRESS)
-python run_ablation.py --variants 1 2 3      # BFS, FastRP, TransE (no OpenAI)
-python run_ablation.py --variants 4 5        # With OpenAI entity linking
-python run_ablation.py --all                 # All 5 variants
-python analyze_results.py                    # Generate paper tables/plots
+# Phase 2: Run QA ablation study (PARTIALLY IMPLEMENTED)
+# Variant 0: LLM Direct QA (baseline)
+python variant0_llm_baseline.py --mode batch --datasets 1-hop 2-hop --limit 1000
+
+# Variant 5: LLM-Guided BFS (upper bound)
+python variant5_openai_guided.py --mode batch --datasets 1-hop 2-hop --limit 1000
+
+# TODO: Implement Variants 1-3 (graph-based methods)
+# python variant1_bfs_baseline.py
+# python variant2_fastrp_astar.py
+# python variant3_transe_astar.py  # MAIN CONTRIBUTION
+
+# Analyze results
+python analyze_results.py  # Generate paper tables/plots (TODO)
 ```
 
 ---
@@ -36,14 +45,32 @@ big_data_workshop/
 ├── train_embeddings.py         # Phase 1: Train FastRP/Node2Vec/TransE
 ├── validate_embeddings.py      # Phase 1: Validate embedding quality
 │
-├── qa_system/                  # Phase 2: QA implementation (NEW)
+├── qa_system/                  # Phase 2: QA implementation (PARTIALLY IMPLEMENTED)
+│   ├── core/                   # Base classes
+│   │   ├── base_entity_linker.py
+│   │   ├── base_relation_ranker.py
+│   │   ├── base_search.py
+│   │   ├── question.py
+│   │   └── search_result.py
 │   ├── entity_linkers/         # Entity extraction & linking
-│   ├── search_algorithms/      # BFS, A* variants
-│   ├── config.py               # Configuration
-│   └── evaluator.py            # Metrics & evaluation
+│   │   └── exact_matcher.py   # ✅ ExactMatcher (bracket extraction)
+│   ├── relation_rankers/       # Relation selection
+│   │   └── openai_ranker.py   # ✅ OpenAI embeddings + GPT-4o planning
+│   ├── search_algorithms/      # Search algorithms
+│   │   └── llm_guided_bfs.py  # ✅ LLM-guided BFS (Variant 5)
+│   ├── llm_qa/                 # Direct LLM QA (Variant 0)
+│   │   ├── direct_qa.py       # ✅ Parallel API calls
+│   │   ├── batch_qa.py        # ✅ OpenAI Batch API (50% cheaper)
+│   │   └── prompts.py
+│   ├── utils/
+│   │   ├── loader.py          # Data loading utilities
+│   │   └── evaluator.py       # Evaluation framework
+│   └── config.py              # Configuration
 │
-├── run_ablation.py             # Phase 2: Run 5-variant ablation study (NEW)
-├── analyze_results.py          # Phase 2: Generate paper tables/plots (NEW)
+├── variant0_llm_baseline.py   # ✅ Variant 0: LLM Direct QA
+├── variant5_openai_guided.py  # ✅ Variant 5: LLM-Guided BFS
+│
+├── results/                   # Phase 2: Ablation results
 │
 ├── data/metaqa/
 │   ├── kb.txt                  # 134,741 KB triples
@@ -159,43 +186,58 @@ big_data_workshop/
 
 ### Phase 2: QA System & Ablation Study 🔄 IN PROGRESS
 
-**Overview:** Implement 5-variant ablation study comparing different entity linking and search heuristics.
+**Overview:** Implement 5-variant ablation study comparing different entity linking and search approaches.
 
-**See [phase2_context.md](phase2_context.md) for complete implementation details.**
+**Current Implementation Status:**
+- ✅ **Variant 0**: LLM Direct QA (baseline, no graph)
+- ✅ **Variant 5**: OpenAI Relation Ranking + LLM-Guided BFS (upper bound)
+- ❌ **Variants 1-3**: Graph-based search methods (TODO - main contribution)
 
-#### 5 Ablation Variants
+#### 5 Ablation Variants (ACTUAL IMPLEMENTATION)
 
-| # | Name | Entity Linking | Search Heuristic | Cost | Status |
-|---|------|----------------|------------------|------|--------|
-| 1 | BFS Baseline | Exact match | None (BFS) | $0 | TODO |
-| 2 | FastRP A* | Exact match | FastRP cosine | $0 | TODO |
-| **3** | **TransE A*** ⭐ | **Exact match** | **TransE distance** | **$0** | **TODO** |
-| 4 | OpenAI+FastRP | OpenAI embeddings | FastRP cosine | $$$ | TODO |
-| 5 | OpenAI+TransE | OpenAI embeddings | TransE distance | $$$ | TODO |
+| # | Name | Entity Linking | Relation Selection | Search | Cost | Status |
+|---|------|----------------|-------------------|--------|------|--------|
+| **0** | **LLM Direct QA** | None (no graph) | None | None (direct answer) | $$$ | ✅ **DONE** |
+| 1 | BFS Baseline | ExactMatcher | None (all relations) | BFS | $0 | ❌ TODO |
+| 2 | FastRP A* | ExactMatcher | FastRP cosine | A* | $0 | ❌ TODO |
+| **3** | **TransE A*** ⭐ | **ExactMatcher** | **TransE distance** | **A*** | **$0** | ❌ **TODO** |
+| **5** | **LLM-Guided BFS** | **ExactMatcher** | **GPT-4o planning** | **BFS** | **$$** | ✅ **DONE** |
 
 ⭐ **Variant 3 is our main contribution** - demonstrating that relation-aware embeddings achieve near-optimal accuracy at zero inference cost.
+
+**Note:** Variant 4 (OpenAI entity linking) is optional and may be skipped to focus on the core contribution.
 
 #### Implementation Tasks
 
 **Task 4:** Build entity linkers
-- [x] Design architecture (see [phase2_context.md](phase2_context.md))
-- [ ] Implement `ExactMatcher` (Variants 1-3)
-- [ ] Implement `OpenAILinker` (Variants 4-5)
+- [x] Design architecture
+- [x] Implement `ExactMatcher` (Variants 1-5) ✅
+- [ ] (Optional) Implement `OpenAILinker` for Variant 4
 
 **Task 5:** Implement search algorithms
-- [ ] BFS baseline (Variant 1)
-- [ ] A* with FastRP heuristic (Variants 2, 4)
-- [ ] A* with TransE heuristic (Variants 3, 5) - **Main method**
+- [x] LLM-guided BFS (Variant 5) ✅
+- [ ] BFS baseline (Variant 1) ❌ TODO
+- [ ] A* with FastRP heuristic (Variant 2) ❌ TODO
+- [ ] A* with TransE heuristic (Variant 3) ❌ TODO - **Main method**
 
 **Task 6:** Build evaluation framework
-- [ ] Metrics tracking (accuracy, nodes expanded, cost)
-- [ ] Question parsing & relation extraction
-- [ ] Results logging & analysis
+- [x] Metrics tracking (accuracy, nodes expanded, cost) ✅
+- [x] Question parsing & relation extraction ✅
+- [x] Results logging & analysis ✅
+- [x] Batch processing support (OpenAI Batch API) ✅
 
 **Task 7:** Run ablation experiments
-- [ ] Test on 1-hop questions (1K samples)
-- [ ] Test on 2-hop questions (1K samples)
-- [ ] Generate comparison tables for paper
+- [x] Variant 0: LLM Direct QA ✅
+  - 1-hop: 9,947 questions, **56.0% accuracy**, $5.50 cost
+  - 2-hop: 14,872 questions, **24.7% accuracy**, $8.21 cost
+- [x] Variant 5: LLM-Guided BFS ✅
+  - 1-hop: 9,947 questions, **99.9% accuracy**, ~$1.00 cost
+  - 2-hop: 14,872 questions, **99.9% accuracy**, ~$1.50 cost
+  - 3-hop: 14,274 questions, **97.0% accuracy**, ~$2.00 cost
+- [ ] Variant 1: BFS Baseline ❌ TODO
+- [ ] Variant 2: FastRP A* ❌ TODO
+- [ ] Variant 3: TransE A* ❌ TODO - **MAIN CONTRIBUTION**
+- [ ] Generate comparison tables for paper ❌ TODO
 
 ### Phase 3: Paper Writing 🔄 TODO
 
@@ -279,25 +321,37 @@ kb.txt → build_graph.py → graph.pkl → train_embeddings.py → embeddings/*
 
 ## Next Steps (Phase 2)
 
-### Current Focus: 5-Variant Ablation Study
+### Current Focus: Complete Core Graph-Based Variants (1-3)
 
-**See [phase2_context.md](phase2_context.md) for detailed implementation plan**
+**Completed:**
+- ✅ Phase 1: Embeddings trained and validated
+- ✅ Variant 0: LLM Direct QA (baseline showing need for graph grounding)
+- ✅ Variant 5: LLM-Guided BFS (upper bound with GPT-4o planning)
+- ✅ Infrastructure: ExactMatcher, Evaluator, Batch processing
 
-### Immediate TODO
-1. ✅ Phase 1 complete: Embeddings trained and validated
-2. ✅ Phase 2 architecture designed: 5-variant ablation study
-3. 🔄 **NEXT:** Implement core infrastructure
-   - Create `qa_system/` module structure
-   - Implement `ExactMatcher` entity linker
-   - Implement BFS baseline (Variant 1)
-4. 🔄 Implement Variants 2-3 (FastRP A*, TransE A*)
-5. 🔄 Add OpenAI integration (Variants 4-5)
-6. 🔄 Run experiments & generate results
+### Immediate TODO (Priority Order)
+1. 🔄 **NEXT:** Implement Variant 1 (BFS Baseline)
+   - Simple breadth-first search with no heuristic
+   - Establishes lower bound for graph-based methods
+   - Expected: ~60-70% accuracy on 1-hop, ~40-50% on 2-hop
+2. 🔄 Implement Variant 3 (TransE A*) - **MAIN CONTRIBUTION**
+   - A* search with TransE relation embeddings as heuristic
+   - Expected: ~90-95% accuracy on 1-hop, ~80-85% on 2-hop
+   - Proves relation-aware embeddings work at $0 inference cost
+3. 🔄 Implement Variant 2 (FastRP A*)
+   - A* search with FastRP node embeddings as heuristic
+   - Proves TransE > FastRP for multi-hop reasoning
+   - Expected: ~80-85% accuracy on 1-hop, ~60-70% on 2-hop
+4. 🔄 Run full ablation study (1K samples per hop-count)
+5. 🔄 Generate comparison tables and cost-accuracy plots
+6. 🔄 Error analysis: Where does Variant 3 fail vs Variant 5?
+7. 🔄 Write paper draft
 
 ### Implementation Strategy
-- **Priority 1:** Variants 1-3 (no OpenAI dependency) - prove TransE > FastRP
-- **Priority 2:** Variants 4-5 (with OpenAI) - show cost scaling argument
-- **Priority 3:** Analysis & visualization for paper
+- **Priority 1:** Variants 1-3 (graph-based, $0 inference) - Core contribution
+- **Priority 2:** Analysis comparing Variant 3 vs Variant 5 (cost-accuracy tradeoff)
+- **Priority 3:** Paper writing with visualizations
+- **Optional:** Variant 4 (OpenAI entity linking + FastRP) - not critical for story
 
 ---
 
@@ -393,7 +447,7 @@ git status
 
 ## Summary
 
-### Current Status (October 20, 2025)
+### Current Status (October 22, 2025)
 
 **Phase 1: COMPLETE ✅**
 - MetaQA dataset downloaded and processed
@@ -401,17 +455,30 @@ git status
 - Three embedding methods trained: FastRP (2.9s), Node2Vec (5min), TransE (54s on GPU)
 - All embeddings validated
 
-**Phase 2: IN PROGRESS 🔄**
-- Architecture designed: 5-variant ablation study
-- Goal: Prove TransE-guided A* achieves 90%+ accuracy of expensive LLM methods at $0 cost
-- Next: Implement entity linkers and search algorithms
+**Phase 2: PARTIAL ✅**
+- ✅ QA system infrastructure complete
+- ✅ **Variant 0** (LLM Direct QA): 56% on 1-hop, 25% on 2-hop - shows hallucination problem
+- ✅ **Variant 5** (LLM-Guided BFS): 99.9% on 1-hop/2-hop, 97% on 3-hop - upper bound
+- ❌ **Variants 1-3** (graph-based methods): TODO - **MAIN CONTRIBUTION MISSING**
+
+**Actual Results So Far:**
+
+| Variant | 1-hop Acc | 2-hop Acc | 3-hop Acc | Cost/Query | Dataset Size |
+|---------|-----------|-----------|-----------|------------|--------------|
+| 0: LLM Direct | 56.0% | 24.7% | - | $0.00055 | 9,947 / 14,872 |
+| 5: LLM-Guided | 99.9% | 99.9% | 97.0% | $0.0001 | 9,947 / 14,872 / 14,274 |
 
 **Phase 3: TODO**
-- Paper writing and visualization
+- Implement Variants 1-3 (BFS, FastRP A*, TransE A*)
+- Run full ablation study
+- Generate comparison plots
+- Paper writing
 
 ### Key Insight for Paper
-**"Relation-aware embeddings (TransE) are the key to multi-hop reasoning, not expensive LLM entity linking. Our method achieves practical accuracy at zero marginal cost."**
+**"Relation-aware embeddings (TransE) can replace expensive LLM planning for multi-hop reasoning, achieving 85-95% accuracy at zero inference cost vs 99% at $0.0001/query."**
+
+**Critical Gap:** Need to implement Variant 3 (TransE A*) to prove this hypothesis!
 
 ---
 
-**Current Focus:** Implementing Phase 2 QA system - see [phase2_context.md](phase2_context.md) for details
+**Current Focus:** Implement Variants 1-3 to complete the ablation study

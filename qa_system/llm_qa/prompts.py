@@ -1,6 +1,41 @@
 """Shared prompts for LLM-based QA"""
 
 
+def build_qwen_qa_prompt(question: str) -> str:
+    """
+    Build a simpler, more constrained prompt for Qwen models
+
+    Key differences from GPT-4o prompt:
+    1. Simpler instructions (avoid confusion)
+    2. Stronger JSON format constraints
+    3. Explicit anti-hallucination warning
+    4. Fewer examples (avoid pattern copying)
+    5. No placeholder examples like "item1", "item2"
+
+    Args:
+        question: Question text
+
+    Returns:
+        Formatted prompt string
+    """
+    return f"""You are answering a movie database question. Provide ONLY actual movies/people you are confident about.
+
+Question: {question}
+
+STRICT RULES:
+1. Return ONLY valid JSON in this exact format: {{"answers": ["Movie 1", "Movie 2"]}}
+2. Include ONLY real movies/people - NO made-up titles
+3. If you don't know, return: {{"answers": []}}
+4. NO explanations, NO extra text, ONLY the JSON object
+5. Movie titles WITHOUT years: "The Matrix" not "The Matrix (1999)"
+6. Do NOT repeat the same movie multiple times
+
+Example output format:
+{{"answers": ["Forrest Gump", "Cast Away", "Apollo 13"]}}
+
+Your JSON response:"""
+
+
 def build_direct_qa_prompt(question: str) -> str:
     """
     Build the prompt for direct QA (used by both DirectLLMQA and BatchLLMQA)
