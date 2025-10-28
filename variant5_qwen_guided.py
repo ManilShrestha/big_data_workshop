@@ -138,6 +138,7 @@ Note:
     use_llm_planning = True  # Variant 5B uses Qwen planning
     batch_planning = True  # Use parallel calls via ThreadPoolExecutor
 
+    # Incremental saving will auto-enable when dataset_name is passed to evaluate()
     evaluator = Evaluator(
         entity_linker=entity_linker,
         relation_ranker=relation_ranker,
@@ -175,16 +176,16 @@ Note:
         # Load dataset
         questions = load_qa_dataset(dataset_path, hop_count=hop_count, limit=args.limit)
 
-        # Set incremental save path for this dataset with timestamp
+        # Prepare output path for final results
         limit_str = f"_limit{args.limit}" if args.limit else "_full"
         output_path = f"results/variant5_qwen_guided_{dataset_name}{limit_str}_{timestamp}.json"
-        evaluator.incremental_save_path = output_path
 
-        # Evaluate (results will be saved incrementally)
+        # Evaluate (incremental saving auto-enables with dataset_name parameter)
         evaluation = evaluator.evaluate(
             questions=questions,
             top_k_relations=args.top_k,
-            verbose=True
+            verbose=True,
+            dataset_name=f"{dataset_name}{limit_str}"  # Auto-generates incremental save path
         )
 
         # Save final results (marks as 'completed')

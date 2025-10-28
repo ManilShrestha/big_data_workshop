@@ -79,7 +79,10 @@ def evaluate_qwen_qa(
     questions,
     dataset_name: str,
     output_path: str,
-    verbose: bool = True
+    batch_size: int = None,
+    max_workers: int = None,
+    verbose: bool = True,
+    debug: bool = False
 ):
     """
     Evaluate Qwen LLM QA on a dataset
@@ -106,7 +109,14 @@ def evaluate_qwen_qa(
     # Answer all questions using parallel calls
     if verbose:
         print("\n[QwenLLM] Answering questions with Qwen 30B (parallel calls)...")
-    batch_results = llm_qa.answer_batch(question_texts, verbose=verbose)
+
+    batch_results = llm_qa.answer_batch(
+        question_texts,
+        batch_size=batch_size,
+        max_workers=max_workers,
+        verbose=verbose,
+        debug=debug
+    )
 
     # Process results
     results = []
@@ -233,37 +243,107 @@ def evaluate_qwen_qa(
             print(f"  [Progress] {i+1}/{len(questions)} questions processed...")
 
     # Calculate aggregate metrics
+    import statistics
+
     accuracy = total_correct / len(questions) if questions else 0.0
     success_rate = total_successful / len(questions) if questions else 0.0
     cost_per_query = total_cost / len(questions) if questions else 0.0
 
-    # Precision, Recall, F1
-    precision = total_correct_answers / (total_correct_answers + total_incorrect_answers) if (total_correct_answers + total_incorrect_answers) > 0 else 0.0
-    recall = total_correct_answers / (total_correct_answers + total_missed_answers) if (total_correct_answers + total_missed_answers) > 0 else 0.0
-    f1_score = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+    # Micro-averaging: Precision, Recall, F1 (aggregate all predictions first)
+    micro_precision = total_correct_answers / (total_correct_answers + total_incorrect_answers) if (total_correct_answers + total_incorrect_answers) > 0 else 0.0
+    micro_recall = total_correct_answers / (total_correct_answers + total_missed_answers) if (total_correct_answers + total_missed_answers) > 0 else 0.0
+    micro_f1_score = 2 * micro_precision * micro_recall / (micro_precision + micro_recall) if (micro_precision + micro_recall) > 0 else 0.0
+
+    # Macro-averaging: Calculate precision/recall/F1 per question, then average
+    precisions = []
+    recalls = []
+    f1_scores = []
+
+    for result_dict in results:
+        metadata = result_dict.get('metadata', {})
+        num_correct = len(metadata.get('correct_answers', []))
+        num_incorrect = len(metadata.get('incorrect_answers', []))
+        num_missed = len(metadata.get('missed_answers', []))
+
+        # Calculate per-question metrics
+        q_precision = num_correct / (num_correct + num_incorrect) if (num_correct + num_incorrect) > 0 else 0.0
+        q_recall = num_correct / (num_correct + num_missed) if (num_correct + num_missed) > 0 else 0.0
+        q_f1 = 2 * q_precision * q_recall / (q_precision + q_recall) if (q_precision + q_recall) > 0 else 0.0
+
+        precisions.append(q_precision)
+        recalls.append(q_recall)
+        f1_scores.append(q_f1)
+
+    macro_avg_precision = sum(precisions) / len(precisions) if precisions else 0.0
+    macro_avg_recall = sum(recalls) / len(recalls) if recalls else 0.0
+    macro_avg_f1_score = sum(f1_scores) / len(f1_scores) if f1_scores else 0.0
+
+    macro_median_precision = statistics.median(precisions) if precisions else 0.0
+    macro_median_recall = statistics.median(recalls) if recalls else 0.0
+    macro_median_f1_score = statistics.median(f1_scores) if f1_scores else 0.0
 
     eval_time = time.time() - eval_start_time
 
     metrics = {
+        # Core accuracy metrics
         'total_questions': len(questions),
         'correct_answers': total_correct,
         'accuracy': accuracy,
         'successful_searches': total_successful,
         'success_rate': success_rate,
-        'precision': precision,
-        'recall': recall,
-        'f1_score': f1_score,
+
+        # Macro-averaging: average P/R/F1 across all questions (treats all questions equally)
+        'macro_avg_precision': macro_avg_precision,
+        'macro_avg_recall': macro_avg_recall,
+        'macro_avg_f1_score': macro_avg_f1_score,
+        'macro_median_precision': macro_median_precision,
+        'macro_median_recall': macro_median_recall,
+        'macro_median_f1_score': macro_median_f1_score,
+
+        # Micro-averaging: aggregate all predictions then calculate (weights by answer count)
+        'micro_precision': micro_precision,
+        'micro_recall': micro_recall,
+        'micro_f1_score': micro_f1_score,
+
+        # Legacy names (micro-averaged, for backwards compatibility)
+        'precision': micro_precision,
+        'recall': micro_recall,
+        'f1_score': micro_f1_score,
+
+        # Answer quality metrics
         'avg_correct_per_question': total_correct_answers / len(questions) if questions else 0.0,
         'avg_incorrect_per_question': total_incorrect_answers / len(questions) if questions else 0.0,
         'avg_missed_per_question': total_missed_answers / len(questions) if questions else 0.0,
         'total_correct_answers': total_correct_answers,
         'total_incorrect_answers': total_incorrect_answers,
         'total_missed_answers': total_missed_answers,
+
+        # Efficiency metrics
         'avg_nodes_expanded': 0.0,  # No graph traversal
+        'min_nodes_expanded': 0,
+        'max_nodes_expanded': 0,
+        'median_nodes_expanded': 0.0,
+
+        # Timing metrics
+        'avg_search_time_ms': 0.0,  # No graph search
+        'min_search_time_ms': 0.0,
+        'max_search_time_ms': 0.0,
+        'median_search_time_ms': 0.0,
+        'total_search_time_sec': 0.0,
+
+        # Total evaluation time (includes all overhead: LLM inference, processing)
+        'total_eval_time_sec': eval_time,
+        'total_eval_time_min': eval_time / 60,
+        'avg_time_per_query_sec': eval_time / len(questions) if questions else 0.0,
+
+        # Cost metrics
         'total_cost_usd': total_cost,
         'cost_per_query_usd': cost_per_query,
-        'total_eval_time_sec': eval_time,
+
+        # Throughput
         'queries_per_second': len(questions) / eval_time if eval_time > 0 else 0.0,
+        'queries_per_minute': (len(questions) / eval_time) * 60 if eval_time > 0 else 0.0,
+
         # Answer quality breakdown
         'count_perfect': count_perfect,
         'count_complete_with_hallucinations': count_complete_with_hallucinations,
@@ -275,6 +355,7 @@ def evaluate_qwen_qa(
         'pct_partial': count_partial / len(questions) * 100 if questions else 0.0,
         'pct_hallucination_only': count_hallucination_only / len(questions) * 100 if questions else 0.0,
         'pct_failed': count_failed / len(questions) * 100 if questions else 0.0,
+
         # Qwen-specific metrics
         'json_parse_failures': json_parse_failures,
         'json_parse_failure_rate': json_parse_failures / len(questions) * 100 if questions else 0.0
@@ -298,9 +379,9 @@ def evaluate_qwen_qa(
     if verbose:
         print(f"\n[Results] {dataset_name}")
         print(f"  Accuracy:           {accuracy:.2%}")
-        print(f"  Precision:          {precision:.2%}")
-        print(f"  Recall:             {recall:.2%}")
-        print(f"  F1 Score:           {f1_score:.2%}")
+        print(f"  Precision (micro):  {micro_precision:.2%}")
+        print(f"  Recall (micro):     {micro_recall:.2%}")
+        print(f"  F1 Score (micro):   {micro_f1_score:.2%}")
         print(f"  Correct answers:    {total_correct_answers}")
         print(f"  Incorrect answers:  {total_incorrect_answers} (hallucinations)")
         print(f"  Missed answers:     {total_missed_answers}")
@@ -339,8 +420,11 @@ Examples:
   # Run on full 1-hop dataset
   python variant0_qwen_baseline.py --datasets 1-hop
 
-  # Run on all datasets
-  python variant0_qwen_baseline.py --datasets 1-hop 2-hop 3-hop
+  # Run on all datasets with custom batch settings
+  python variant0_qwen_baseline.py --datasets 1-hop 2-hop 3-hop --batch-size 20 --max-workers 5
+
+  # Run with higher parallelism for faster processing
+  python variant0_qwen_baseline.py --datasets 1-hop --batch-size 100 --max-workers 20
         """
     )
     parser.add_argument(
@@ -356,6 +440,18 @@ Examples:
         choices=['1-hop', '2-hop', '3-hop'],
         default=['1-hop'],
         help='Datasets to evaluate (default: 1-hop)'
+    )
+    parser.add_argument(
+        '--batch-size',
+        type=int,
+        default=None,
+        help=f'Batch size for parallel processing (default: {Config.OPENAI_BATCH_SIZE})'
+    )
+    parser.add_argument(
+        '--max-workers',
+        type=int,
+        default=None,
+        help=f'Max parallel workers (default: {Config.OPENAI_MAX_WORKERS})'
     )
 
     args = parser.parse_args()
@@ -409,12 +505,19 @@ Examples:
         # Evaluate
         limit_str = f"_limit{limit}" if limit else "_full"
         output_path = f"results/variant0_qwen_baseline_{dataset_name}{limit_str}_{timestamp}.json"
+
+        # Enable debug mode when limit is set
+        debug_mode = limit is not None
+
         evaluation = evaluate_qwen_qa(
             llm_qa=llm_qa,
             questions=questions,
             dataset_name=dataset_name,
             output_path=output_path,
-            verbose=True
+            batch_size=args.batch_size,
+            max_workers=args.max_workers,
+            verbose=True,
+            debug=debug_mode
         )
 
         all_results[dataset_name] = evaluation['metrics']

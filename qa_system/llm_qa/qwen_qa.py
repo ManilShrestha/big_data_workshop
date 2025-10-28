@@ -7,7 +7,11 @@ from typing import List, Tuple
 import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from ..config import Config
-from .prompts import build_qwen_qa_prompt
+from .prompts import (
+    build_qwen_qa_prompt,
+    build_qwen_qa_prompt_pass1,
+    build_qwen_formatting_prompt_pass2
+)
 
 
 class QwenLLMQA:
@@ -30,9 +34,9 @@ class QwenLLMQA:
             base_url: Base URL for Qwen API endpoint
             model: Model name/path
         """
-        # Default to the endpoint from test_connections.ipynb
-        self.base_url = base_url or "http://96.245.177.243:12302/v1"
-        self.model = model or "cpatonn/Qwen3-30B-A3B-Instruct-2507-AWQ-8bit"
+        # Use config defaults
+        self.base_url = base_url or Config.QWEN_BASE_URL
+        self.model = model or Config.QWEN_MODEL
         self.total_cost = 0.0  # Keep for compatibility (always $0)
 
         print(f"  [QwenLLM] Initialized with model: {self.model}")
@@ -55,6 +59,10 @@ class QwenLLMQA:
         seen = set()
 
         for ans in answers:
+            # Convert to string if not already (model may return integers)
+            if not isinstance(ans, str):
+                ans = str(ans)
+
             # Skip placeholder responses
             if ans.lower() in {'item1', 'item2', 'movie 1', 'movie 2', 'movies', 'films'}:
                 continue
@@ -95,7 +103,8 @@ class QwenLLMQA:
         except json.JSONDecodeError:
             pass
 
-        # Strategy 2: Find JSON object between curly braces
+        # Strategy 2: Find FIRST JSON object between curly braces (non-greedy)
+        # This prevents matching repeated patterns like {"answers": []}{"answers": []}...
         try:
             match = re.search(r'\{.*?\}', text, re.DOTALL)
             if match:
@@ -133,42 +142,6 @@ class QwenLLMQA:
         # All strategies failed
         return {'answers': []}
 
-    def _build_qa_prompt_pass1(self, question: str) -> str:
-        """Build the prompt for Pass 1: Get raw answers (no JSON required)"""
-        return f"""Answer this movie question with a simple list of movies or people. Just list the names, one per line.
-
-Question: {question}
-
-Instructions:
-- List ONLY actual movies/people you are confident about
-- If you don't know, say "I don't know"
-- One name per line
-- Movie titles WITHOUT years
-- Do NOT make up fake titles
-
-Your answer:"""
-
-    def _build_formatting_prompt_pass2(self, question: str, raw_answer: str) -> str:
-        """Build the prompt for Pass 2: Convert raw answer to JSON"""
-        return f"""Convert this answer into JSON format.
-
-Question: {question}
-Answer: {raw_answer}
-
-Convert the answer above into this exact JSON format:
-{{"answers": ["item1", "item2", "item3"]}}
-
-Rules:
-- Each line becomes one item in the array
-- Skip lines like "I don't know" or empty lines
-- Keep the exact text, just put it in JSON format
-- If there are no valid answers, return: {{"answers": []}}
-
-JSON output:"""
-
-    def _build_qa_prompt(self, question: str) -> str:
-        """Build the prompt for direct QA (uses Qwen-specific prompt)"""
-        return build_qwen_qa_prompt(question)
 
     def answer_single(self, question: str, use_two_pass: bool = True) -> Tuple[List[str], float]:
         """
@@ -181,11 +154,11 @@ JSON output:"""
         Returns:
             Tuple of (list of answers, cost in USD) - cost is always 0.0
         """
-        max_retries = Config.OPENAI_MAX_RETRIES
+        max_retries = Config.QWEN_MAX_RETRIES_API
 
         if not use_two_pass:
             # Single-pass mode (original behavior)
-            prompt = self._build_qa_prompt(question)
+            prompt = build_qwen_qa_prompt(question)
 
             for attempt in range(max_retries):
                 try:
@@ -198,11 +171,11 @@ JSON output:"""
                             'max_tokens': 300,
                             'temperature': 0.1,
                             'top_p': 0.9,
-                            'frequency_penalty': 0.5,
-                            'presence_penalty': 0.3,
-                            'stop': ['\n\n', 'Question:', 'Q:', 'Example']
+                            'frequency_penalty': 1.0,  # Increased to prevent repetition
+                            'presence_penalty': 0.5,   # Increased to prevent repetition
+                            'stop': ['\n\n', 'Question:', 'Q:', 'Example', '}\n']
                         },
-                        timeout=30
+                        timeout=Config.QWEN_TIMEOUT
                     )
 
                     if response.status_code != 200:
@@ -230,7 +203,7 @@ JSON output:"""
 
         # TWO-PASS MODE (default)
         # Pass 1: Get raw answer (plain text, no JSON)
-        prompt_pass1 = self._build_qa_prompt_pass1(question)
+        prompt_pass1 = build_qwen_qa_prompt_pass1(question)
         raw_answer = None
 
         for attempt in range(max_retries):
@@ -248,7 +221,7 @@ JSON output:"""
                         'presence_penalty': 0.3,
                         'stop': ['\n\nQuestion:', 'Q:']
                     },
-                    timeout=30
+                    timeout=Config.QWEN_TIMEOUT
                 )
 
                 if response.status_code != 200:
@@ -274,7 +247,7 @@ JSON output:"""
             return [], 0.0
 
         # Pass 2: Convert raw answer to JSON
-        prompt_pass2 = self._build_formatting_prompt_pass2(question, raw_answer)
+        prompt_pass2 = build_qwen_formatting_prompt_pass2(question, raw_answer)
 
         for attempt in range(max_retries):
             try:
@@ -288,7 +261,7 @@ JSON output:"""
                         'temperature': 0,  # Deterministic for formatting
                         'stop': ['\n\n', 'Question:']
                     },
-                    timeout=30
+                    timeout=Config.QWEN_TIMEOUT
                 )
 
                 if response.status_code != 200:
@@ -326,16 +299,18 @@ JSON output:"""
         questions: List[str],
         batch_size: int = None,
         max_workers: int = None,
-        verbose: bool = True
+        verbose: bool = True,
+        debug: bool = False
     ) -> List[Tuple[List[str], float]]:
         """
         Answer multiple questions in parallel
 
         Args:
             questions: List of question texts
-            batch_size: Questions per batch (None = use Config.OPENAI_BATCH_SIZE)
-            max_workers: ThreadPoolExecutor workers (None = use Config.OPENAI_MAX_WORKERS)
+            batch_size: Questions per batch (None = use Config.QWEN_BATCH_SIZE)
+            max_workers: ThreadPoolExecutor workers (None = use Config.QWEN_MAX_WORKERS)
             verbose: Print progress
+            debug: Print raw LLM responses (for debugging)
 
         Returns:
             List of (answers, cost) tuples, one per question
@@ -345,9 +320,9 @@ JSON output:"""
 
         # Use config defaults if not specified
         if batch_size is None:
-            batch_size = Config.OPENAI_BATCH_SIZE
+            batch_size = Config.QWEN_BATCH_SIZE
         if max_workers is None:
-            max_workers = Config.OPENAI_MAX_WORKERS
+            max_workers = Config.QWEN_MAX_WORKERS
 
         num_batches = (len(questions) + batch_size - 1) // batch_size
 
@@ -358,11 +333,12 @@ JSON output:"""
         def call_api_with_retries(args):
             """Call API with retry logic for individual question"""
             idx, question = args
-            max_retries = Config.OPENAI_MAX_RETRIES
+            max_retries = Config.QWEN_MAX_RETRIES_API
+            nonlocal debug  # Access debug from outer scope
 
             for attempt in range(max_retries):
                 try:
-                    prompt = self._build_qa_prompt(question)
+                    prompt = build_qwen_qa_prompt(question)
 
                     response = requests.post(
                         f"{self.base_url}/completions",
@@ -373,11 +349,11 @@ JSON output:"""
                             'max_tokens': 300,
                             'temperature': 0.1,
                             'top_p': 0.9,
-                            'frequency_penalty': 0.5,
-                            'presence_penalty': 0.3,
-                            'stop': ['\n\n', 'Question:', 'Q:', 'Example']
+                            'frequency_penalty': 1.0,  # Increased to prevent repetition
+                            'presence_penalty': 0.5,   # Increased to prevent repetition
+                            'stop': ['\n\n', 'Question:', 'Q:', 'Example', '}\n']
                         },
-                        timeout=30
+                        timeout=Config.QWEN_TIMEOUT
                     )
 
                     if response.status_code != 200:
@@ -386,12 +362,24 @@ JSON output:"""
                     result = response.json()
                     completion_text = result['choices'][0]['text']
 
+                    # Debug: Print raw response
+                    if debug:
+                        print(f"\n{'='*80}")
+                        print(f"[DEBUG] Question {idx+1}: {question}")
+                        print(f"[DEBUG] Raw LLM Response:")
+                        print(f"{completion_text}")
+                        print(f"{'='*80}\n")
+
                     # Use robust JSON extraction
                     parsed = self._extract_json_robust(completion_text)
                     answers = parsed.get('answers', [])
 
                     if not isinstance(answers, list):
                         raise ValueError("'answers' field is not a list")
+
+                    # Debug: Print parsed answers
+                    if debug:
+                        print(f"[DEBUG] Parsed answers for Question {idx+1}: {answers}\n")
 
                     # Log parsing issues
                     if len(answers) == 0 and verbose:

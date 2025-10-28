@@ -50,6 +50,17 @@ class Config:
     OPENAI_MAX_WORKERS = 10  # ThreadPoolExecutor max workers for parallel API calls
     OPENAI_MAX_RETRIES = 5  # Number of retries for malformed JSON responses
 
+    # Qwen configuration (self-hosted)
+    # QWEN_BASE_URL = "http://96.245.177.243:12302/v1"
+    # QWEN_MODEL = "cpatonn/Qwen3-30B-A3B-Instruct-2507-AWQ-8bit"
+    QWEN_BASE_URL = "http://0.0.0.0:12302/v1"
+    QWEN_MODEL = "Qwen3-30B-A3B-Instruct-2507"
+    QWEN_BATCH_SIZE = 50  # Number of questions to batch in parallel LLM calls
+    QWEN_MAX_WORKERS = 10  # Lower than OpenAI to avoid overwhelming self-hosted server
+    QWEN_MAX_RETRIES_PARSE = 2  # Retries for parse errors (model won't improve)
+    QWEN_MAX_RETRIES_API = 5  # Retries for API/server errors (transient issues)
+    QWEN_TIMEOUT = 120  # API timeout in seconds (higher due to self-hosted latency)
+
     # Cost tracking (USD)
     COST_PER_EMBEDDING = 0.00000002  # text-embedding-3-small: $0.02 per 1M tokens
     COST_PER_CHAT_TOKEN = 0.0000005  # gpt-4o-mini average

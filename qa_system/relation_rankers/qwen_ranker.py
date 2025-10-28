@@ -44,8 +44,8 @@ class QwenRelationRanker(BaseRelationRanker):
             base_url: Base URL for Qwen API endpoint
             model: Model name/path
         """
-        self.base_url = base_url or "http://96.245.177.243:12302/v1"
-        self.model = model or "cpatonn/Qwen3-30B-A3B-Instruct-2507-AWQ-8bit"
+        self.base_url = base_url or Config.QWEN_BASE_URL
+        self.model = model or Config.QWEN_MODEL
         self.total_cost = 0.0  # Keep for compatibility (always $0)
         self.last_query_cost = 0.0
 
@@ -69,9 +69,10 @@ class QwenRelationRanker(BaseRelationRanker):
         except json.JSONDecodeError:
             pass
 
-        # Strategy 2: Find JSON object between curly braces
+        # Strategy 2: Find FIRST JSON object between curly braces (non-greedy)
+        # This prevents matching repeated patterns like {...}JSON: {...}JSON: {...}
         try:
-            match = re.search(r'\{.*\}', text, re.DOTALL)
+            match = re.search(r'\{.*?\}', text, re.DOTALL)
             if match:
                 return json.loads(match.group(0))
         except (json.JSONDecodeError, AttributeError):
@@ -139,8 +140,8 @@ class QwenRelationRanker(BaseRelationRanker):
         """Return cost of last query only (always $0 for self-hosted)"""
         return 0.0
 
-    def _build_relation_planning_prompt(self, question: str, max_hops: int) -> str:
-        """Build the prompt for relation planning (same as OpenAI)"""
+    def _build_relation_planning_prompt_pass1(self, question: str, max_hops: int) -> str:
+        """Build Pass 1 prompt: plain text reasoning (no JSON)"""
         relations_list = "\n".join([f"- {rel}" for rel in Config.METAQA_RELATIONS])
 
         return f"""You are analyzing a knowledge graph question to determine which relations to traverse.
@@ -152,16 +153,31 @@ Question: "{question}"
 
 This is a {max_hops}-hop question. You need to select which relation(s) might be relevant at EACH hop.
 
-For each hop, select 1-2 most relevant relations from the list above. Think about the logical path needed to answer the question.
+Think about the logical path needed to answer the question. For each hop, select 1-2 most relevant relations from the list above.
 
 Examples:
 - "Who directed movies starring [Actor]?" → Hop 1: starred_actors, Hop 2: directed_by
 - "What genre are films written by [Writer]?" → Hop 1: written_by, Hop 2: has_genre
 - "What year were movies by the director of [Movie]?" → Hop 1: directed_by, Hop 2: release_year
-- "What films can be described by [occupation]?" → Hop 1: has_tags (films point TO tags/themes)
-- "What films can be described by [Person Name]?" → Hop 1: has_tags (films associated with person as tag)
 
-Respond in JSON format:
+Provide your analysis as plain text (one relation per hop, one line per hop):
+Hop 1: relation_name
+Hop 2: relation_name
+...
+
+Your analysis:"""
+
+    def _build_relation_planning_prompt_pass2(self, question: str, max_hops: int, raw_answer: str) -> str:
+        """Build Pass 2 prompt: convert plain text to JSON"""
+        return f"""Convert the following relation planning to JSON format.
+
+Question: "{question}"
+Max hops: {max_hops}
+
+Analysis:
+{raw_answer}
+
+Convert to this exact JSON format:
 {{
   "reasoning": "brief explanation of the path",
   "hops": [
@@ -171,11 +187,12 @@ Respond in JSON format:
   ]
 }}
 
-Provide your analysis:"""
+JSON:"""
 
     def plan_relation_sequence(self, question: str, max_hops: int) -> Tuple[List[List[str]], str]:
         """
         Use Qwen to plan which relations to use for multi-hop questions.
+        Uses two-pass approach: first get reasoning, then convert to JSON.
 
         Args:
             question: Question text
@@ -185,23 +202,65 @@ Provide your analysis:"""
             Tuple of (List of relation lists for each hop, reasoning string)
             Returns (None, "FAILED") if all retries fail
         """
-        prompt = self._build_relation_planning_prompt(question, max_hops)
+        # PASS 1: Get plain text reasoning (retry API errors)
+        prompt_pass1 = self._build_relation_planning_prompt_pass1(question, max_hops)
+        raw_answer = None
 
-        max_retries = Config.OPENAI_MAX_RETRIES
-
-        for attempt in range(max_retries):
+        for attempt in range(Config.QWEN_MAX_RETRIES_API):
             try:
                 response = requests.post(
                     f"{self.base_url}/completions",
                     headers={'Content-Type': 'application/json'},
                     json={
                         'model': self.model,
-                        'prompt': prompt,
+                        'prompt': prompt_pass1,
+                        'max_tokens': 200,
+                        'temperature': 0.1,
+                        'frequency_penalty': 1.0,  # Prevent repetition
+                        'presence_penalty': 0.5,   # Prevent repetition
+                        'stop': ['\n\nQuestion:', 'Q:', '\n\n']
+                    },
+                    timeout=Config.QWEN_TIMEOUT
+                )
+
+                if response.status_code != 200:
+                    raise ValueError(f"API returned status {response.status_code}")
+
+                result = response.json()
+                raw_answer = result['choices'][0]['text'].strip()
+                break  # Success
+
+            except Exception as e:
+                if attempt < Config.QWEN_MAX_RETRIES_API - 1:
+                    wait_time = min(2 ** attempt, 4)
+                    print(f"  [QwenRanker] Pass1 API error (attempt {attempt+1}/{Config.QWEN_MAX_RETRIES_API}): {e}. Retrying in {wait_time}s...")
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    print(f"  [QwenRanker] Pass1 failed after {Config.QWEN_MAX_RETRIES_API} API retries - marking as FAILED")
+                    return None, "FAILED"
+
+        if not raw_answer:
+            return None, "FAILED"
+
+        # PASS 2: Convert to JSON (retry API errors, limited parse retries)
+        prompt_pass2 = self._build_relation_planning_prompt_pass2(question, max_hops, raw_answer)
+
+        for attempt in range(Config.QWEN_MAX_RETRIES_API):
+            try:
+                response = requests.post(
+                    f"{self.base_url}/completions",
+                    headers={'Content-Type': 'application/json'},
+                    json={
+                        'model': self.model,
+                        'prompt': prompt_pass2,
                         'max_tokens': 300,
                         'temperature': 0,
-                        'stop': ['\n\nQuestion:', 'Q:', 'Examples:']
+                        'frequency_penalty': 1.0,  # Prevent repetition
+                        'presence_penalty': 0.5,   # Prevent repetition
+                        'stop': ['\n\nQuestion:', '\n\nConvert', '}\n', 'JSON:']
                     },
-                    timeout=30
+                    timeout=Config.QWEN_TIMEOUT
                 )
 
                 if response.status_code != 200:
@@ -211,54 +270,99 @@ Provide your analysis:"""
                 completion_text = result['choices'][0]['text']
 
                 # Use robust JSON extraction
-                try:
-                    parsed = self._extract_json_robust(completion_text)
+                parse_attempt = 0
+                parsed = None
 
-                    reasoning = parsed.get('reasoning', 'N/A')
-                    hops = parsed.get('hops', [])
+                while parse_attempt < Config.QWEN_MAX_RETRIES_PARSE:
+                    try:
+                        parsed = self._extract_json_robust(completion_text)
 
-                    # Validate hops structure
-                    if not isinstance(hops, list):
-                        raise ValueError("'hops' field is not a list")
+                        reasoning = parsed.get('reasoning', raw_answer[:100])  # Fallback to raw
+                        hops = parsed.get('hops', [])
 
-                    # Filter hops to only include lists
-                    filtered_hops = [hop for hop in hops if isinstance(hop, list)]
+                        # Validate hops structure
+                        if not isinstance(hops, list):
+                            raise ValueError("'hops' field is not a list")
 
-                    if len(filtered_hops) == 0:
-                        raise ValueError("No valid hop lists found")
+                        # Filter hops to only include lists
+                        filtered_hops = [hop for hop in hops if isinstance(hop, list)]
 
-                    # Success!
-                    print(f"  [QwenRanker] Relation planning - Reasoning: {reasoning}")
-                    print(f"  [QwenRanker] Planned hops: {filtered_hops}")
+                        if len(filtered_hops) == 0:
+                            raise ValueError("No valid hop lists found")
 
-                    return filtered_hops, reasoning
+                        # Success!
+                        print(f"  [QwenRanker] Relation planning - Reasoning: {reasoning}")
+                        print(f"  [QwenRanker] Planned hops: {filtered_hops}")
 
-                except (ValueError, KeyError) as e:
-                    # Parsing failed - retry
-                    if attempt < max_retries - 1:
-                        wait_time = 2 ** attempt
-                        print(f"  [QwenRanker] Parse error (attempt {attempt+1}/{max_retries}): {e}")
-                        print(f"  [QwenRanker] Response preview: {completion_text[:200]}...")
-                        print(f"  [QwenRanker] Retrying in {wait_time}s...")
-                        time.sleep(wait_time)
-                        continue
-                    else:
-                        print(f"  [QwenRanker] All {max_retries} retries failed - marking as FAILED")
-                        return None, "FAILED"
+                        return filtered_hops, reasoning
+
+                    except (ValueError, KeyError) as e:
+                        # Parse error - limited retries (re-request from API)
+                        parse_attempt += 1
+                        if parse_attempt < Config.QWEN_MAX_RETRIES_PARSE:
+                            print(f"  [QwenRanker] Pass2 parse error (attempt {parse_attempt}/{Config.QWEN_MAX_RETRIES_PARSE}): {e}")
+                            print(f"  [QwenRanker] Full response: {completion_text}")
+                            print(f"  [QwenRanker] Re-requesting from API...")
+                            break  # Break inner loop to retry API call
+                        else:
+                            # Final fallback: parse raw_answer manually
+                            print(f"  [QwenRanker] Pass2 parse failed after {Config.QWEN_MAX_RETRIES_PARSE} attempts")
+                            print(f"  [QwenRanker] Last response: {completion_text}")
+                            print(f"  [QwenRanker] Attempting manual parse of raw answer...")
+                            return self._parse_raw_planning(raw_answer, max_hops)
+
+                # If we successfully parsed, we would have returned above
+                # If we broke out to retry API call, continue the outer loop
+                if parse_attempt < Config.QWEN_MAX_RETRIES_PARSE:
+                    continue
 
             except Exception as e:
-                # API call failed - retry
-                if attempt < max_retries - 1:
-                    wait_time = 2 ** attempt
-                    print(f"  [QwenRanker] Error (attempt {attempt+1}/{max_retries}): {e}. Retrying in {wait_time}s...")
+                # API error - full retries
+                if attempt < Config.QWEN_MAX_RETRIES_API - 1:
+                    wait_time = min(2 ** attempt, 4)
+                    print(f"  [QwenRanker] Pass2 API error (attempt {attempt+1}/{Config.QWEN_MAX_RETRIES_API}): {e}. Retrying in {wait_time}s...")
                     time.sleep(wait_time)
                     continue
                 else:
-                    print(f"  [QwenRanker] All {max_retries} retries failed - marking as FAILED")
-                    return None, "FAILED"
+                    # Final fallback: parse raw_answer manually
+                    print(f"  [QwenRanker] Pass2 API failed after {Config.QWEN_MAX_RETRIES_API} retries")
+                    print(f"  [QwenRanker] Attempting manual parse of raw answer...")
+                    return self._parse_raw_planning(raw_answer, max_hops)
 
         # Should never reach here
         return None, "FAILED"
+
+    def _parse_raw_planning(self, raw_answer: str, max_hops: int) -> Tuple[List[List[str]], str]:
+        """
+        Fallback: Parse plain text planning into hop structure
+
+        Expected format:
+        Hop 1: relation_name
+        Hop 2: relation_name
+        """
+        import re
+
+        lines = raw_answer.split('\n')
+        hops = []
+
+        for i in range(1, max_hops + 1):
+            # Look for "Hop N: relation_name"
+            pattern = rf'Hop\s*{i}\s*:\s*(\w+)'
+            for line in lines:
+                match = re.search(pattern, line, re.IGNORECASE)
+                if match:
+                    relation = match.group(1).strip()
+                    # Validate it's a real relation
+                    if relation in Config.METAQA_RELATIONS:
+                        hops.append([relation])
+                    break
+
+        if len(hops) > 0:
+            print(f"  [QwenRanker] Manual parse successful: {hops}")
+            return hops, raw_answer[:100]
+        else:
+            print(f"  [QwenRanker] Manual parse failed - marking as FAILED")
+            return None, "FAILED"
 
     def plan_relation_sequence_batch(self, questions: List[str], max_hops: int, batch_size: int = None, max_workers: int = None) -> List[Tuple[List[List[str]], str]]:
         """
@@ -268,8 +372,8 @@ Provide your analysis:"""
         Args:
             questions: List of question texts
             max_hops: Number of hops needed
-            batch_size: Max questions per batch (None = uses Config.OPENAI_BATCH_SIZE)
-            max_workers: ThreadPoolExecutor workers (None = uses Config.OPENAI_MAX_WORKERS)
+            batch_size: Max questions per batch (None = uses Config.QWEN_BATCH_SIZE)
+            max_workers: ThreadPoolExecutor workers (None = uses Config.QWEN_MAX_WORKERS)
 
         Returns:
             List of (hops, reasoning) tuples, one per question
@@ -279,82 +383,26 @@ Provide your analysis:"""
 
         # Use config defaults if not specified
         if batch_size is None:
-            batch_size = Config.OPENAI_BATCH_SIZE
+            batch_size = Config.QWEN_BATCH_SIZE
         if max_workers is None:
-            max_workers = Config.OPENAI_MAX_WORKERS
+            max_workers = Config.QWEN_MAX_WORKERS
 
         num_batches = (len(questions) + batch_size - 1) // batch_size
         print(f"  [QwenRanker] Processing {len(questions)} questions in {num_batches} batch(es) (batch_size={batch_size}, max_workers={max_workers})...")
 
-        max_retries = Config.OPENAI_MAX_RETRIES
-
         def call_api_with_retries(args):
-            """Call API with retry logic for individual question"""
+            """Call API with retry logic for individual question - uses two-pass approach"""
             idx, question = args
 
-            for attempt in range(max_retries):
-                try:
-                    prompt = self._build_relation_planning_prompt(question, max_hops)
-
-                    response = requests.post(
-                        f"{self.base_url}/completions",
-                        headers={'Content-Type': 'application/json'},
-                        json={
-                            'model': self.model,
-                            'prompt': prompt,
-                            'max_tokens': 300,
-                            'temperature': 0,
-                            'stop': ['\n\nQuestion:', 'Q:', 'Examples:']
-                        },
-                        timeout=30
-                    )
-
-                    if response.status_code != 200:
-                        raise ValueError(f"API returned status {response.status_code}")
-
-                    result = response.json()
-                    completion_text = result['choices'][0]['text']
-
-                    # Try to parse JSON
-                    try:
-                        parsed = self._extract_json_robust(completion_text)
-
-                        # Validate structure
-                        hops = parsed.get('hops', [])
-                        if not isinstance(hops, list):
-                            raise ValueError("'hops' field is not a list")
-
-                        filtered_hops = [hop for hop in hops if isinstance(hop, list)]
-                        if len(filtered_hops) == 0:
-                            raise ValueError("No valid hop lists found")
-
-                        # Success!
-                        return idx, parsed, None
-
-                    except (ValueError, KeyError) as e:
-                        # Parsing failed - retry
-                        if attempt < max_retries - 1:
-                            wait_time = 2 ** attempt
-                            print(f"  [QwenRanker] Question {idx+1} failed (attempt {attempt+1}/{max_retries}): {e}. Retrying in {wait_time}s...")
-                            time.sleep(wait_time)
-                            continue
-                        else:
-                            print(f"  [QwenRanker] Question {idx+1} failed after {max_retries} retries - marking as FAILED")
-                            return idx, None, "FAILED"
-
-                except Exception as e:
-                    # API call failed - retry
-                    if attempt < max_retries - 1:
-                        wait_time = 2 ** attempt
-                        print(f"  [QwenRanker] Question {idx+1} API error (attempt {attempt+1}/{max_retries}): {e}. Retrying in {wait_time}s...")
-                        time.sleep(wait_time)
-                        continue
-                    else:
-                        print(f"  [QwenRanker] Question {idx+1} failed after {max_retries} retries - marking as FAILED")
-                        return idx, None, "FAILED"
-
-            # Should never reach here
-            return idx, None, "FAILED"
+            # Use the single-question plan_relation_sequence method (already has two-pass logic)
+            try:
+                hops, reasoning = self.plan_relation_sequence(question, max_hops)
+                if hops is None:
+                    return idx, None, "FAILED"
+                return idx, {'hops': hops, 'reasoning': reasoning}, None
+            except Exception as e:
+                print(f"  [QwenRanker] Question {idx+1} failed: {e}")
+                return idx, None, "FAILED"
 
         # Process in parallel with progress tracking
         start_time = time.time()

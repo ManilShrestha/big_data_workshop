@@ -49,7 +49,8 @@ class Evaluator:
         self,
         questions: List[Question],
         top_k_relations: int = 3,
-        verbose: bool = True
+        verbose: bool = True,
+        dataset_name: str = None
     ) -> Dict:
         """
         Evaluate on a list of questions
@@ -58,12 +59,26 @@ class Evaluator:
             questions: List of Question objects
             top_k_relations: Use top-k relations from ranker
             verbose: Print progress
+            dataset_name: Optional dataset name for auto-generated save path (e.g., "1-hop-test")
 
         Returns:
             Dictionary with aggregate metrics
         """
         import time
         eval_start_time = time.time()
+
+        # Auto-generate incremental save path if dataset_name provided
+        # This allows each dataset to have its own save file
+        if dataset_name:
+            from datetime import datetime
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            save_path = f"results/{self.variant_name}_{dataset_name}_{timestamp}.json"
+            self.incremental_save_path = save_path
+            if verbose:
+                print(f"  Auto-enabled incremental saves: {save_path}\n")
+        elif self.incremental_save_path is None:
+            # No dataset name provided and no path set - disable incremental saving
+            pass
 
         results = []
         total_cost = 0.0
@@ -192,12 +207,15 @@ class Evaluator:
 
                     # Create a failed search result
                     result = SearchResult(
-                        question=question,
-                        found_answers=[],
-                        expected_answers=question.answers,
+                        question_id=question.question_id,
+                        question_text=question.text,
+                        predicted_answers=[],
+                        ground_truth_answers=question.ground_truth_answers,
                         success=False,
                         nodes_expanded=0,
                         search_time_ms=0.0,
+                        reasoning_path=[],
+                        relations_used=[],
                         metadata={'error': 'LLM planning failed after retries', 'llm_reasoning': 'FAILED'}
                     )
 
@@ -269,6 +287,8 @@ class Evaluator:
             # NOTE: Cost doesn't include batch_llm_cost yet - will be added after loop
             if self.incremental_save_path:
                 self._save_incremental(results, total_cost, eval_start_time)
+                if verbose and i % 5 == 0:  # Print every 5 questions
+                    print(f"  [Progress saved: {len(results)} questions completed]")
 
         # Distribute batch LLM cost across all questions that used LLM planning
         if llm_plans and batch_llm_cost > 0:
