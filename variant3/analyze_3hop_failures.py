@@ -20,27 +20,30 @@ def analyze_failures(results):
     success_cases = []
 
     for item in results['results']:
-        question = item['question']
+        question = item['question_text']
         predicted = set(item['predicted_answers'])
-        ground_truth = set(item['ground_truth'])
+        ground_truth = set(item['ground_truth_answers'])
 
-        is_correct = item['correct']
+        is_correct = item['is_correct']
 
         if not is_correct:
             failures.append({
                 'question': question,
                 'predicted': predicted,
                 'ground_truth': ground_truth,
-                'paths': item.get('paths', []),
-                'search_trace': item.get('search_trace', {}),
-                'reasoning': item.get('reasoning', '')
+                'reasoning_path': item.get('reasoning_path', ''),
+                'relations_used': item.get('relations_used', []),
+                'nodes_expanded': item.get('nodes_expanded', 0),
+                'metadata': item.get('metadata', {}),
             })
         else:
             success_cases.append({
                 'question': question,
                 'predicted': predicted,
                 'ground_truth': ground_truth,
-                'paths': item.get('paths', []),
+                'reasoning_path': item.get('reasoning_path', ''),
+                'relations_used': item.get('relations_used', []),
+                'nodes_expanded': item.get('nodes_expanded', 0),
             })
 
     return failures, success_cases
@@ -74,24 +77,16 @@ def analyze_path_quality(failures):
     """Analyze the quality of paths found."""
 
     path_stats = {
-        'num_paths': [],
-        'avg_path_scores': [],
-        'hop_scores_by_position': [[], [], []],  # hop 1, hop 2, hop 3
+        'nodes_expanded': [],
+        'num_relations_used': [],
+        'has_reasoning_path': 0,
     }
 
     for failure in failures:
-        paths = failure.get('paths', [])
-        path_stats['num_paths'].append(len(paths))
-
-        if paths:
-            for path in paths:
-                if 'avg_score' in path:
-                    path_stats['avg_path_scores'].append(path['avg_score'])
-
-                # Collect hop scores
-                for hop_idx, hop in enumerate(path.get('hops', [])):
-                    if hop_idx < 3 and 'score' in hop:
-                        path_stats['hop_scores_by_position'][hop_idx].append(hop['score'])
+        path_stats['nodes_expanded'].append(failure.get('nodes_expanded', 0))
+        path_stats['num_relations_used'].append(len(failure.get('relations_used', [])))
+        if failure.get('reasoning_path'):
+            path_stats['has_reasoning_path'] += 1
 
     return path_stats
 
@@ -112,54 +107,36 @@ def print_analysis(failures, success_cases, categories, path_stats):
         print(f"\n{category.upper().replace('_', ' ')}: {len(cases)} cases")
 
     print("\n" + "=" * 80)
-    print("PATH STATISTICS (Failures)")
+    print("SEARCH STATISTICS (Failures)")
     print("=" * 80)
-    if path_stats['num_paths']:
-        print(f"Avg paths found: {sum(path_stats['num_paths'])/len(path_stats['num_paths']):.2f}")
-        print(f"Cases with 0 paths: {sum(1 for x in path_stats['num_paths'] if x == 0)}")
+    if path_stats['nodes_expanded']:
+        print(f"Avg nodes expanded: {sum(path_stats['nodes_expanded'])/len(path_stats['nodes_expanded']):.2f}")
+        print(f"Min nodes expanded: {min(path_stats['nodes_expanded'])}")
+        print(f"Max nodes expanded: {max(path_stats['nodes_expanded'])}")
+        print(f"Cases with 0 nodes: {sum(1 for x in path_stats['nodes_expanded'] if x == 0)}")
 
-    if path_stats['avg_path_scores']:
-        print(f"Avg path score: {sum(path_stats['avg_path_scores'])/len(path_stats['avg_path_scores']):.4f}")
-        print(f"Min path score: {min(path_stats['avg_path_scores']):.4f}")
-        print(f"Max path score: {max(path_stats['avg_path_scores']):.4f}")
+    if path_stats['num_relations_used']:
+        print(f"\nAvg relations used: {sum(path_stats['num_relations_used'])/len(path_stats['num_relations_used']):.2f}")
 
-    print("\nHop scores by position:")
-    for hop_idx, scores in enumerate(path_stats['hop_scores_by_position']):
-        if scores:
-            avg_score = sum(scores) / len(scores)
-            print(f"  Hop {hop_idx+1}: {avg_score:.4f} (n={len(scores)})")
+    print(f"\nCases with reasoning path: {path_stats['has_reasoning_path']}/{len(failures)}")
 
     # Compare with success cases
     print("\n" + "=" * 80)
-    print("SUCCESS CASE PATH STATISTICS (for comparison)")
+    print("SEARCH STATISTICS (Success cases - for comparison)")
     print("=" * 80)
-    success_path_count = []
-    success_scores = []
-    success_hop_scores = [[], [], []]
+    success_nodes = [case.get('nodes_expanded', 0) for case in success_cases]
+    success_relations = [len(case.get('relations_used', [])) for case in success_cases]
+    success_reasoning = sum(1 for case in success_cases if case.get('reasoning_path'))
 
-    for case in success_cases:
-        paths = case.get('paths', [])
-        success_path_count.append(len(paths))
+    if success_nodes:
+        print(f"Avg nodes expanded: {sum(success_nodes)/len(success_nodes):.2f}")
+        print(f"Min nodes expanded: {min(success_nodes)}")
+        print(f"Max nodes expanded: {max(success_nodes)}")
 
-        if paths:
-            for path in paths:
-                if 'avg_score' in path:
-                    success_scores.append(path['avg_score'])
+    if success_relations:
+        print(f"\nAvg relations used: {sum(success_relations)/len(success_relations):.2f}")
 
-                for hop_idx, hop in enumerate(path.get('hops', [])):
-                    if hop_idx < 3 and 'score' in hop:
-                        success_hop_scores[hop_idx].append(hop['score'])
-
-    if success_path_count:
-        print(f"Avg paths found: {sum(success_path_count)/len(success_path_count):.2f}")
-    if success_scores:
-        print(f"Avg path score: {sum(success_scores)/len(success_scores):.4f}")
-
-    print("\nHop scores by position:")
-    for hop_idx, scores in enumerate(success_hop_scores):
-        if scores:
-            avg_score = sum(scores) / len(scores)
-            print(f"  Hop {hop_idx+1}: {avg_score:.4f} (n={len(scores)})")
+    print(f"\nCases with reasoning path: {success_reasoning}/{len(success_cases)}")
 
     # Sample failures
     print("\n" + "=" * 80)
@@ -173,22 +150,15 @@ def print_analysis(failures, success_cases, categories, path_stats):
                 print(f"\n  [{i+1}] Question: {case['question']}")
                 print(f"      Ground truth: {case['ground_truth']}")
                 print(f"      Predicted: {case['predicted']}")
+                print(f"      Nodes expanded: {case.get('nodes_expanded', 0)}")
+                print(f"      Relations used: {case.get('relations_used', [])}")
 
-                # Show top path if available
-                paths = case.get('paths', [])
-                if paths:
-                    top_path = paths[0]
-                    print(f"      Top path score: {top_path.get('avg_score', 'N/A')}")
-                    print(f"      Path: ", end="")
-                    for hop_idx, hop in enumerate(top_path.get('hops', [])):
-                        if hop_idx > 0:
-                            print(" -> ", end="")
-                        print(f"{hop.get('entity', '?')} --[{hop.get('relation', '?')}]-->", end="")
-                    if top_path.get('hops'):
-                        last_hop = top_path['hops'][-1]
-                        print(f" {last_hop.get('target', '?')}")
+                # Show reasoning path if available
+                reasoning_path = case.get('reasoning_path', '')
+                if reasoning_path:
+                    print(f"      Reasoning: {reasoning_path[:200]}{'...' if len(reasoning_path) > 200 else ''}")
                 else:
-                    print(f"      No paths found")
+                    print(f"      No reasoning path found")
 
 def main():
     # Find most recent 3-hop result file

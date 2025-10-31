@@ -121,21 +121,21 @@ def extract_answer_entities(answer_list: List[str], entity_lookup: Dict[str, str
     return entities
 
 
-def bfs_shortest_path(
+def bfs_exact_hop_path(
     graph,
     start_nodes: Set[str],
     target_nodes: Set[str],
-    max_hops: int = 3
+    target_hops: int = 3
 ) -> Optional[List[Tuple[str, str, str]]]:
     """
-    Find shortest path using BFS, treating graph as non-directional.
+    Find a path of EXACTLY target_hops length using BFS.
 
-    IMPORTANT: Returns TRUE shortest path by tracking paths explicitly.
-    This allows finding longer paths even when shortcuts exist.
+    This function finds paths of the exact hop count, even if shorter paths exist.
+    Uses BFS to explore all paths level by level.
 
     Returns:
         List of (node_id, relation, target_id) tuples representing the path,
-        or None if no path found
+        or None if no path of exact length found
     """
     # Track paths explicitly: (current_node, hop_count, path_so_far)
     queue = deque()
@@ -149,23 +149,15 @@ def bfs_shortest_path(
     for start in start_nodes:
         visited.add((start, 0))
 
-    # Store shortest path to any target
-    shortest_path = None
-    shortest_length = float('inf')
-
     while queue:
         current, hop, path = queue.popleft()
 
-        # Check if we reached target
-        if current in target_nodes and hop > 0:
-            if len(path) < shortest_length:
-                shortest_length = len(path)
-                shortest_path = path
-            # IMPORTANT: Keep exploring from targets to find longer paths!
-            # Don't stop here - there might be 3-hop paths through other nodes
+        # Check if we reached target at EXACT hop count
+        if hop == target_hops and current in target_nodes:
+            return path  # Found exact-hop path!
 
-        # Don't explore beyond max hops
-        if hop >= max_hops:
+        # Don't explore beyond target hops
+        if hop >= target_hops:
             continue
 
         # Explore in BOTH directions (graph is non-directional)
@@ -186,7 +178,7 @@ def bfs_shortest_path(
                 new_path = path + [(current, relation, source)]
                 queue.append((source, hop + 1, new_path))
 
-    return shortest_path
+    return None
 
 
 def create_training_samples(
@@ -295,25 +287,21 @@ def process_question_batch(
             no_path_count += 1
             continue
 
-        # Find shortest path
-        path = bfs_shortest_path(
+        # Find path of EXACT hop count (not shortest path!)
+        # This allows using questions with shortcuts if they also have N-hop paths
+        path = bfs_exact_hop_path(
             graph,
             topic_entities,
             answer_entities,
-            max_hops=3
+            target_hops=question.hop_count
         )
 
         if path is None:
             no_path_count += 1
             continue
 
-        # Only accept paths that match expected hop count
+        # Track path length (should always match question.hop_count now)
         path_length = len(path)
-        if path_length != question.hop_count:
-            no_path_count += 1
-            continue
-
-        # Track path length
         if path_length in path_length_stats:
             path_length_stats[path_length] += 1
 

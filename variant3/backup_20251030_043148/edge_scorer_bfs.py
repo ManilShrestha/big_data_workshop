@@ -132,8 +132,7 @@ class EdgeScorerBFS(BaseSearch):
                 scores = self.edge_scorer.score_edges_batch(
                     question=question_text,
                     edges=all_edges,
-                    hop=current_hop,
-                    question_hop_count=max_hops  # Pass question hop count
+                    hop=current_hop
                 )
 
                 # Group edges by relation and find top-K relations

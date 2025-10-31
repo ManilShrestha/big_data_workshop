@@ -78,20 +78,6 @@ class EdgeScorerDualDataset(Dataset):
         self.zero_text = np.zeros(1536, dtype=np.float32)
         self.zero_graph = np.zeros(256, dtype=np.float32)
 
-        # Precompute question hop counts (infer from max hop per question)
-        from collections import defaultdict
-        question_max_hops = defaultdict(int)
-        for sample in samples:
-            qid = sample['question_id']
-            hop = sample['hop']
-            question_max_hops[qid] = max(question_max_hops[qid], hop)
-        self.question_hop_counts = dict(question_max_hops)
-
-        print(f"   Inferred question hop counts: "
-              f"1-hop: {sum(1 for h in self.question_hop_counts.values() if h==1)}, "
-              f"2-hop: {sum(1 for h in self.question_hop_counts.values() if h==2)}, "
-              f"3-hop: {sum(1 for h in self.question_hop_counts.values() if h==3)}")
-
     def __len__(self):
         return len(self.samples)
 
@@ -127,23 +113,15 @@ class EdgeScorerDualDataset(Dataset):
         sample = self.samples[idx]
 
         # Extract sample fields
-        question_id = sample['question_id']
         question_text = sample['question_text']
         node_id = sample['node_id']
         relation = sample['edge_relation']
         target_id = sample['edge_target']
-        current_hop = sample['hop']  # 1, 2, or 3
+        hop = sample['hop']
         label = sample['label']
 
-        # Get question hop count (1, 2, or 3)
-        question_hop_count = self.question_hop_counts[question_id]
-
-        # Create 6-bit one-hot hop context
-        # First 3 bits: question hop count (1-hot)
-        # Second 3 bits: current hop (1-hot)
-        hop_context = np.zeros(6, dtype=np.float32)
-        hop_context[question_hop_count - 1] = 1.0  # Question hop: 0-2 index
-        hop_context[3 + current_hop - 1] = 1.0     # Current hop: 3-5 index
+        # Convert hop from 1-indexed to 0-indexed (data has 1,2,3 but model expects 0,1,2)
+        hop_idx = hop - 1
 
         # Question text embedding (no graph structure for questions)
         q_text = self.text_embeddings_cache.get(question_text, self.zero_text)
@@ -165,7 +143,7 @@ class EdgeScorerDualDataset(Dataset):
             'edge_graph_emb': torch.tensor(e_graph, dtype=torch.float32),
             'target_text_emb': torch.tensor(t_text, dtype=torch.float32),
             'target_graph_emb': torch.tensor(t_graph, dtype=torch.float32),
-            'hop_context': torch.tensor(hop_context, dtype=torch.float32),  # 6-dim
+            'hop': torch.tensor(hop_idx, dtype=torch.long),
             'label': torch.tensor(label, dtype=torch.float32)
         }
 
@@ -188,14 +166,14 @@ def train_epoch(model, dataloader, optimizer, criterion, device, log_wandb=False
         edge_graph = batch['edge_graph_emb'].to(device)
         target_text = batch['target_text_emb'].to(device)
         target_graph = batch['target_graph_emb'].to(device)
-        hop_context = batch['hop_context'].to(device)
+        hop = batch['hop'].to(device)
         labels = batch['label'].to(device).unsqueeze(1)
 
         # Forward
         optimizer.zero_grad()
         logits = model(question_text, node_text, node_graph,
                        edge_text, edge_graph,
-                       target_text, target_graph, hop_context)
+                       target_text, target_graph, hop)
         loss = criterion(logits, labels)
 
         # Backward
@@ -271,12 +249,12 @@ def evaluate(model, dataloader, criterion, device, return_predictions=False):
             edge_graph = batch['edge_graph_emb'].to(device)
             target_text = batch['target_text_emb'].to(device)
             target_graph = batch['target_graph_emb'].to(device)
-            hop_context = batch['hop_context'].to(device)
+            hop = batch['hop'].to(device)
             labels = batch['label'].to(device).unsqueeze(1)
 
             logits = model(question_text, node_text, node_graph,
                            edge_text, edge_graph,
-                           target_text, target_graph, hop_context)
+                           target_text, target_graph, hop)
             loss = criterion(logits, labels)
 
             total_loss += loss.item()
@@ -290,10 +268,7 @@ def evaluate(model, dataloader, criterion, device, return_predictions=False):
             all_labels.extend(labels.cpu().numpy())
             all_preds.extend(preds.detach().cpu().numpy())
             all_probs.extend(probs.detach().cpu().numpy())
-
-            # Extract current hop from hop_context (second 3 bits)
-            current_hops = hop_context[:, 3:].argmax(dim=1).cpu().numpy()  # 0, 1, or 2
-            all_hops.extend(current_hops)
+            all_hops.extend(hop.cpu().numpy())
 
     avg_loss = total_loss / len(dataloader)
 
@@ -554,7 +529,7 @@ def main():
         text_dim=1536,
         graph_dim=256,
         hidden_dim=512,
-        hop_context_dim=6,  # 6-bit one-hot encoding
+        max_hops=3,
         dropout=0.3
     ).to(DEVICE)
 

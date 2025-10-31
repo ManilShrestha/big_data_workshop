@@ -44,6 +44,7 @@ class Evaluator:
         self.batch_planning = batch_planning
         self.poll_interval = poll_interval
         self.incremental_save_path = incremental_save_path
+        self.save_interval_percent = 5  # Save every 5% progress (configurable)
 
     def evaluate(
         self,
@@ -83,6 +84,14 @@ class Evaluator:
         results = []
         total_cost = 0.0
         batch_llm_cost = 0.0  # Track total cost of all batch LLM calls
+
+        # Calculate save checkpoints (every 5% by default)
+        total_questions = len(questions)
+        save_interval = max(1, int(total_questions * self.save_interval_percent / 100))
+        next_save_at = save_interval  # Next question number to save at
+
+        if verbose and self.incremental_save_path:
+            print(f"  Incremental saves enabled: every {self.save_interval_percent}% ({save_interval} questions)\n")
 
         # BATCHED LLM PLANNING: If using LLM planning with batch mode
         llm_plans = {}  # Maps question index -> (hop_relations, reasoning)
@@ -283,12 +292,14 @@ class Evaluator:
 
             results.append(result)
 
-            # Incremental save: write results after each question
+            # Incremental save: write results at checkpoints only (every 5% by default)
             # NOTE: Cost doesn't include batch_llm_cost yet - will be added after loop
-            if self.incremental_save_path:
+            if self.incremental_save_path and len(results) >= next_save_at:
                 self._save_incremental(results, total_cost, eval_start_time)
-                if verbose and i % 5 == 0:  # Print every 5 questions
-                    print(f"  [Progress saved: {len(results)} questions completed]")
+                if verbose:
+                    percent_complete = (len(results) / total_questions) * 100
+                    print(f"  [Checkpoint: {len(results)}/{total_questions} questions ({percent_complete:.1f}%) - saved to {Path(self.incremental_save_path).name}]")
+                next_save_at += save_interval
 
         # Distribute batch LLM cost across all questions that used LLM planning
         if llm_plans and batch_llm_cost > 0:
@@ -297,9 +308,11 @@ class Evaluator:
                 results[i].cost_usd += cost_per_query
             total_cost += batch_llm_cost
 
-            # Re-save with correct costs included
-            if self.incremental_save_path:
-                self._save_incremental(results, total_cost, eval_start_time)
+        # Final save: ensure we save the last batch of results
+        if self.incremental_save_path:
+            self._save_incremental(results, total_cost, eval_start_time)
+            if verbose:
+                print(f"  [Final checkpoint: {len(results)}/{total_questions} questions (100.0%) - saved to {Path(self.incremental_save_path).name}]")
 
         # Compute total evaluation time
         total_eval_time = time.time() - eval_start_time

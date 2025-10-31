@@ -96,12 +96,12 @@ class EdgeScorerRelationRanker:
         # Load checkpoint (weights_only=False for compatibility with numpy types)
         checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
 
-        # Create model with same architecture (6-bit hop context)
+        # Create model with same architecture
         model = EdgeScorerDual(
             text_dim=1536,
             graph_dim=256,
             hidden_dim=512,
-            hop_context_dim=6,
+            max_hops=3,
             dropout=0.3
         )
 
@@ -191,8 +191,7 @@ class EdgeScorerRelationRanker:
         self,
         question: str,
         edges: List[Tuple[str, str, str]],
-        hop: int,
-        question_hop_count: int
+        hop: int
     ) -> List[float]:
         """
         Score a batch of edges using the trained model.
@@ -201,7 +200,6 @@ class EdgeScorerRelationRanker:
             question: Question text
             edges: List of (current_node, relation, target_node) tuples
             hop: Current hop (0, 1, or 2)
-            question_hop_count: Total hop count for this question (1, 2, or 3)
 
         Returns:
             List of scores (probabilities 0-1) for each edge
@@ -221,14 +219,7 @@ class EdgeScorerRelationRanker:
         edge_graph_batch = []
         target_text_batch = []
         target_graph_batch = []
-        hop_context_batch = []
-
-        # Create 6-bit hop context for this batch
-        # First 3 bits: question hop count (one-hot)
-        # Second 3 bits: current hop (one-hot)
-        hop_context = np.zeros(6, dtype=np.float32)
-        hop_context[question_hop_count - 1] = 1.0  # Question hop: 0-2 index
-        hop_context[3 + hop] = 1.0                  # Current hop: 3-5 index (hop is already 0-indexed)
+        hop_batch = []
 
         for current_node, relation, target_node in edges:
             # Question
@@ -252,8 +243,8 @@ class EdgeScorerRelationRanker:
             target_text_batch.append(target_text)
             target_graph_batch.append(target_graph)
 
-            # Hop context (same for all edges in this batch)
-            hop_context_batch.append(hop_context)
+            # Hop
+            hop_batch.append(hop)
 
         # Convert to tensors
         question_text_tensor = torch.tensor(np.array(question_text_batch), dtype=torch.float32).to(self.device)
@@ -263,7 +254,7 @@ class EdgeScorerRelationRanker:
         edge_graph_tensor = torch.tensor(np.array(edge_graph_batch), dtype=torch.float32).to(self.device)
         target_text_tensor = torch.tensor(np.array(target_text_batch), dtype=torch.float32).to(self.device)
         target_graph_tensor = torch.tensor(np.array(target_graph_batch), dtype=torch.float32).to(self.device)
-        hop_context_tensor = torch.tensor(np.array(hop_context_batch), dtype=torch.float32).to(self.device)
+        hop_tensor = torch.tensor(hop_batch, dtype=torch.long).to(self.device)
 
         # Run inference (no gradients needed)
         with torch.no_grad():
@@ -275,7 +266,7 @@ class EdgeScorerRelationRanker:
                 edge_graph_tensor,
                 target_text_tensor,
                 target_graph_tensor,
-                hop_context_tensor
+                hop_tensor
             )
 
         # Convert to list of floats

@@ -6,19 +6,15 @@ Architecture:
    - Question: text_emb (1536)
    - Node: text_emb (1536) + graph_emb (256)
    - Edge: text_emb (1536) + graph_emb (256)
-   - Target: text_emb (1536) + graph_emb (256)
-   - Hop Context: 6-bit one-hot encoding
-     * First 3 bits: Question hop count (1-hop, 2-hop, or 3-hop)
-     * Second 3 bits: Current hop (hop 1, 2, or 3)
-     * Example: [0,0,1, 0,1,0] = 3-hop question, currently at hop 2
+   - Target: text_emb (1536) + graph_emb (256)  <- NEW!
+   - Hop: learned_emb (512)
 
 2. Fusion per component:
    - For node/edge/target: concat [text; graph] then project
    - Learns to weight semantic vs structural per component
-   - Hop context: 6-dim direct input (gives model question length awareness)
 
 3. Gated Fusion across components:
-   - 5 attention gates (question, node, edge, target, hop_context)
+   - 5 attention gates (question, node, edge, target, hop)
    - Weighted sum of all signals
 
 4. Classification:
@@ -101,12 +97,10 @@ class EdgeScorerDual(nn.Module):
     - edge_graph_emb: 256-dim TransE embedding
     - target_text_emb: 1536-dim OpenAI embedding (candidate node)
     - target_graph_emb: 256-dim TransE embedding (candidate node)
-    - hop_context: 6-dim one-hot encoding [q_hop1, q_hop2, q_hop3, c_hop1, c_hop2, c_hop3]
-      * First 3 bits: question hop count (1-hot)
-      * Second 3 bits: current hop (1-hot)
+    - hop: 0, 1, or 2
 
     Output:
-    - score: P(this edge+target leads to answer | question, current_node, hop_context)
+    - score: P(this edge+target leads to answer | question, current_node, hop)
     """
 
     def __init__(
@@ -114,13 +108,12 @@ class EdgeScorerDual(nn.Module):
         text_dim: int = 1536,
         graph_dim: int = 256,
         hidden_dim: int = 512,
-        hop_context_dim: int = 6,  # 6-bit one-hot encoding
+        max_hops: int = 3,
         dropout: float = 0.3
     ):
         super().__init__()
 
         self.hidden_dim = hidden_dim
-        self.hop_context_dim = hop_context_dim
 
         # Question: only text (no graph structure for question)
         self.question_proj = nn.Linear(text_dim, hidden_dim)
@@ -130,13 +123,8 @@ class EdgeScorerDual(nn.Module):
         self.edge_fusion = DualEmbeddingFusion(text_dim, graph_dim, hidden_dim, dropout)
         self.target_fusion = DualEmbeddingFusion(text_dim, graph_dim, hidden_dim, dropout)
 
-        # Hop context projection (6-dim -> 512-dim)
-        self.hop_context_proj = nn.Sequential(
-            nn.Linear(hop_context_dim, hidden_dim // 2),
-            nn.ReLU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_dim // 2, hidden_dim)
-        )
+        # Hop embedding
+        self.hop_embed = nn.Embedding(max_hops, hidden_dim)
 
         # Cross-component gated fusion
         # 5 components: question, node, edge, target, hop
@@ -183,15 +171,10 @@ class EdgeScorerDual(nn.Module):
         edge_graph_emb: torch.Tensor,        # [B, 256]
         target_text_emb: torch.Tensor,       # [B, 1536]
         target_graph_emb: torch.Tensor,      # [B, 256]
-        hop_context: torch.Tensor            # [B, 6] - one-hot encoding
+        hop: torch.Tensor                    # [B]
     ) -> torch.Tensor:
         """
-        Forward pass with dual embeddings and hop context.
-
-        Args:
-            hop_context: 6-dim tensor [q_hop1, q_hop2, q_hop3, c_hop1, c_hop2, c_hop3]
-                First 3 bits: question hop count (one-hot)
-                Second 3 bits: current hop (one-hot)
+        Forward pass with dual embeddings.
 
         Returns:
             logits: [B, 1] (pre-sigmoid)
@@ -204,8 +187,8 @@ class EdgeScorerDual(nn.Module):
         e = self.edge_fusion(edge_text_emb, edge_graph_emb)      # [B, 512]
         t = self.target_fusion(target_text_emb, target_graph_emb)  # [B, 512]
 
-        # Project hop context
-        h = self.hop_context_proj(hop_context)  # [B, 512]
+        # Hop embedding
+        h = self.hop_embed(hop)  # [B, 512]
 
         # Concatenate all components
         concat = torch.cat([q, n, e, t, h], dim=1)  # [B, 2560]
@@ -234,13 +217,13 @@ class EdgeScorerDual(nn.Module):
         edge_graph_emb: torch.Tensor,
         target_text_emb: torch.Tensor,
         target_graph_emb: torch.Tensor,
-        hop_context: torch.Tensor
+        hop: torch.Tensor
     ) -> torch.Tensor:
         """Predict with sigmoid"""
         logits = self.forward(
             question_text_emb, node_text_emb, node_graph_emb,
             edge_text_emb, edge_graph_emb,
-            target_text_emb, target_graph_emb, hop_context
+            target_text_emb, target_graph_emb, hop
         )
         return torch.sigmoid(logits)
 
@@ -253,14 +236,14 @@ class EdgeScorerDual(nn.Module):
         edge_graph_emb: torch.Tensor,
         target_text_emb: torch.Tensor,
         target_graph_emb: torch.Tensor,
-        hop_context: torch.Tensor
+        hop: torch.Tensor
     ) -> dict:
         """
         Get all gates for interpretability.
 
         Returns:
             {
-                'component_gates': [B, 5],  # question, node, edge, target, hop_context
+                'component_gates': [B, 5],  # question, node, edge, target, hop
                 'node_fusion_gates': [B, 2],  # text vs graph for node
                 'edge_fusion_gates': [B, 2],  # text vs graph for edge
                 'target_fusion_gates': [B, 2]  # text vs graph for target
@@ -271,7 +254,7 @@ class EdgeScorerDual(nn.Module):
         n = self.node_fusion(node_text_emb, node_graph_emb)
         e = self.edge_fusion(edge_text_emb, edge_graph_emb)
         t = self.target_fusion(target_text_emb, target_graph_emb)
-        h = self.hop_context_proj(hop_context)
+        h = self.hop_embed(hop)
 
         concat = torch.cat([q, n, e, t, h], dim=1)
         component_gates = self.gate_network(concat)
@@ -319,7 +302,7 @@ if __name__ == "__main__":
         text_dim=1536,
         graph_dim=256,
         hidden_dim=512,
-        hop_context_dim=6,
+        max_hops=3,
         dropout=0.3
     )
 
@@ -337,18 +320,7 @@ if __name__ == "__main__":
     edge_graph = torch.randn(batch_size, 256)
     target_text = torch.randn(batch_size, 1536)
     target_graph = torch.randn(batch_size, 256)
-
-    # 6-bit hop context examples:
-    # [1,0,0, 1,0,0] = 1-hop question, at hop 1
-    # [0,1,0, 0,1,0] = 2-hop question, at hop 2
-    # [0,0,1, 0,0,1] = 3-hop question, at hop 3
-    # [0,0,1, 0,1,0] = 3-hop question, at hop 2
-    hop_context = torch.tensor([
-        [1, 0, 0, 1, 0, 0],  # 1-hop question, hop 1
-        [0, 1, 0, 0, 1, 0],  # 2-hop question, hop 2
-        [0, 0, 1, 0, 0, 1],  # 3-hop question, hop 3
-        [0, 0, 1, 0, 1, 0],  # 3-hop question, hop 2
-    ], dtype=torch.float32)
+    hop = torch.tensor([0, 1, 2, 0])
 
     print(f"\n[Forward pass test]")
     print(f"Input shapes:")
@@ -356,23 +328,18 @@ if __name__ == "__main__":
     print(f"  node_text: {node_text.shape}, node_graph: {node_graph.shape}")
     print(f"  edge_text: {edge_text.shape}, edge_graph: {edge_graph.shape}")
     print(f"  target_text: {target_text.shape}, target_graph: {target_graph.shape}")
-    print(f"  hop_context: {hop_context.shape}")
-    print(f"\nHop context examples:")
-    for i in range(batch_size):
-        q_hop = hop_context[i, :3].argmax() + 1
-        c_hop = hop_context[i, 3:].argmax() + 1
-        print(f"  Sample {i}: {q_hop}-hop question, at hop {c_hop}")
+    print(f"  hop: {hop.shape}")
 
     # Forward
     logits = model(question_text, node_text, node_graph,
                    edge_text, edge_graph,
-                   target_text, target_graph, hop_context)
+                   target_text, target_graph, hop)
     probs = model.predict(question_text, node_text, node_graph,
                           edge_text, edge_graph,
-                          target_text, target_graph, hop_context)
+                          target_text, target_graph, hop)
     gates_dict = model.get_gates(question_text, node_text, node_graph,
                                   edge_text, edge_graph,
-                                  target_text, target_graph, hop_context)
+                                  target_text, target_graph, hop)
 
     print(f"\nOutput shapes:")
     print(f"  logits: {logits.shape}")
