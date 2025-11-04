@@ -142,3 +142,13 @@ logs/
 *.log
 *.pkl
 embeddings/
+
+*test*
+
+claude.md
+readme.md
+
+# Markdown files
+*.md
+
+Llama-Factory
