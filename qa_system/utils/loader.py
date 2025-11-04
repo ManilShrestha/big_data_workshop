@@ -77,7 +77,9 @@ def load_transe_embeddings(
 def load_qa_dataset(
     dataset_path: str,
     hop_count: int,
-    limit: int = None
+    limit: int = None,
+    shuffle: bool = False,
+    seed: int = 42
 ) -> List[Question]:
     """
     Load QA dataset from file
@@ -86,6 +88,8 @@ def load_qa_dataset(
         dataset_path: Path to qa_*.txt file
         hop_count: Number of hops (1, 2, or 3)
         limit: Maximum number of questions to load (None = all)
+        shuffle: If True, shuffle questions before limiting (default: False)
+        seed: Random seed for shuffling (default: 42)
 
     Returns:
         List of Question objects
@@ -95,9 +99,6 @@ def load_qa_dataset(
     questions = []
     with open(dataset_path, 'r', encoding='utf-8') as f:
         for i, line in enumerate(f):
-            if limit and i >= limit:
-                break
-
             line = line.strip()
             if not line:
                 continue
@@ -108,6 +109,17 @@ def load_qa_dataset(
             except Exception as e:
                 print(f"  Warning: Failed to parse line {i}: {e}")
                 continue
+
+    # Shuffle if requested
+    if shuffle:
+        import random
+        random.seed(seed)
+        random.shuffle(questions)
+        print(f"  Shuffled {len(questions)} questions (seed={seed})")
+
+    # Apply limit after shuffling
+    if limit and limit < len(questions):
+        questions = questions[:limit]
 
     print(f"  Loaded {len(questions)} questions")
     return questions

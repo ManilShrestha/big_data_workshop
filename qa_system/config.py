@@ -51,15 +51,44 @@ class Config:
     OPENAI_MAX_RETRIES = 5  # Number of retries for malformed JSON responses
 
     # Qwen configuration (self-hosted)
+    # Available models - uncomment/comment to switch
     # QWEN_BASE_URL = "http://96.245.177.243:12302/v1"
     # QWEN_MODEL = "cpatonn/Qwen3-30B-A3B-Instruct-2507-AWQ-8bit"
-    QWEN_BASE_URL = "http://0.0.0.0:12302/v1"
-    QWEN_MODEL = "Qwen3-30B-A3B-Instruct-2507"
-    QWEN_BATCH_SIZE = 50  # Number of questions to batch in parallel LLM calls
-    QWEN_MAX_WORKERS = 10  # Lower than OpenAI to avoid overwhelming self-hosted server
-    QWEN_MAX_RETRIES_PARSE = 2  # Retries for parse errors (model won't improve)
-    QWEN_MAX_RETRIES_API = 5  # Retries for API/server errors (transient issues)
-    QWEN_TIMEOUT = 120  # API timeout in seconds (higher due to self-hosted latency)
+
+    # Currently active model - change this to switch models
+    QWEN_ACTIVE_MODEL = "qwen4b"  # Options: "qwen30b", "qwen4b"
+
+    # Model configurations
+    QWEN_MODELS = {
+        "qwen30b": {
+            "base_url": "http://0.0.0.0:12302/v1",
+            "model_name": "Qwen3-30B-A3B-Instruct-2507",
+            "batch_size": 50,
+            "max_workers": 10,
+            "max_retries_parse": 2,  # Retries for parse errors
+            "max_retries_api": 5,    # Retries for API/server errors
+            "timeout": 120,          # API timeout in seconds
+        },
+        "qwen4b": {
+            "base_url": "http://0.0.0.0:8000/v1",  # Different port for 4B model
+            "model_name": "qwen3-4b-ft",   #qwen3-4b-local",
+            "batch_size": 100,
+            "max_workers": 10,
+            "max_retries_parse": 5,  # More retries for smaller model (less reliable)
+            "max_retries_api": 5,
+            "timeout": 120,
+        }
+    }
+
+    # Set active configuration based on selected model
+    _active_qwen_config = QWEN_MODELS[QWEN_ACTIVE_MODEL]
+    QWEN_BASE_URL = _active_qwen_config["base_url"]
+    QWEN_MODEL = _active_qwen_config["model_name"]
+    QWEN_BATCH_SIZE = _active_qwen_config["batch_size"]
+    QWEN_MAX_WORKERS = _active_qwen_config["max_workers"]
+    QWEN_MAX_RETRIES_PARSE = _active_qwen_config["max_retries_parse"]
+    QWEN_MAX_RETRIES_API = _active_qwen_config["max_retries_api"]
+    QWEN_TIMEOUT = _active_qwen_config["timeout"]
 
     # Cost tracking (USD)
     COST_PER_EMBEDDING = 0.00000002  # text-embedding-3-small: $0.02 per 1M tokens

@@ -63,25 +63,32 @@ class QwenRelationRanker(BaseRelationRanker):
         Returns:
             Parsed dict, or empty dict if all fail
         """
+        # Preprocessing: Remove markdown code fences (common in Qwen 4B responses)
+        # Handles patterns like: ```json\n{...}\n``` or ```\n{...}\n```
+        text_cleaned = re.sub(r'```(?:json)?\s*', '', text)
+        text_cleaned = text_cleaned.strip()
+
         # Strategy 1: Direct JSON parse
         try:
-            return json.loads(text)
+            return json.loads(text_cleaned)
         except json.JSONDecodeError:
             pass
 
-        # Strategy 2: Find FIRST JSON object between curly braces (non-greedy)
-        # This prevents matching repeated patterns like {...}JSON: {...}JSON: {...}
+        # Strategy 2: Find JSON object between curly braces
+        # Use greedy match to get the full object including nested structures
         try:
-            match = re.search(r'\{.*?\}', text, re.DOTALL)
+            match = re.search(r'\{.*\}', text_cleaned, re.DOTALL)
             if match:
                 return json.loads(match.group(0))
         except (json.JSONDecodeError, AttributeError):
             pass
 
         # Strategy 3: Extract specific fields (reasoning + hops)
+        # Use greedy match for hops to handle nested arrays like [["rel1"], ["rel2"]]
         try:
-            reasoning_match = re.search(r'"reasoning"\s*:\s*"([^"]*)"', text, re.DOTALL)
-            hops_match = re.search(r'"hops"\s*:\s*(\[.*?\])', text, re.DOTALL)
+            reasoning_match = re.search(r'"reasoning"\s*:\s*"([^"]*)"', text_cleaned, re.DOTALL)
+            # Match nested arrays: find opening [ and matching closing ]
+            hops_match = re.search(r'"hops"\s*:\s*(\[\s*\[.*?\]\s*\])', text_cleaned, re.DOTALL)
 
             if reasoning_match and hops_match:
                 reasoning = reasoning_match.group(1)
@@ -151,18 +158,22 @@ Available relations in the knowledge graph:
 
 Question: "{question}"
 
-This is a {max_hops}-hop question. You need to select which relation(s) might be relevant at EACH hop.
+This is a {max_hops}-hop question. You MUST provide EXACTLY {max_hops} hops - no more, no less.
+For EACH of the {max_hops} hops, select which relation(s) might be relevant.
 
 Think about the logical path needed to answer the question. For each hop, select 1-2 most relevant relations from the list above.
 
 Examples:
-- "Who directed movies starring [Actor]?" → Hop 1: starred_actors, Hop 2: directed_by
-- "What genre are films written by [Writer]?" → Hop 1: written_by, Hop 2: has_genre
-- "What year were movies by the director of [Movie]?" → Hop 1: directed_by, Hop 2: release_year
+1-hop: "What films did [Actor] star in?" → Hop 1: starred_actors
+2-hop: "Who directed movies starring [Actor]?" → Hop 1: starred_actors, Hop 2: directed_by
+2-hop: "What genre are films written by [Writer]?" → Hop 1: written_by, Hop 2: has_genre
+3-hop: "What languages are films by actors in [Movie]?" → Hop 1: starred_actors, Hop 2: starred_actors, Hop 3: in_language
+3-hop: "Who directed films starring actors in [Movie]?" → Hop 1: starred_actors, Hop 2: starred_actors, Hop 3: directed_by
 
 Provide your analysis as plain text (one relation per hop, one line per hop):
 Hop 1: relation_name
 Hop 2: relation_name
+Hop 3: relation_name
 ...
 
 Your analysis:"""
@@ -172,12 +183,12 @@ Your analysis:"""
         return f"""Convert the following relation planning to JSON format.
 
 Question: "{question}"
-Max hops: {max_hops}
+Required hops: EXACTLY {max_hops} (no more, no less)
 
 Analysis:
 {raw_answer}
 
-Convert to this exact JSON format:
+Convert to this exact JSON format with EXACTLY {max_hops} hops in the array:
 {{
   "reasoning": "brief explanation of the path",
   "hops": [
@@ -186,6 +197,8 @@ Convert to this exact JSON format:
     ...
   ]
 }}
+
+IMPORTANT: The "hops" array MUST contain EXACTLY {max_hops} items.
 
 JSON:"""
 
