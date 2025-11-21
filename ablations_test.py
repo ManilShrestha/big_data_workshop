@@ -505,7 +505,7 @@ def main():
             config = ABLATION_CONFIG[abl]
             print(f"\n{abl.upper()}: {config['name']}")
             for ds, metrics in results.items():
-                print(f"  {ds}: Acc={metrics['accuracy']:.2%}, F1={metrics['f1']:.2%}")
+                print(f"  {ds}: Acc={metrics['accuracy']:.2%}, P={metrics['precision']:.2%}, R={metrics['recall']:.2%}, F1={metrics['f1']:.2%}")
     else:
         evaluate_ablation(args.ablation, args.datasets, args.limit, args.beam_width, device)
 
