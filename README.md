@@ -58,4 +58,14 @@ Uses the MetaQA dataset with:
 - 134,741 edges (9 relation types)
 - 1/2/3-hop question-answer pairs
 
+## Models and Results
+
+Pre-trained models and full evaluation results are available on Google Drive:
+
+**[Download Models & Results](https://drive.google.com/drive/folders/1f-e_GGtWpCjo71Ik0BdfUwo1ZjJrW8ln?usp=sharing)**
+
+Contents:
+- `models/` - Trained edge scorer checkpoints and LoRA fine-tuned weights
+- `results/` - Full evaluation JSONs for all experiments
+
 
