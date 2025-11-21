@@ -36,7 +36,7 @@ def download_batch_results_with_retry(client: OpenAI, output_file_id: str, texts
             # Try to download with longer timeout
             file_content = client.files.content(output_file_id)
 
-            print(f"  ✓ Download successful!")
+            print(f"   Download successful!")
             print(f"  Parsing embeddings...")
 
             # Parse JSONL results
@@ -62,18 +62,18 @@ def download_batch_results_with_retry(client: OpenAI, output_file_id: str, texts
 
                 embeddings[text] = embedding
 
-            print(f"\n  ✓ Parsed {len(embeddings):,} embeddings")
+            print(f"\n   Parsed {len(embeddings):,} embeddings")
             return embeddings
 
         except Exception as e:
-            print(f"\n  ✗ Download failed: {e}")
+            print(f"\n   Download failed: {e}")
 
             if attempt < max_retries - 1:
                 wait_time = (attempt + 1) * 10  # Exponential backoff: 10s, 20s, 30s, etc.
                 print(f"  Retrying in {wait_time} seconds...")
                 time.sleep(wait_time)
             else:
-                print(f"\n  ✗ Failed after {max_retries} attempts")
+                print(f"\n   Failed after {max_retries} attempts")
                 raise
 
 
@@ -90,7 +90,7 @@ def main():
         sys.exit(1)
 
     client = OpenAI(api_key=Config.OPENAI_API_KEY)
-    print("  ✓ OpenAI client initialized")
+    print("   OpenAI client initialized")
     print()
 
     # Find the most recent batch info file
@@ -98,7 +98,7 @@ def main():
     batch_info_files = sorted(Config.EMBEDDINGS_DIR.glob("batch_info_*.json"))
 
     if not batch_info_files:
-        print("  ✗ No batch info files found!")
+        print("   No batch info files found!")
         print("  Please provide the batch ID manually:")
         batch_id = input("  Batch ID: ").strip()
     else:
@@ -121,12 +121,12 @@ def main():
     print(f"  Completed: {batch_job.request_counts.completed}/{batch_job.request_counts.total}")
 
     if batch_job.status != "completed":
-        print(f"\n  ✗ Batch job not completed yet (status: {batch_job.status})")
+        print(f"\n   Batch job not completed yet (status: {batch_job.status})")
         print(f"  Please wait for completion before running this script")
         sys.exit(1)
 
     if not batch_job.output_file_id:
-        print(f"\n  ✗ No output file available")
+        print(f"\n   No output file available")
         sys.exit(1)
 
     output_file_id = batch_job.output_file_id
@@ -194,7 +194,7 @@ def main():
     with open(cache_path, 'wb') as f:
         pickle.dump(cache, f)
 
-    print(f"  ✓ Cache updated: {len(cache):,} total embeddings")
+    print(f"   Cache updated: {len(cache):,} total embeddings")
     print()
 
     # Summary
@@ -205,8 +205,8 @@ def main():
     print(f"New embeddings added: {len(new_embeddings):,}")
     print(f"Total cache size: {len(cache):,}")
     print()
-    print("✓ All test questions are now cached!")
-    print("✓ Future evaluations will have NO OpenAI API costs for question embeddings")
+    print(" All test questions are now cached!")
+    print(" Future evaluations will have NO OpenAI API costs for question embeddings")
     print()
 
 

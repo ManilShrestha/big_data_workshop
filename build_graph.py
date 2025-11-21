@@ -50,4 +50,4 @@ if __name__ == '__main__':
     # Save graph
     save_graph(G)
 
-    print("\n✓ Task 2 complete: graph.pkl created")
+    print("\n Task 2 complete: graph.pkl created")

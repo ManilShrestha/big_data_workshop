@@ -155,4 +155,4 @@ if __name__ == '__main__':
     visualize_degree_distribution(G)
     visualize_subgraph(G)
 
-    print("\n✓ Visualization complete!")
+    print("\n Visualization complete!")

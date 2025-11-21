@@ -36,4 +36,4 @@ for i, succ in enumerate(list(graph.successors("Runner Runner"))[:20]):
     # Check if Just Cause also points to this
     if graph.has_edge("Just Cause", succ):
         jc_edge = graph["Just Cause"][succ]
-        print(f"    ✓ Just Cause also points here: Just Cause --{jc_edge.get('relation', '')}--> {succ}")
+        print(f"     Just Cause also points here: Just Cause --{jc_edge.get('relation', '')}--> {succ}")

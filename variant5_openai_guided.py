@@ -52,8 +52,11 @@ Examples:
   # Run on full 1-hop dataset (no limit)
   python variant5_openai_guided.py --datasets 1-hop
 
-  # Run on all datasets with 100 questions each (batch mode)
-  python variant5_openai_guided.py --datasets 1-hop 2-hop 3-hop --limit 100 --mode batch
+  # Run on all datasets with 25K shuffled questions each (batch mode)
+  python variant5_openai_guided.py --datasets 1-hop 2-hop 3-hop --limit 25000 --shuffle --mode batch
+
+  # Run on 50K random samples per dataset (different seed)
+  python variant5_openai_guided.py --datasets 1-hop 2-hop 3-hop --limit 50000 --shuffle --seed 123 --mode batch
 
   # Run on full 2-hop dataset with batched LLM planning
   python variant5_openai_guided.py --datasets 2-hop --mode batch
@@ -67,6 +70,10 @@ Note:
     * 50% cheaper than direct mode
     * Requires polling/waiting (typically minutes to hours)
     * Recommended for large datasets (100+ questions)
+
+  - Shuffle: Use --shuffle to get random samples instead of first N questions
+    * Useful for creating diverse training datasets
+    * Use --seed to ensure reproducibility
         """
     )
     parser.add_argument(
@@ -102,6 +109,17 @@ Note:
         default=Config.NUM_TOP_RELATIONS,
         help=f'Number of top relations to use (default: {Config.NUM_TOP_RELATIONS})'
     )
+    parser.add_argument(
+        '--shuffle',
+        action='store_true',
+        help='Shuffle questions before limiting (ensures random sample)'
+    )
+    parser.add_argument(
+        '--seed',
+        type=int,
+        default=42,
+        help='Random seed for shuffling (default: 42)'
+    )
 
     args = parser.parse_args()
 
@@ -116,6 +134,7 @@ Note:
         print(f"  Poll interval: {args.poll_interval}s")
     print(f"  Datasets: {', '.join(args.datasets)}")
     print(f"  Limit per dataset: {args.limit if args.limit else 'Full dataset'}")
+    print(f"  Shuffle: {'Yes' if args.shuffle else 'No'}{' (seed=' + str(args.seed) + ')' if args.shuffle else ''}")
     print(f"  Top-k relations: {args.top_k}")
     print(f"  Timestamp: {timestamp}")
     print("="*80 + "\n")
@@ -174,9 +193,9 @@ Note:
     # Evaluate on Datasets
     # =========================================================================
     dataset_map = {
-        '1-hop': ("1-hop-test", Config.QA_1HOP_TEST, 1),
-        '2-hop': ("2-hop-test", Config.QA_2HOP_TEST, 2),
-        '3-hop': ("3-hop-test", Config.QA_3HOP_TEST, 3),
+        '1-hop': ("1-hop-train", Config.QA_1HOP_TRAIN, 1),
+        '2-hop': ("2-hop-train", Config.QA_2HOP_TRAIN, 2),
+        '3-hop': ("3-hop-train", Config.QA_3HOP_TRAIN, 3),
     }
 
     datasets = [
@@ -191,7 +210,13 @@ Note:
         print("-" * 80)
 
         # Load dataset
-        questions = load_qa_dataset(dataset_path, hop_count=hop_count, limit=args.limit)
+        questions = load_qa_dataset(
+            dataset_path,
+            hop_count=hop_count,
+            limit=args.limit,
+            shuffle=args.shuffle,
+            seed=args.seed
+        )
 
         # Set incremental save path for this dataset with timestamp
         limit_str = f"_limit{args.limit}" if args.limit else "_full"

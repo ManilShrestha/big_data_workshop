@@ -498,8 +498,8 @@ def main():
     print(f"\n   Validation set breakdown:")
     print(f"      Positive: {val_pos_count:,} ({100*val_pos_count/len(val_labels):.1f}%)")
     print(f"      Negative: {val_neg_count:,} ({100*val_neg_count/len(val_labels):.1f}%)")
-    print(f"      ⚠️  Baseline (always predict negative): {100*val_neg_count/len(val_labels):.1f}% accuracy")
-    print(f"      ✓  Primary metric: F1 score (balances precision & recall)")
+    print(f"        Baseline (always predict negative): {100*val_neg_count/len(val_labels):.1f}% accuracy")
+    print(f"        Primary metric: F1 score (balances precision & recall)")
     print(f"      Hop 1: {val_hop_counts.get(1, 0):,}")
     print(f"      Hop 2: {val_hop_counts.get(2, 0):,}")
     print(f"      Hop 3: {val_hop_counts.get(3, 0):,}")
@@ -662,7 +662,7 @@ def main():
                 'best_f1': best_f1,
                 'val_metrics': val_metrics
             }, checkpoint_path)
-            print(f"   ✓ Best model saved (F1: {best_f1:.4f})")
+            print(f"    Best model saved (F1: {best_f1:.4f})")
         else:
             patience_counter += 1
             if patience_counter >= PATIENCE:

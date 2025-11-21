@@ -174,7 +174,7 @@ def main():
         print(f"\nSHORTCUT PATH:")
         for node, rel, target in path:
             print(f"  {node} --[{rel}]--> {target}")
-        print(f"\n⚠️  This question expects 3 hops, but a 1-hop shortcut exists!")
+        print(f"\n  This question expects 3 hops, but a 1-hop shortcut exists!")
     else:
         print("\nNo 1-hop shortcut found in sample")
 
@@ -193,7 +193,7 @@ def main():
         print(f"\nSHORTCUT PATH:")
         for node, rel, target in path:
             print(f"  {node} --[{rel}]--> {target}")
-        print(f"\n⚠️  This question expects 3 hops, but a 2-hop shortcut exists!")
+        print(f"\n  This question expects 3 hops, but a 2-hop shortcut exists!")
     else:
         print("\nNo 2-hop shortcut found in sample")
 
@@ -222,7 +222,7 @@ def main():
         show_edges(graph, answer, "out", max_show=5)
         show_edges(graph, answer, "in", max_show=10)
 
-        print(f"\n⚠️  NO PATH EXISTS within 3 hops!")
+        print(f"\n  NO PATH EXISTS within 3 hops!")
         print(f"   This means the graph is incomplete or the question/answer is incorrect.")
     else:
         print("\nNo disconnected examples found in sample")

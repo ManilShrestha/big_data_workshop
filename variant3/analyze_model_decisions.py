@@ -148,14 +148,14 @@ def analyze_cases(cases, text_embeddings, case_type):
         if len(predicted) > 0:
             print(f"\nSample predicted answers (first 5):")
             for ans in predicted[:5]:
-                in_gt = "✓" if ans in ground_truth else "✗"
+                in_gt = "" if ans in ground_truth else ""
                 print(f"    {in_gt} {ans}")
 
         if len(ground_truth) > 0 and case_type in ["FAILURE", "LOW_F1"]:
             print(f"\nSample missed ground truth answers (first 5):")
             missed = [ans for ans in ground_truth if ans not in predicted]
             for ans in missed[:5]:
-                print(f"    ✗ {ans}")
+                print(f"     {ans}")
 
         # Analyze text similarity for relations
         if question in text_embeddings and len(relations_used) > 0:

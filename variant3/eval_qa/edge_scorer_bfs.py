@@ -34,7 +34,9 @@ class EdgeScorerBFS(BaseSearch):
         edge_scorer: EdgeScorerRelationRanker,
         top_k_relations: int = 3,
         max_nodes_per_relation: int = 30,
-        score_threshold: float = 0.0
+        score_threshold: float = 0.0,
+        enable_hybrid: bool = False,
+        hybrid_alphas: dict = None
     ):
         """
         Initialize EdgeScorer-guided BFS with global path selection.
@@ -45,9 +47,24 @@ class EdgeScorerBFS(BaseSearch):
             top_k_relations: Number of top relations to explore per hop (default: 3)
             max_nodes_per_relation: Maximum nodes to expand per relation (default: 30)
             score_threshold: Minimum score to consider an edge (default: 0.0)
+            enable_hybrid: Enable hybrid text+model scoring (default: False)
+            hybrid_alphas: Hop-specific alpha weights for hybrid scoring (default: None)
         """
         super().__init__(graph)
-        self.edge_scorer = edge_scorer
+
+        # BACKWARD COMPATIBLE: Wrap edge scorer with hybrid if enabled
+        if enable_hybrid:
+            from .hybrid_edge_scorer import HybridEdgeScorer
+            self.edge_scorer = HybridEdgeScorer(
+                base_scorer=edge_scorer,
+                enable_hybrid=True,
+                static_alphas=hybrid_alphas,
+                verbose=False
+            )
+            print(f"[EdgeScorerBFS] Hybrid scoring ENABLED with alphas: {hybrid_alphas or 'default'}")
+        else:
+            self.edge_scorer = edge_scorer
+
         self.top_k_relations = top_k_relations
         self.max_nodes_per_relation = max_nodes_per_relation
         self.score_threshold = score_threshold
@@ -231,16 +248,26 @@ class EdgeScorerBFS(BaseSearch):
             )
 
         # Calculate aggregate score for each path
+        # FIXED: Use multiplicative (chain) scoring instead of average
+        # This penalizes paths with ANY weak hop, not just average weakness
         for path in active_paths:
             if len(path['hop_scores']) > 0:
+                # Multiplicative: score = hop1 * hop2 * hop3
+                # This ensures ALL hops must be strong
+                path['chain_score'] = 1.0
+                for hop_score in path['hop_scores']:
+                    path['chain_score'] *= hop_score
+
+                # Also keep average for backward compatibility / debugging
                 path['avg_score'] = sum(path['hop_scores']) / len(path['hop_scores'])
             else:
+                path['chain_score'] = 0.0
                 path['avg_score'] = 0.0
 
-        # Select best path: highest average score, tie-break by hop 0 score
+        # Select best path: highest chain score, tie-break by first hop score
         best_path = max(
             active_paths,
-            key=lambda p: (p['avg_score'], p['hop_scores'][0] if len(p['hop_scores']) > 0 else 0.0)
+            key=lambda p: (p['chain_score'], p['hop_scores'][0] if len(p['hop_scores']) > 0 else 0.0)
         )
 
         # Extract answers from best path's frontier
@@ -331,7 +358,7 @@ if __name__ == "__main__":
     # Show predicted answers
     print(f"\n   Top 10 predicted answers:")
     for i, answer in enumerate(result.predicted_answers[:10], 1):
-        in_gt = "✓" if answer in result.ground_truth else "✗"
+        in_gt = "" if answer in result.ground_truth else ""
         print(f"      {i}. {answer} {in_gt}")
 
     # Show sample paths

@@ -120,19 +120,19 @@ Let me check: Are there duplicate question IDs?
     duplicates = {qid: count for qid, count in question_id_counts.items() if count > 1}
 
     if duplicates:
-        print(f"\n⚠️  Found {len(duplicates):,} duplicate question IDs!")
+        print(f"\n  Found {len(duplicates):,} duplicate question IDs!")
         print(f"   Showing first 10:")
         for i, (qid, count) in enumerate(list(duplicates.items())[:10], 1):
             print(f"   {i}. ID '{qid}' appears {count} times")
     else:
-        print(f"\n✓ No duplicate question IDs found")
+        print(f"\n No duplicate question IDs found")
 
     # Check unique texts
     unique_texts = set(q.text for q in all_questions)
     print(f"\nUnique question texts: {len(unique_texts):,}")
 
     if len(unique_texts) != len(all_questions):
-        print(f"⚠️  Some questions have identical text! This might be intentional.")
+        print(f"  Some questions have identical text! This might be intentional.")
 
 
 if __name__ == "__main__":

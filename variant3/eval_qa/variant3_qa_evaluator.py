@@ -115,11 +115,37 @@ Note:
         default=None,
         help='Path to trained model checkpoint (default: models/variant3_edge_scorer_dual_best.pt)'
     )
+    parser.add_argument(
+        '--enable-hybrid',
+        action='store_true',
+        default=False,
+        help='Enable hybrid text+model scoring (default: False, backward compatible)'
+    )
+    parser.add_argument(
+        '--hybrid-alphas',
+        type=str,
+        default='1:0.7,2:0.5,3:0.3',
+        help='Hop-specific alpha weights for hybrid scoring (format: "1:0.7,2:0.5,3:0.3")'
+    )
 
     args = parser.parse_args()
 
     # Generate timestamp for unique output files
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    # Parse hybrid alphas if hybrid scoring is enabled
+    hybrid_alphas = None
+    if args.enable_hybrid:
+        try:
+            hybrid_alphas = {
+                int(k): float(v)
+                for k, v in (pair.split(':') for pair in args.hybrid_alphas.split(','))
+            }
+        except Exception as e:
+            print(f"\n ERROR: Invalid hybrid-alphas format: {args.hybrid_alphas}")
+            print(f"   Expected format: '1:0.7,2:0.5,3:0.3'")
+            print(f"   Error: {e}")
+            sys.exit(1)
 
     # Set model path
     if args.model_path is None:
@@ -128,7 +154,7 @@ Note:
         model_path = Path(args.model_path)
 
     if not model_path.exists():
-        print(f"\n❌ ERROR: Model checkpoint not found: {model_path}")
+        print(f"\n ERROR: Model checkpoint not found: {model_path}")
         print(f"\nPlease train the model first using:")
         print(f"  python variant3/variant3_train_edge_scorer_dual.py")
         sys.exit(1)
@@ -143,6 +169,9 @@ Note:
     print(f"  Top-K relations: {args.top_k_relations}")
     print(f"  Max nodes/relation: {args.max_nodes_per_relation}")
     print(f"  Score threshold: {args.score_threshold}")
+    print(f"  Hybrid scoring: {'ENABLED' if args.enable_hybrid else 'DISABLED'}")
+    if args.enable_hybrid:
+        print(f"  Hybrid alphas: {hybrid_alphas}")
     print(f"  Timestamp: {timestamp}")
     print("="*80 + "\n")
 
@@ -179,7 +208,9 @@ Note:
         edge_scorer=edge_scorer,
         top_k_relations=args.top_k_relations,
         max_nodes_per_relation=args.max_nodes_per_relation,
-        score_threshold=args.score_threshold
+        score_threshold=args.score_threshold,
+        enable_hybrid=args.enable_hybrid,
+        hybrid_alphas=hybrid_alphas
     )
 
     print("\n  Component initialization complete!")

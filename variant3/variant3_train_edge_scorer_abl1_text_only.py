@@ -416,7 +416,7 @@ def main():
                 'best_f1': best_f1,
                 'val_metrics': val_metrics
             }, checkpoint_path)
-            print(f"   ✓ Best model saved (F1: {best_f1:.4f})")
+            print(f"    Best model saved (F1: {best_f1:.4f})")
         else:
             patience_counter += 1
             if patience_counter >= PATIENCE:

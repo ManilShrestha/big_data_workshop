@@ -47,7 +47,7 @@ output_file = "data/metaqa/graph_subgraph.gexf"
 print(f"\nExporting to {output_file}...")
 nx.write_gexf(subgraph, output_file)
 
-print(f"\n✓ Export complete!")
+print(f"\n Export complete!")
 print(f"\nTo use in Gephi:")
 print(f"  1. Open Gephi")
 print(f"  2. File → Open → Select '{output_file}'")

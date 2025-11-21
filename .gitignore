@@ -143,8 +143,6 @@ logs/
 *.pkl
 embeddings/
 
-*test*
-
 claude.md
 readme.md
 
@@ -152,3 +150,16 @@ readme.md
 *.md
 
 Llama-Factory
+
+# Results and outputs
+results/
+models/
+finetuning/models/
+wandb/
+nohup.out
+simulation_traces.json
+**/backup_*/
+
+# Generated figures
+*.png
+*.pdf

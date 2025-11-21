@@ -80,7 +80,7 @@ class DirectLLMQA:
 
                     # Log if empty response
                     if len(answers) == 0:
-                        print(f"\n  [DirectLLM] ⚠️  WARNING: Empty answer list received")
+                        print(f"\n  [DirectLLM]   WARNING: Empty answer list received")
                         print(f"  [DirectLLM] Question: {question}")
                         print(f"  [DirectLLM] Model: {self.model}")
                         print(f"  [DirectLLM] Raw response: {raw_content}")
@@ -174,7 +174,7 @@ class DirectLLMQA:
 
                         # Debug: print full response if empty
                         if not raw_content and verbose:
-                            print(f"\n  [DirectLLM] ⚠️  Question {idx+1}: Empty content")
+                            print(f"\n  [DirectLLM]   Question {idx+1}: Empty content")
                             print(f"  [DirectLLM] Question: {question_text}")
                             print(f"  [DirectLLM] Full response object: {response}")
                             print(f"  [DirectLLM] Message object: {response.choices[0].message}")
@@ -188,7 +188,7 @@ class DirectLLMQA:
 
                         # Log if empty response (for debugging)
                         if len(answers) == 0 and verbose:
-                            print(f"\n  [DirectLLM] ⚠️  Question {idx+1}: Empty answer list")
+                            print(f"\n  [DirectLLM]   Question {idx+1}: Empty answer list")
                             print(f"  [DirectLLM] Question: {question_text}")
                             print(f"  [DirectLLM] Raw response: {raw_content}")
 
@@ -200,7 +200,7 @@ class DirectLLMQA:
                         if attempt < max_retries - 1:
                             wait_time = 2 ** attempt
                             if verbose:
-                                print(f"\n  [DirectLLM] ⚠️  Question {idx+1} JSON parse error (attempt {attempt+1}/{max_retries}): {e}")
+                                print(f"\n  [DirectLLM]   Question {idx+1} JSON parse error (attempt {attempt+1}/{max_retries}): {e}")
                                 print(f"  [DirectLLM] Question: {question_text}")
                                 print(f"  [DirectLLM] Raw response: '{raw_content}'")
                                 print(f"  [DirectLLM] Retrying in {wait_time}s...")
@@ -208,7 +208,7 @@ class DirectLLMQA:
                             continue
                         else:
                             if verbose:
-                                print(f"\n  [DirectLLM] ❌ Question {idx+1} failed after {max_retries} retries")
+                                print(f"\n  [DirectLLM]  Question {idx+1} failed after {max_retries} retries")
                                 print(f"  [DirectLLM] Question: {question_text}")
                                 print(f"  [DirectLLM] Final response: '{raw_content}'")
                             return idx, response, [], "FAILED"

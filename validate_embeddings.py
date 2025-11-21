@@ -60,7 +60,7 @@ class EmbeddingValidator:
         print(f"\n📂 Loading graph from {graph_path}...")
         with open(graph_path, 'rb') as f:
             self.G = pickle.load(f)
-        print(f"   ✓ Loaded: {self.G.number_of_nodes():,} nodes, {self.G.number_of_edges():,} edges")
+        print(f"    Loaded: {self.G.number_of_nodes():,} nodes, {self.G.number_of_edges():,} edges")
 
         # Load node2id mapping
         node2id_path = Path(embedding_dir) / "node2id.json"
@@ -68,7 +68,7 @@ class EmbeddingValidator:
         with open(node2id_path, 'r') as f:
             self.node2id = json.load(f)
         self.id2node = {v: k for k, v in self.node2id.items()}
-        print(f"   ✓ Loaded {len(self.node2id):,} node mappings")
+        print(f"    Loaded {len(self.node2id):,} node mappings")
 
         # Load QA data if available
         self.qa_data = []
@@ -81,7 +81,7 @@ class EmbeddingValidator:
                         question = parts[0]
                         answers = parts[1].split('|')
                         self.qa_data.append((question, answers))
-            print(f"   ✓ Loaded {len(self.qa_data):,} QA pairs")
+            print(f"    Loaded {len(self.qa_data):,} QA pairs")
         
         # Create output directory
         self.output_dir = Path(output_dir)
@@ -113,7 +113,7 @@ class EmbeddingValidator:
         print(f"{'='*70}")
 
         if use_l2:
-            print("   ℹ️  Using L2 distance (TransE mode) - lower is better for connected pairs")
+            print("     Using L2 distance (TransE mode) - lower is better for connected pairs")
 
         edges = list(self.G.edges())
 
@@ -155,11 +155,11 @@ class EmbeddingValidator:
 
             # For L2 distance, connected should be LOWER (closer) than random
             if random_metric > connected_metric + 0.5:
-                verdict = "✅ PASS - Clear separation between connected and random"
+                verdict = " PASS - Clear separation between connected and random"
             elif random_metric > connected_metric:
-                verdict = "⚠️  WEAK - Some separation but not strong"
+                verdict = "  WEAK - Some separation but not strong"
             else:
-                verdict = "❌ FAIL - No separation"
+                verdict = " FAIL - No separation"
         else:
             print(f"\n   Connected pairs avg similarity: {connected_metric:.4f}")
             print(f"   Random pairs avg similarity:    {random_metric:.4f}")
@@ -167,11 +167,11 @@ class EmbeddingValidator:
 
             # For cosine similarity, connected should be HIGHER than random
             if connected_metric > random_metric + 0.2:
-                verdict = "✅ PASS - Clear separation between connected and random"
+                verdict = " PASS - Clear separation between connected and random"
             elif connected_metric > random_metric:
-                verdict = "⚠️  WEAK - Some separation but not strong"
+                verdict = "  WEAK - Some separation but not strong"
             else:
-                verdict = "❌ FAIL - No separation"
+                verdict = " FAIL - No separation"
 
         print(f"\n   {verdict}")
 
@@ -203,7 +203,7 @@ class EmbeddingValidator:
             reducer = UMAP(n_components=2, random_state=42)
             Z = reducer.fit_transform(X_sample)
         else:
-            print("   ⚠️  UMAP not available, falling back to PCA")
+            print("     UMAP not available, falling back to PCA")
             reducer = PCA(n_components=2, random_state=42)
             Z = reducer.fit_transform(X_sample)
             method = 'pca'
@@ -221,7 +221,7 @@ class EmbeddingValidator:
         plt.savefig(output_file, dpi=150, bbox_inches='tight')
         plt.close()
         
-        print(f"   ✓ Saved visualization: {output_file}")
+        print(f"    Saved visualization: {output_file}")
 
     def nearest_neighbors_check(self, emb: np.ndarray, name: str, topk: int = 10, use_l2: bool = False):
         """Check nearest neighbors for a few entities."""
@@ -231,7 +231,7 @@ class EmbeddingValidator:
         print(f"{'='*70}")
 
         if use_l2:
-            print("   ℹ️  Using L2 distance (TransE mode) - lower values = closer neighbors")
+            print("     Using L2 distance (TransE mode) - lower values = closer neighbors")
 
         # Pick some test entities (actors, movies)
         test_entities = []
@@ -307,7 +307,7 @@ class EmbeddingValidator:
         plt.savefig(output_file, dpi=150, bbox_inches='tight')
         plt.close()
         
-        print(f"   ✓ Saved visualization: {output_file}")
+        print(f"    Saved visualization: {output_file}")
         
         # Compute correlation between degree and position
         corr_x = np.corrcoef(proj[:, 0], deg_vals)[0, 1]
@@ -317,9 +317,9 @@ class EmbeddingValidator:
         print(f"   Correlation (PC-2 vs Degree): {corr_y:.4f}")
         
         if abs(corr_x) > 0.3 or abs(corr_y) > 0.3:
-            print(f"   ✅ PASS - Degree information captured in embeddings")
+            print(f"    PASS - Degree information captured in embeddings")
         else:
-            print(f"   ⚠️  WEAK - Limited degree information")
+            print(f"     WEAK - Limited degree information")
         
         return {'corr_pc1': float(corr_x), 'corr_pc2': float(corr_y)}
 
@@ -363,11 +363,11 @@ class EmbeddingValidator:
         
         # Verdict
         if intra_mean > inter_mean + 0.2:
-            verdict = "✅ PASS - Strong community structure"
+            verdict = " PASS - Strong community structure"
         elif intra_mean > inter_mean:
-            verdict = "⚠️  WEAK - Some community structure"
+            verdict = "  WEAK - Some community structure"
         else:
-            verdict = "❌ FAIL - No community structure"
+            verdict = " FAIL - No community structure"
         
         print(f"\n   {verdict}")
         
@@ -382,11 +382,11 @@ class EmbeddingValidator:
         """Check correlation between embedding distance and graph path length."""
         metric_name = "L2 Distance" if use_l2 else "Cosine-based Distance"
         print(f"\n{'='*70}")
-        print(f"🛤️  Path Distance Correlation ({metric_name}): {name}")
+        print(f"🛤  Path Distance Correlation ({metric_name}): {name}")
         print(f"{'='*70}")
 
         if use_l2:
-            print("   ℹ️  Using L2 distance (TransE mode)")
+            print("     Using L2 distance (TransE mode)")
 
         # Sample source nodes
         nodes = list(self.G.nodes())
@@ -396,7 +396,7 @@ class EmbeddingValidator:
         # Pick a target node
         target_node = random.choice(nodes)
         if target_node not in self.node2id:
-            print("   ⚠️  Target node not in embedding, skipping...")
+            print("     Target node not in embedding, skipping...")
             return {}
 
         print(f"\n   Computing distances from {n_sources} nodes to '{target_node}'...")
@@ -433,7 +433,7 @@ class EmbeddingValidator:
             path_lengths.append(path_len)
 
         if len(emb_dists) < 10:
-            print("   ⚠️  Not enough valid paths, skipping...")
+            print("     Not enough valid paths, skipping...")
             return {}
 
         # Compute correlation
@@ -461,15 +461,15 @@ class EmbeddingValidator:
         plt.savefig(output_file, dpi=150, bbox_inches='tight')
         plt.close()
 
-        print(f"   ✓ Saved visualization: {output_file}")
+        print(f"    Saved visualization: {output_file}")
 
         # Verdict
         if correlation > 0.5:
-            verdict = "✅ PASS - Strong correlation"
+            verdict = " PASS - Strong correlation"
         elif correlation > 0.3:
-            verdict = "⚠️  WEAK - Moderate correlation"
+            verdict = "  WEAK - Moderate correlation"
         else:
-            verdict = "❌ FAIL - Weak/no correlation"
+            verdict = " FAIL - Weak/no correlation"
 
         print(f"\n   {verdict}")
 
@@ -488,10 +488,10 @@ class EmbeddingValidator:
         print(f"{'='*70}")
 
         if use_l2:
-            print("   ℹ️  Using L2 distance (TransE mode)")
+            print("     Using L2 distance (TransE mode)")
 
         if not self.qa_data:
-            print("   ⚠️  No QA data available, skipping...")
+            print("     No QA data available, skipping...")
             return {}
 
         # Sample QA pairs
@@ -535,7 +535,7 @@ class EmbeddingValidator:
                 hits += 1
 
         if valid_questions == 0:
-            print("   ⚠️  No valid questions found, skipping...")
+            print("     No valid questions found, skipping...")
             return {}
 
         accuracy = hits / valid_questions
@@ -545,11 +545,11 @@ class EmbeddingValidator:
 
         # Verdict
         if accuracy >= 0.6:
-            verdict = "✅ PASS - Good QA performance"
+            verdict = " PASS - Good QA performance"
         elif accuracy >= 0.4:
-            verdict = "⚠️  WEAK - Moderate QA performance"
+            verdict = "  WEAK - Moderate QA performance"
         else:
-            verdict = "❌ FAIL - Poor QA performance"
+            verdict = " FAIL - Poor QA performance"
 
         print(f"\n   {verdict}")
 
@@ -573,13 +573,13 @@ class EmbeddingValidator:
         rel_emb_file = self.embedding_dir / f"{base_name}_relation_embeddings.npy"
 
         if not rel_emb_file.exists():
-            print(f"\n   ⚠️  Relation embeddings not found at {rel_emb_file}")
+            print(f"\n     Relation embeddings not found at {rel_emb_file}")
             print(f"   Cannot perform TransE-specific validation without relation embeddings.")
             print(f"   Note: TransE should be evaluated with L2 distance, not cosine similarity!")
             return {'error': 'relation_embeddings_not_found'}
 
         rel_emb = np.load(rel_emb_file)
-        print(f"\n   ✓ Loaded relation embeddings: {rel_emb.shape}")
+        print(f"\n    Loaded relation embeddings: {rel_emb.shape}")
 
         # Sample edges for evaluation
         edges = list(self.G.edges(data=True))
@@ -620,7 +620,7 @@ class EmbeddingValidator:
             scores_random.append(random_score)
 
         if not scores_connected:
-            print(f"   ⚠️  No valid edges found for evaluation")
+            print(f"     No valid edges found for evaluation")
             return {}
 
         connected_mean = np.mean(scores_connected)
@@ -632,11 +632,11 @@ class EmbeddingValidator:
 
         # For TransE, connected edges should have HIGHER scores (less negative)
         if connected_mean > random_mean + 0.5:
-            verdict = "✅ PASS - TransE properly distinguishes edges"
+            verdict = " PASS - TransE properly distinguishes edges"
         elif connected_mean > random_mean:
-            verdict = "⚠️  WEAK - Some separation but not strong"
+            verdict = "  WEAK - Some separation but not strong"
         else:
-            verdict = "❌ FAIL - No separation"
+            verdict = " FAIL - No separation"
 
         print(f"\n   {verdict}")
 
@@ -719,7 +719,7 @@ class EmbeddingValidator:
             json.dump(results, f, indent=2)
         
         print(f"\n{'='*70}")
-        print(f"✅ Validation complete for {embedding_file}")
+        print(f" Validation complete for {embedding_file}")
         print(f"   Results saved: {results_file}")
         print(f"{'='*70}")
         
@@ -801,11 +801,11 @@ class EmbeddingValidator:
         with open(summary_file, 'w') as f:
             json.dump(all_results, f, indent=2)
         
-        print(f"\n✓ Summary saved: {summary_file}")
+        print(f"\n Summary saved: {summary_file}")
         
         # Print recommendations
         print(f"\n{'='*70}")
-        print("💡 RECOMMENDATIONS")
+        print(" RECOMMENDATIONS")
         print(f"{'='*70}")
         
         # Find best embedding for different tasks
@@ -892,12 +892,12 @@ def main():
     elif args.embedding:
         validator.validate_embedding(args.embedding, args.method)
     else:
-        print("\n❌ Error: Please specify --embedding or --all")
+        print("\n Error: Please specify --embedding or --all")
         parser.print_help()
         return 1
     
     print(f"\n\n{'='*70}")
-    print("✅ VALIDATION COMPLETE!")
+    print(" VALIDATION COMPLETE!")
     print(f"{'='*70}")
     print(f"\nResults saved to: {args.output}/")
     print("Check the validation_summary.json for a complete overview.")

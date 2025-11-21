@@ -81,7 +81,7 @@ class EmbeddingTrainer:
 
         self.num_nodes = self.G.number_of_nodes()
         self.num_edges = self.G.number_of_edges()
-        self.logger.log(f"✓ Loaded graph: {self.num_nodes:,} nodes, {self.num_edges:,} edges")
+        self.logger.log(f" Loaded graph: {self.num_nodes:,} nodes, {self.num_edges:,} edges")
 
         # Create node to ID mapping
         self.node_list = list(self.G.nodes())
@@ -102,7 +102,7 @@ class EmbeddingTrainer:
             checkpoints: List of iteration counts to save (if None, only saves final)
         """
         self.logger.log("="*60)
-        self.logger.log("🚀 Training FastRP Embeddings")
+        self.logger.log(" Training FastRP Embeddings")
         self.logger.log("="*60)
 
         if checkpoints is None:
@@ -163,7 +163,7 @@ class EmbeddingTrainer:
                 else:
                     self.logger.log(f"      Iteration {current_iteration}/{iterations} complete")
 
-                self.logger.log(f"      ✓ Complete in {checkpoint_time:.2f}s")
+                self.logger.log(f"       Complete in {checkpoint_time:.2f}s")
                 self.logger.log(f"      Shape: {embeddings.shape}")
                 self.logger.log(f"      Mean norm: {np.linalg.norm(embeddings, axis=1).mean():.4f}")
                 self.logger.log("")
@@ -185,7 +185,7 @@ class EmbeddingTrainer:
                 self.logger.log(f"      Iteration {current_iteration}/{iterations} complete")
 
         elapsed = time.time() - start_time
-        self.logger.log(f"✓ FastRP training complete in {elapsed:.2f}s")
+        self.logger.log(f" FastRP training complete in {elapsed:.2f}s")
 
         return results
 
@@ -215,7 +215,7 @@ class EmbeddingTrainer:
             raise ImportError("node2vec not installed. Run: pip install node2vec")
 
         self.logger.log("="*60)
-        self.logger.log("🚀 Training Node2Vec Embeddings")
+        self.logger.log(" Training Node2Vec Embeddings")
         self.logger.log("="*60)
 
         G_undirected = self.G.to_undirected()
@@ -267,7 +267,7 @@ class EmbeddingTrainer:
                 embeddings[idx] = model.wv[node]
 
             elapsed = time.time() - checkpoint_start
-            self.logger.log(f"      ✓ Complete in {elapsed:.2f}s ({elapsed/60:.1f} min)")
+            self.logger.log(f"       Complete in {elapsed:.2f}s ({elapsed/60:.1f} min)")
             self.logger.log(f"      Shape: {embeddings.shape}")
             self.logger.log(f"      Mean norm: {np.linalg.norm(embeddings, axis=1).mean():.4f}")
             self.logger.log("")
@@ -289,7 +289,7 @@ class EmbeddingTrainer:
 
             results.append((embeddings, metadata))
 
-        self.logger.log(f"✓ Node2Vec training complete!")
+        self.logger.log(f" Node2Vec training complete!")
         return results
 
     def train_transe(self,
@@ -318,7 +318,7 @@ class EmbeddingTrainer:
             raise ImportError("pykeen not installed. Run: pip install pykeen torch")
 
         self.logger.log("="*60)
-        self.logger.log("🚀 Training TransE Embeddings (GPU Accelerated)")
+        self.logger.log(" Training TransE Embeddings (GPU Accelerated)")
         self.logger.log("="*60)
         start_time = time.time()
 
@@ -345,7 +345,7 @@ class EmbeddingTrainer:
 
         # Setup device
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.logger.log(f"   🚀 Device: {device.type.upper()}")
+        self.logger.log(f"    Device: {device.type.upper()}")
 
         if device.type == 'cuda':
             gpu_name = torch.cuda.get_device_name(0)
@@ -449,7 +449,7 @@ class EmbeddingTrainer:
                         embeddings[idx] = entity_embeddings[transe_id]
 
                 checkpoint_elapsed = time.time() - start_time
-                self.logger.log(f"   ✓ Checkpoint {target_epoch} epochs: {checkpoint_elapsed:.2f}s")
+                self.logger.log(f"    Checkpoint {target_epoch} epochs: {checkpoint_elapsed:.2f}s")
 
                 # Log metrics for this checkpoint
                 if hasattr(result, 'metric_results') and result.metric_results:
@@ -482,7 +482,7 @@ class EmbeddingTrainer:
 
             elapsed = time.time() - start_time
             self.logger.log("")
-            self.logger.log(f"✓ TransE complete in {elapsed:.2f}s ({elapsed/60:.1f} min)")
+            self.logger.log(f" TransE complete in {elapsed:.2f}s ({elapsed/60:.1f} min)")
             self.logger.log(f"   Total checkpoints saved: {len(results)}")
 
             return results
@@ -508,7 +508,7 @@ class EmbeddingTrainer:
                 device=device.type,
             )
 
-            self.logger.log(f"   ℹ️  Training completed {num_epochs} epochs")
+            self.logger.log(f"     Training completed {num_epochs} epochs")
 
             # Log final metrics
             self.logger.log("")
@@ -541,7 +541,7 @@ class EmbeddingTrainer:
 
             elapsed = time.time() - start_time
             self.logger.log("")
-            self.logger.log(f"✓ TransE complete in {elapsed:.2f}s ({elapsed/60:.1f} min)")
+            self.logger.log(f" TransE complete in {elapsed:.2f}s ({elapsed/60:.1f} min)")
             self.logger.log(f"   Shape: {embeddings.shape}")
             self.logger.log(f"   Mean norm: {np.linalg.norm(embeddings, axis=1).mean():.4f}")
 
@@ -751,7 +751,7 @@ Examples:
     logger = TimingLogger(str(log_file))
 
     logger.log("="*60)
-    logger.log("🎯 MetaQA Graph Embedding Trainer")
+    logger.log(" MetaQA Graph Embedding Trainer")
     logger.log("="*60)
     logger.log(f"Method: {args.method}")
     logger.log(f"Dimension: {args.dim}")
@@ -775,7 +775,7 @@ Examples:
 
         if args.method == 'node2vec' or args.method == 'all':
             if not NODE2VEC_AVAILABLE:
-                logger.log("⚠️  node2vec not installed. Skipping.", level="WARNING")
+                logger.log("  node2vec not installed. Skipping.", level="WARNING")
             else:
                 results = trainer.train_node2vec(
                     embedding_dim=args.dim,
@@ -791,7 +791,7 @@ Examples:
 
         if args.method == 'transe' or args.method == 'all':
             if not PYKEEN_AVAILABLE:
-                logger.log("⚠️  pykeen not installed. Skipping.", level="WARNING")
+                logger.log("  pykeen not installed. Skipping.", level="WARNING")
             else:
                 results = trainer.train_transe(
                     embedding_dim=args.dim,
@@ -806,11 +806,11 @@ Examples:
                 logger.log("")
 
         logger.log("="*60)
-        logger.log("✅ Training complete!")
+        logger.log(" Training complete!")
         logger.log("="*60)
 
     except Exception as e:
-        logger.log(f"❌ Training failed: {e}", level="ERROR")
+        logger.log(f" Training failed: {e}", level="ERROR")
         import traceback
         traceback.print_exc()
         return 1

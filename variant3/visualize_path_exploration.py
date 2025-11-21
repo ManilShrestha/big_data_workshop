@@ -270,10 +270,10 @@ def main():
         print(f"HOP {hop['hop_number']}: From '{hop['current_node']}'")
         print(f"{'=' * 80}")
 
-        print(f"\n✓ PATH TAKEN (Score: {hop['taken_edge']['score']:.4f}):")
+        print(f"\n PATH TAKEN (Score: {hop['taken_edge']['score']:.4f}):")
         print(f"  └─ {hop['taken_edge']['relation']} → {hop['taken_edge']['target']}")
 
-        print(f"\n✗ PATHS NOT TAKEN (Top alternatives):")
+        print(f"\n PATHS NOT TAKEN (Top alternatives):")
         for i, alt in enumerate(hop['alternatives_not_taken'][:5], 1):
             print(f"  {i}. {alt['relation']} → {alt['target']} (Score: {alt['score']:.4f})")
 

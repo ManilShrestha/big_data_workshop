@@ -6,10 +6,15 @@ This is a comparison variant to Variant 5A (OpenAI upper bound):
 - Entity Linking: Exact matching (free)
 - Relation Ranking: Keyword-based (simple heuristic)
 - Search: Qwen-guided BFS with relation sequencing
-- Model: Qwen 30B (self-hosted)
+- Model: Configurable (Qwen 30B or Qwen 4B - self-hosted)
+
+Configuration:
+- Edit QWEN_ACTIVE_MODEL in qa_system/config.py to switch between models
+- Options: "qwen30b" or "qwen4b"
+- Each model has its own endpoint, batch size, and retry settings
 
 Expected performance vs. Variant 5A:
-- Lower accuracy (Qwen 30B < GPT-4o planning quality)
+- Lower accuracy (Qwen < GPT-4o planning quality)
 - Zero cost (self-hosted vs. paid API)
 - More planning failures (less reliable JSON output)
 - Weaker relation sequencing (less reasoning capability)
@@ -19,6 +24,7 @@ This variant demonstrates:
 2. Whether graph grounding can compensate for weaker models
 3. Cost-accuracy tradeoff in complex multi-hop reasoning
 4. Robustness requirements for self-hosted models
+5. Model size impact (30B vs 4B) on reasoning quality
 """
 
 import sys
@@ -64,7 +70,8 @@ Examples:
   python variant5_qwen_guided.py --datasets 1-hop 2-hop 3-hop --limit 100
 
 Note:
-  - Uses self-hosted Qwen 30B model (no cost)
+  - Uses self-hosted Qwen model (configurable: 30B or 4B)
+  - Edit QWEN_ACTIVE_MODEL in qa_system/config.py to switch models
   - Direct mode only (no batch API for Qwen)
   - Parallel API calls via ThreadPoolExecutor
   - Compare with Variant 5A (OpenAI) to see quality gap
@@ -99,12 +106,15 @@ Note:
     print("\n" + "="*80)
     print(" VARIANT 5B: Qwen Relation Ranking + LLM-Guided BFS")
     print("="*80)
-    print(f"  Model: Qwen 30B (self-hosted)")
+    print(f"  Active Model: {Config.QWEN_ACTIVE_MODEL.upper()} (self-hosted)")
+    print(f"  Model Name: {Config.QWEN_MODEL}")
+    print(f"  Endpoint: {Config.QWEN_BASE_URL}")
     print(f"  Mode: Direct (parallel API calls)")
     print(f"  Datasets: {', '.join(args.datasets)}")
     print(f"  Limit per dataset: {args.limit if args.limit else 'Full dataset'}")
     print(f"  Top-k relations: {args.top_k}")
     print(f"  Timestamp: {timestamp}")
+    print(f"  Note: To switch models, edit QWEN_ACTIVE_MODEL in qa_system/config.py")
     print("="*80 + "\n")
 
     # =========================================================================
@@ -150,7 +160,10 @@ Note:
     )
 
     print("  Components initialized.")
-    print("  LLM Planning: Enabled (Qwen 30B - parallel API calls)")
+    print(f"  LLM Planning: Enabled ({Config.QWEN_ACTIVE_MODEL.upper()} - parallel API calls)")
+    print(f"  Max workers: {Config.QWEN_MAX_WORKERS}")
+    print(f"  Batch size: {Config.QWEN_BATCH_SIZE}")
+    print(f"  Parse retries: {Config.QWEN_MAX_RETRIES_PARSE}")
     print("  Cost: $0.00 (self-hosted model)\n")
 
     # =========================================================================
@@ -178,7 +191,7 @@ Note:
 
         # Prepare output path for final results
         limit_str = f"_limit{args.limit}" if args.limit else "_full"
-        output_path = f"results/variant5_qwen_guided_{dataset_name}{limit_str}_{timestamp}.json"
+        output_path = f"results/variant5_qwen4B_LoRA_guided_{dataset_name}{limit_str}_{timestamp}.json"
 
         # Evaluate (incremental saving auto-enables with dataset_name parameter)
         evaluation = evaluator.evaluate(
@@ -216,10 +229,16 @@ Note:
     print("\nKey Features:")
     print("  - Entity linking: ExactMatcher (free)")
     print("  - Relation ranking: Keyword-based heuristic (simple)")
-    print("  - LLM planning: Qwen 30B with robust JSON parsing")
+    print(f"  - LLM planning: {Config.QWEN_ACTIVE_MODEL.upper()} ({Config.QWEN_MODEL}) with robust JSON parsing")
     print("  - Search: LLM-guided BFS with relation sequencing")
+    print("\nConfiguration:")
+    print(f"  - Active model: {Config.QWEN_ACTIVE_MODEL}")
+    print(f"  - Model name: {Config.QWEN_MODEL}")
+    print(f"  - Endpoint: {Config.QWEN_BASE_URL}")
+    print(f"  - To switch: Edit QWEN_ACTIVE_MODEL in qa_system/config.py")
     print("\nComparison points:")
     print("  - Compare accuracy with Variant 5A (OpenAI) to see model quality gap")
+    print("  - Compare Qwen 30B vs Qwen 4B to see model size impact")
     print("  - Cost: $0 vs. ~$0.01 per query for OpenAI")
     print("  - Robustness: Track JSON parsing failures")
 

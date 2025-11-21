@@ -383,7 +383,7 @@ class QwenLLMQA:
 
                     # Log parsing issues
                     if len(answers) == 0 and verbose:
-                        print(f"\n  [QwenLLM] ⚠️  Question {idx+1}: Empty answer list")
+                        print(f"\n  [QwenLLM]   Question {idx+1}: Empty answer list")
                         print(f"  [QwenLLM] Raw response: {completion_text[:200]}...")
 
                     # Success!

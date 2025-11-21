@@ -391,7 +391,7 @@ def print_trace(trace: Dict):
             )[:10]
 
             for relation, info in sorted_relations:
-                selected = "✓ YES" if info['selected'] else "✗ no"
+                selected = " YES" if info['selected'] else " no"
                 print(f"    {relation:<35} {selected:<10} {info['num_edges']:<8} "
                       f"{info['best_score']:<8.4f} {info['avg_score']:<8.4f} "
                       f"{info['avg_text_sim']:<8.4f} {info['edges_to_ground_truth']:<5}")
@@ -406,7 +406,7 @@ def print_trace(trace: Dict):
                 print(f"        {'-'*70}")
 
                 for edge in info['top_edges'][:3]:
-                    in_gt = "✓" if edge['in_ground_truth'] else "✗"
+                    in_gt = "" if edge['in_ground_truth'] else ""
                     target_short = edge['target'][:37] + "..." if len(edge['target']) > 40 else edge['target']
                     print(f"        {target_short:<40} {edge['model_score']:<10.4f} "
                           f"{edge['text_similarity']:<10.4f} {in_gt:<8}")
@@ -569,7 +569,7 @@ def main():
         start_nodes = entity_linker.extract_and_link(question_text)
 
         if not start_nodes:
-            print(f"⚠ Could not link entity from question: {question_text}")
+            print(f" Could not link entity from question: {question_text}")
             continue
 
         # Determine hop count from question text

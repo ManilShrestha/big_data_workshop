@@ -60,11 +60,11 @@ def main():
 
             # Check if relation matches question intent
             if 'director' in question_lower and 'directed' not in rel:
-                print(f"    ⚠️  Question asks about directors but used: {rel}")
+                print(f"      Question asks about directors but used: {rel}")
             if ('written' in question_lower or 'writer' in question_lower) and 'written' not in rel:
-                print(f"    ⚠️  Question asks about writers but used: {rel}")
+                print(f"      Question asks about writers but used: {rel}")
             if 'language' in question_lower and hop_idx == len(relations) - 1 and 'language' not in rel:
-                print(f"    ⚠️  Question asks about language but final hop is: {rel}")
+                print(f"      Question asks about language but final hop is: {rel}")
 
         print()
 

@@ -65,14 +65,14 @@ def main():
     missing_entities = all_triples_entities - known_entities
     
     if missing_entities:
-        print(f"\n❌ Found {len(missing_entities)} missing entities in entity2id.txt:")
+        print(f"\n Found {len(missing_entities)} missing entities in entity2id.txt:")
         print("-" * 50)
         for entity in sorted(missing_entities)[:20]:  # Show first 20
             print(f"  - {entity}")
         if len(missing_entities) > 20:
             print(f"  ... and {len(missing_entities) - 20} more")
     else:
-        print("\n✅ All entities in train/valid/test are present in entity2id.txt!")
+        print("\n All entities in train/valid/test are present in entity2id.txt!")
     
     # Check each file individually
     print("\n" + "=" * 50)
@@ -84,9 +84,9 @@ def main():
                            ("test.txt", test_entities)]:
         missing = entities - known_entities
         if missing:
-            print(f"❌ {name}: {len(missing)} missing entities")
+            print(f" {name}: {len(missing)} missing entities")
         else:
-            print(f"✅ {name}: All entities present")
+            print(f" {name}: All entities present")
     
     # Additional statistics
     print("\n" + "=" * 50)

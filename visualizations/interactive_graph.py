@@ -47,5 +47,5 @@ net.toggle_physics(True)
 
 # Save to HTML file
 net.write_html("graph.html")
-print(f"\n✓ Graph saved to graph.html")
+print(f"\n Graph saved to graph.html")
 print(f"  This subgraph preserves ALL connections for included nodes")

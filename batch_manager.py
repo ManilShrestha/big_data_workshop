@@ -54,11 +54,11 @@ def check_status(llm_qa: BatchLLMQA, batch_id: str):
     status = llm_qa.check_batch_status(batch_id, verbose=True)
 
     if status['status'] == 'completed':
-        print(f"\n✅ Batch is complete!")
+        print(f"\n Batch is complete!")
         print(f"\nTo retrieve results and continue evaluation, run:")
         print(f"  python variant0_llm_baseline.py --mode batch --batch-id {batch_id}")
     elif status['status'] == 'failed':
-        print(f"\n❌ Batch failed!")
+        print(f"\n Batch failed!")
     elif status['status'] in ['validating', 'in_progress', 'finalizing']:
         print(f"\n⏳ Batch is still processing...")
         print(f"\nTo wait for completion, run:")
@@ -75,10 +75,10 @@ def cancel_batch(llm_qa: BatchLLMQA, batch_id: str):
 
     try:
         batch = llm_qa.client.batches.cancel(batch_id)
-        print(f"✅ Batch cancelled successfully!")
+        print(f" Batch cancelled successfully!")
         print(f"   New status: {batch.status}")
     except Exception as e:
-        print(f"❌ Failed to cancel batch: {e}")
+        print(f" Failed to cancel batch: {e}")
 
 
 def main():
