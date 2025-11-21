@@ -143,18 +143,16 @@ logs/
 *.pkl
 embeddings/
 
-claude.md
-readme.md
 
 # Markdown files
 *.md
 
-Llama-Factory
+finetuning/Llama-Factory
+finetuning/LLaMA-Factory/
 
 # Results and outputs
 results/
-models/
-finetuning/models/
+models/*.pt
 wandb/
 nohup.out
 simulation_traces.json
@@ -163,3 +161,7 @@ simulation_traces.json
 # Generated figures
 *.png
 *.pdf
+
+*.pt
+
+*.safetensors

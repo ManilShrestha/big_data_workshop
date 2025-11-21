@@ -6,7 +6,7 @@ A multi-hop question answering system over knowledge graphs using learned edge s
 
 This project implements several variants for answering natural language questions over the MetaQA knowledge graph:
 
-- **Variant 0**: LLM baseline (GPT-4o-mini, Qwen) - direct QA without graph traversal
+- **Variant 0**: LLM baseline (GPT-5-mini, Qwen) - direct QA without graph traversal
 - **Variant 1**: Rule-based graph traversal with heuristic edge scoring
 - **Variant 3**: Neural edge scorer combining text embeddings (OpenAI) + graph embeddings (TransE) + hop context
 - **Variant 5**: LLM-guided graph traversal using structured prompts
@@ -42,7 +42,7 @@ The scorer guides beam search through the knowledge graph, predicting which edge
 
 ## Key Results
 
-Performance on MetaQA test sets (Hit@10, F1):
+Performance on MetaQA test sets (Hit Rate, F1):
 
 | Method | 1-hop | 2-hop | 3-hop |
 |--------|-------|-------|-------|
